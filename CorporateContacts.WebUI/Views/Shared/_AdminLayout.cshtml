@@ -1,0 +1,785 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title</title>
+    <link rel="icon" type="image/png" href="~/Content/Images/CorporateContactsIcon32.png" />
+    <!-- <link href="~/Content/Site.css" type="text/css" rel="stylesheet" />
+       <link href="~/Content/Menu.css" type="text/css" rel="stylesheet" /> -->
+
+
+
+    @*<script src="~/Scripts/jquery-1.8.2.js"></script>*@
+    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+    <!--ace-->
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/assets/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="~/assets/css/ace-fonts.css" />
+    <!-- ace styles -->
+    <link rel="stylesheet" href="~/assets/css/ace.min.css" />
+    <link rel="stylesheet" href="~/assets/css/ace-rtl.min.css" />
+    <link rel="stylesheet" href="~/assets/css/ace-skins.min.css" />
+    <script src="~/assets/js/ace-extra.min.js"></script>
+
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="~/css/custom.css" />
+
+    <!-- Placeholder JS-->
+    <script src="~/js/placeholders.min.js"></script>
+
+    <!-- Font Icons JS-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+    <!-- Special Preloader-->
+    <link rel="stylesheet" href="~/css/nprogress.css" />
+    <script src="~/js/nprogress.js"></script>
+
+    <script src="~/js/timeZone.js"></script>
+
+    
+
+
+
+    @RenderSection("JavaScript", required: false)
+    @RenderSection("CSS", false)
+
+    <style>
+        .table-header {
+            background-color: #219fd1;
+        }
+
+        .nav-list li.active > a:after {
+            border-right-color: #219fd1;
+        }
+
+        .nav-list > li.active:after {
+            border: 2px solid #219fd1;
+        }
+
+        .nav-list li.active > a:after {
+            border-right-color: #219fd1;
+        }
+
+        .navbar {
+            background: #219fd1 !important;
+        }
+
+        .btn-primary, .btn-primary:focus {
+            background-color: #219fd1!important;
+            border-color: #219fd1;
+        }
+
+            .btn-primary:hover, .open .btn-primary.dropdown-toggle {
+                background-color: #1A7FA7!important;
+                border-color: #219fd1;
+            }
+
+        .header-color-blue2 {
+            background: #219fd1;
+            border-color: #219fd1;
+        }
+
+        .btn-info, .btn-info:focus {
+            background-color: #219fd1!important;
+            border-color: #219fd1;
+        }
+
+    .ace-settings-container {
+    position: absolute;
+    right: 0;
+    top: auto;
+    z-index: 12;
+    color:black;
+    }
+
+    .btn.btn-app.ace-settings-btn.btn-xs {
+    width: 20px;
+    }
+
+    .btn.btn-app.btn-xs>.icon {
+    display: block;
+    font-size: 24px;
+    line-height: 24px;
+    margin: 0;
+}
+        .btn.btn-app > .icon {
+            display: block;
+            font-size: 42px;
+            margin: 0 0 4px;
+            line-height: 36px;
+            min-width: 0;
+            padding: 0;
+        }
+    </style>
+
+</head>
+<body style='display: none'>
+    <div class="navbar navbar-default custom-fixed" id="navbar">
+        @if (Session["SysAdminDetails"] != null)
+        {
+            if (((Xobnu.Domain.Entities.User)Session["user"]).Email != ((Xobnu.Domain.Entities.User)Session["SysAdminDetails"]).Email)
+            {
+                <center><div class="white" style="max-width:470px;height:30px;background-color:#FF4949;position:fixed;border-radius: 0px 0px 10px 10px;left: 35%;padding-left:2px;padding-right:2px;">Currently being impersonated as @(((Xobnu.Domain.Entities.Account)Session["account"]).AccountName) </div></center>
+            }
+        }
+        else if (((Xobnu.Domain.Entities.Account)Session["account"]).isPaymentIssue == true)
+        {
+            <center><div class="white" style="max-width:500px;height:50px;background-color:#FF4949;position:fixed;border-radius: 0px 0px 10px 10px;left: 35%;padding-left:2px;padding-right:2px;">Your account has been temorarily disabled due to a Payment failure. Click <a id="btnPaymentIssue" class="no-text-decoration" data-toggle="modal" href="#payment-issue-model">here</a> for more information</div></center>
+        }
+        else if (((Xobnu.Domain.Entities.Account)Session["account"]).isOverFlow == true)
+        {
+            <center><div class="white" style="max-width:500px;height:50px;background-color:#FF4949;position:fixed;border-radius: 0px 0px 10px 10px;left: 35%;padding-left:2px;padding-right:2px;">Your account has been temorarily disabled due to an Overflow detected in one of your Folder. Click <a id="btnOverFlowIssue" class="no-text-decoration" data-toggle="modal" href="#folder-overflow-model">here</a> for more information</div></center>
+        }
+
+        <script type="text/javascript">
+            try { ace.settings.check('navbar', 'fixed') } catch (e) { }
+        </script>
+        <div class="navbar-container " id="navbar-container">
+            <div class="navbar-header pull-left">
+                @if ((((Xobnu.Domain.Entities.User)Session["user"]).UserType) == "SystemAdmin")
+                {
+                    <a href="@Url.Action("Index", "CorporateContactsAdmin")" class="navbar-brand">
+                        <small>
+                            <img src="~/Content/Images/CorpConlogo2fbg.png" />
+                            @*  <span style="color: #ff0000;">Corporate</span>
+                                <span style="color: white">Contacts</span>*@
+                        </small>
+                    </a>
+                }
+                else
+                {
+                    <a href="@Url.Action("Index", "Admin")" class="navbar-brand">
+                        <small>
+                            <img src="~/Content/Images/CorpConlogo2fbg.png" />
+                            @*  <span style="color: #ff0000;">Corporate</span>
+                                <span style="color: white">Contacts</span>*@
+                        </small>
+                    </a>
+                <!-- /.brand -->
+                }
+            </div>
+            <div class="navbar-header pull-right" role="navigation">
+                <ul class="nav ace-nav">
+
+
+                    @if (Session["notifications"] != null)
+                    {
+                        <li class="transparent" style="border-left:none !important;  margin-top: 10px;">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#" style="background-color:transparent;">
+                                <i class="icon-bell-alt icon-animated-bell"></i>
+                                <span class="badge badge-success">@(((List<Xobnu.WebUI.Models.NotificationListViewModel>)Session["notifications"]).Count)</span>
+                            </a>
+
+                            <ul class="pull-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-close" style="min-width: 300px;">
+                                <li class="dropdown-header">
+                                    <i class="icon-warning-sign"></i>
+                                    @(((List<Xobnu.WebUI.Models.NotificationListViewModel>)Session["notifications"]).Count) New Notifications
+                                </li>
+
+
+                                @foreach (var noti in (List<Xobnu.WebUI.Models.NotificationListViewModel>)Session["notifications"])
+                                {
+                                    @*<li>
+                                            <a href="#">
+                                                <div class="clearfix">
+                                                    <span title="@noti.NotificationMsg" data-rel="tooltip" class="pull-left" style="display:inline-block;width:250px;white-space: nowrap;overflow:hidden !important;text-overflow: ellipsis;">
+                                                        <i class="btn btn-xs no-hover btn-pink icon-exclamation"></i>
+                                                        @noti.NotificationMsg
+                                                    </span>
+                                                </div>
+                                            </a>
+                                        </li>*@
+
+                                    <li>
+                                        <a href="#" style="text-align:left;color:#000000;">
+                                            <table>
+                                                <tr>
+                                                    <td><i class="btn btn-xs no-hover btn-pink icon-exclamation"></i></td>
+                                                    <td>
+                                                        <span class="msg-body" style="max-width:275px !important;">
+                                                            <span class="msg-title">
+                                                                <span title="@noti.NotificationMsg" data-rel="tooltip" style="display:inline-block;width:250px;white-space: nowrap;overflow:hidden !important;text-overflow: ellipsis;">@noti.NotificationMsg</span>
+                                                            </span>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            @*<span class="msg-body" style="max-width:250px !important;">
+                                                    <span class="msg-title">
+
+                                                        <i class="btn btn-xs no-hover btn-pink icon-exclamation"></i>
+                                                        <span>@noti.NotificationMsg</span>
+                                                    </span>
+                                                </span>*@
+                                        </a>
+                                    </li>
+
+                                }
+                            </ul>
+                        </li>
+                    }
+
+                    <li class="light-blue" style="border-left:none;">
+                        <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                            <span class="user-info">
+                                <small>Welcome,</small>
+                                @(((Xobnu.Domain.Entities.User)Session["user"]).FullName)
+
+                            </span>
+
+                            <i class="icon-caret-down"></i>
+                        </a>
+
+                        <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                            @*<li>
+                                    <a href="#">
+                                        <i class="icon-cog"></i>
+                                        Settings
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="#">
+                                        <i class="icon-user"></i>
+                                        Profile
+                                    </a>
+                                </li>*@
+                            <li>
+                                <a href="@Url.Action("ChangePassword", "Admin")">
+                                    <i class="fa fa-lock"></i>
+                                    Change Password
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="~/user/signout">
+                                    <i class="fa fa-sign-out"></i>
+                                    Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <!-- /.ace-nav -->
+            </div>
+        </div>
+    </div>
+    <div class="main-container custom-margin-container" id="main-container">
+        <script type="text/javascript">
+            try { ace.settings.check('main-container', 'fixed') } catch (e) { }
+        </script>
+
+        <div class="main-container-inner">
+            <a class="menu-toggler custom-menu-toggler-fixed" id="menu-toggler" href="#">
+                <span class="menu-text"></span>
+            </a>
+
+            <div class="sidebar custom-navigation-fixed" id="sidebar">
+                <script type="text/javascript">
+                    try { ace.settings.check('sidebar', 'fixed') } catch (e) { }
+                </script>
+
+
+
+                <ul class="nav nav-list">
+                    @if ((((Xobnu.Domain.Entities.User)Session["user"]).UserType) == "SystemAdmin")
+                    {
+                        @*<li class="@(TempData["SelectedMenu"] == "FlagPauseTimes" ? "active" : null)">
+                            <a href="~/CorporateContactsAdmin/ClearFlageAndPauseTime">
+                                <i class="icon-refresh"></i>
+                                <span class="menu-text">Clear Flags/Pause Times </span>
+                            </a>
+
+                        </li>
+                        <li class="@(TempData["SelectedMenu"] == "ViewStats" ? "active" : null)">
+                            <a href="~/CorporateContactsAdmin">
+                                <i class="icon-bar-chart"></i>
+                                <span class="menu-text">View Statistics </span>
+                            </a>
+
+                        </li>
+                        <li class="@(TempData["SelectedMenu"] == "CheckSyncTimes" ? "active" : null)">
+                            <a href="~/CorporateContactsAdmin">
+                                <i class="icon-exchange"></i>
+                                <span class="menu-text">Check Sync Times </span>
+                            </a>
+
+                        </li>
+                        <li class="@(TempData["SelectedMenu"] == "DeleteAcc" ? "active" : null)">
+                            <a href="~/CorporateContactsAdmin">
+                                <i class="icon-trash"></i>
+                                <span class="menu-text">Delete Account </span>
+                            </a>
+
+                        </li>*@
+                        <li class="@(TempData["SelectedMenu"] == "AccImpersontation" ? "active" : null)">
+                            <a href="@Url.Action("ImpersonateAccount", "CorporateContactsAdmin")">
+                                <i class="icon-laptop"></i>
+                                <span class="menu-text">Access Account</span>
+                            </a>
+
+                        </li>
+                        <li class="@(TempData["SelectedMenu"] == "accInfo" ? "active" : null)">
+                            <a href="@Url.Action("AccountInfo", "CorporateContactsAdmin")">
+                                <i class="icon-info-sign"></i>
+                                <span class="menu-text">Account Ifno</span>
+                            </a>
+
+                        </li>
+                        <li class="@(TempData["SelectedMenu"] == "MErrorLog" ? "active" : null)">
+                            <a href="@Url.Action("viewMasterErrorLog", "CorporateContactsAdmin")">
+                                <i class="icon-cog"></i>
+                                <span class="menu-text">Master Error Log </span>
+                            </a>
+
+                        </li>
+                        <li class="@(TempData["SelectedMenu"] == "SystemStatus" ? "active" : null)">
+                            <a href="@Url.Action("SystemStatus", "CorporateContactsAdmin")">
+                                <i class="icon-bar-chart"></i>
+                                <span class="menu-text">System Status</span>
+                            </a>
+
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="@(TempData["SelectedMenu"] == "Summary" ? "active" : null)">
+                            <a href="@Url.Action("Index", "Admin")">
+                                <i class="icon-home"></i>
+                                <span class="menu-text">Home </span>
+                            </a>
+
+                        </li>
+
+                        if (((((Xobnu.Domain.Entities.User)Session["user"]).isPasswordChange) == true))
+                        {
+                            if ((((List<Xobnu.Domain.Entities.CCFolder>)Session["folderss"])) != null)
+                            {
+                                if ((((List<Xobnu.Domain.Entities.CCFolder>)Session["folderss"])).Count > 0)
+                                {
+                                    var fol = (List<Xobnu.Domain.Entities.CCFolder>)Session["folderss"];
+                                    <li class="@(TempData["SelectedMenu"] == "Folder" ? "active open" : null)">
+                                        <a href="~/Folder/Viewfolder" class="dropdown-toggle">
+                                            <i class="icon-folder-open"></i><span class="menu-text">Folders </span><b class="arrow icon-angle-down"></b>
+                                        </a>
+                                        <ul class="submenu">
+
+
+                                            @*@foreach (var fo in fol)
+                                            {
+                                                if (TempData["SelectedSubMenuFolder"] != null)
+                                                {
+                                                    <li class="@(TempData["SelectedSubMenuFolder"].ToString() == fo.FolderID.ToString() ? "active" : null)">
+                                                        @if (fo.Type == 1)
+                                                        {
+                                                            <a href="@Url.Action("Items", "Folder", new { id = fo.FolderID })">
+                                                                <i class="icon-group"></i>
+                                                                @fo.Name
+                                                            </a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a href="@Url.Action("Items", "Folder", new { id = fo.FolderID })" style="color:#CC3300">
+                                                                <i class="icon-calendar"></i>
+                                                                @fo.Name
+                                                            </a>
+                                                        }
+                                                    </li>
+
+                                                }
+                                                else
+                                                {
+                                                    <li>
+                                                        @if (fo.Type == 1)
+                                                        {
+                                                            <a href="@Url.Action("Items", "Folder", new { id = fo.FolderID })">
+                                                                <i class="icon-group"></i>
+                                                                @fo.Name
+                                                            </a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a href="@Url.Action("Items", "Folder", new { id = fo.FolderID })" style="color:#CC3300">
+                                                                <i class="icon-calendar"></i>
+                                                                @fo.Name
+                                                            </a>
+                                                        }
+                                                    </li>
+                                                }
+
+
+                                            }*@
+
+                                        </ul>
+                                    </li>
+                                }
+                            }
+                            <li class="@(TempData["SelectedMenu"] == "Manage" ? "active open" : null)">
+                                <a href="#" class="dropdown-toggle">
+                                    <i class="icon-cogs"></i>
+                                    <span class="menu-text">Manage</span><b class="arrow icon-angle-down"></b>
+                                </a>
+                                <ul class="submenu">
+                                    @*<li class="@(TempData["SelectedSubMenu"] == "ManageFolders" ? "active" : null)">
+                                        <a href="@Url.Action("ManageFolders", "Folder")">
+                                            <i class="icon-folder-close"></i>Folders
+                                        </a>
+                                    </li>*@
+                                    <li class="@(TempData["SelectedSubMenu"] == "ManageCredentials" ? "active" : null)">
+                                        <a href="@Url.Action("ManageCredentials", "Folder")">
+                                            <i class="icon-lock"></i>Credentials
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            @*if (((((Xobnu.Domain.Entities.User)Session["user"]).UserType) == "Admin") & ((((Xobnu.Domain.Entities.User)Session["user"]).PrimaryUser) == true))
+                            {
+
+                                <li class="@(TempData["SelectedMenu"] == "Account" ? "active open" : null)">
+                                    <a href="#" class="dropdown-toggle">
+                                        <i class="icon-list-alt"></i><span class="menu-text">Account </span><b class="arrow icon-angle-down"></b>
+                                    </a>
+                                    <ul class="submenu">
+                                        <li class="@(TempData["SelectedSubMenu"] == "Options" ? "active" : null)">
+                                            <a href="@Url.Action("AccountOptions", "Admin")">
+                                                <i class="icon-wrench"></i>Options
+                                            </a>
+                                        </li>
+                                        <li class="@(TempData["SelectedSubMenu"] == "Billing" ? "active" : null)">
+                                            <a href="@Url.Action("BillingOptions", "Admin", new { id = 1 })">
+                                                <i class="icon-credit-card"></i>Billing
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                            }*@ 
+                            
+                            
+                        }
+
+
+
+
+                        @*<li class="@(TempData["SelectedMenu"] == "SystemStatus" ? "active" : null)">
+                            <a href="@Url.Action("SystemHealthStatus", "Admin")">
+                                <i class=" icon-exclamation-sign"></i>
+                                <span class="menu-text">System Status</span>
+                            </a>
+
+                        </li>
+
+                        <li class="@(TempData["SelectedMenu"] == "Support" ? "active" : null)">
+                            <a href="http://corporatecontacts.freshdesk.com/support/home">
+                                <i class="icon-bullhorn"></i>
+                                <span class="menu-text">Support </span>
+                            </a>
+
+                        </li>*@
+
+                        if (Session["SysAdminDetails"] != null)
+                        {
+                            <li>
+                                <a href="@Url.Action("ImpersonatedAccount", "CorporateContactsAdmin", new { AccID = ((Xobnu.Domain.Entities.Account)Session["account"]).ID })">
+                                    <i class="icon-desktop"></i>
+                                    <span class="menu-text">Account Summary </span>
+                                </a>
+
+                            </li>
+                            <li>
+                                <a href="@Url.Action("ImpersonateAccount", "CorporateContactsAdmin")">
+                                    <i class="icon-dashboard"></i>
+                                    <span class="menu-text">Back to Admin </span>
+                                </a>
+
+                            </li>
+                        }
+
+                    }
+
+                </ul>
+                <!-- /.nav-list -->
+
+                @*<div class="sidebar-collapse" id="sidebar-collapse">
+                    <i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
+                </div>*@
+
+                @*<script type="text/javascript">
+                    try { ace.settings.check('sidebar', 'collapsed') } catch (e) { }
+                </script>*@
+                @*<center>
+                    <span class="label label-success arrowed-in arrowed-in-right">
+                        Version :
+                        @if (HttpContext.Current.Session["version"].ToString() != null)
+                        { @HttpContext.Current.Session["version"].ToString() }
+                    </span>
+                </center>*@
+
+            </div>
+
+            <div class="main-content">
+                <div class="breadcrumbs custom-breadcrumb-fixed" id="breadcrumbs">
+                    <script type="text/javascript">
+                        try { ace.settings.check('breadcrumbs', 'fixed') } catch (e) { }
+                    </script>
+
+                    <ul class="breadcrumb">
+                        <!-- <li>
+                            <i class="icon-home home-icon"></i>
+                            <a href="#">Home</a>
+                        </li>
+
+                        <li>
+                            <a href="#">Other Pages</a>
+                        </li>
+                        <li class="active">Blank Page</li><!-- .breadcrumb -->
+                    </ul>
+                    
+                  
+                    <!-- #nav-search -->       
+                </div>
+      
+
+                <div class="page-content">
+                 
+                    <div class="page-header">
+                        <h1>
+                            @ViewBag.PageHeader
+                            <a id="btnPageRefresh" style="cursor:pointer;" class="pull-right" title="Refresh" data-rel="tooltip"><i style="font-size:30px;" class="fa fa-refresh fa-6 pull-right"></i></a>
+                        </h1>
+                    </div>
+                   
+                    <div class="row">
+                        <div class="col-xs-12">
+                           
+                            <!-- PAGE CONTENT BEGINS -->
+                            @RenderBody()
+
+                            <!-- PAGE CONTENT ENDS -->
+                        </div>
+
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.page-content -->
+            </div>
+
+            <!-- /.main-content -->
+            <!-- /#ace-settings-container -->
+        </div>
+        <!-- /.main-container-inner -->
+        <div class="ace-settings-container" id="ace-settings-container">
+            @*<a class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn" title="Help" href="@Url.Action("GetFile", "Admin")" target="_blank" >
+                <i class="icon-thumbs-up bigger-130"></i>
+            </a>*@
+        </div>
+        <a href="#" id="toTop" class="btn-scroll-up btn btn-sm btn-inverse">
+            <i class="icon-double-angle-up icon-only bigger-110"></i>
+        </a>
+        @*<a id="toTop" href="#"> <i class="icon-double-angle-up icon-only bigger-110"></i></a>*@
+    </div>
+    <!-- /.main-container -->
+
+
+    <div class="col-sm-6">
+        <!-- #dialog-message -->
+        <div id="payment-issue-model" class="modal" tabindex="-1" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                        <h4 class="blue bigger">Accound Temporarily Disabled</h4>
+                    </div>
+
+                    <div class="modal-body overflow-visible">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                We had trouble charging the amount required to keep corporate running smoothly on your Account. You should received an email as to why the payment was not
+                                successful. If you have not received any email or need any assistance in resolving the problem please send an email to <a>support@corporate-contacts.com</a> or
+                                Call Us on +44 1482 869700. If you are aware of the issue and want to make changes to billing details please click <a href="@Url.Action("BillingOptions", "Admin", new { id = 1 })"> here </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">                       
+                        <a class="btn btn-sm btn-primary" data-dismiss="modal">
+                            <i class="icon-remove"></i>
+                            Close
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #dialog-confirm -->
+    </div>
+
+    <div class="col-sm-6">
+        <!-- #dialog-message -->
+        <div id="folder-overflow-model" class="modal" tabindex="-1" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                        <h4 class="blue bigger">Accound Temporarily Disabled</h4>
+                    </div>
+
+                    <div class="modal-body overflow-visible">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                Our systems indicate that the below mentioned folders have reached its Maximum Items per Folder count. You may click on any of the Folders listed below to do any changes in order to get them back to sync again. If you require any assistance in resolving the problem please send an email to <a>support@corporate-contacts.com</a> or Call us on +44 1482 869700.
+                                <br/><br />
+                                <ul>
+                                    @if ((((List<Xobnu.Domain.Entities.CCFolder>)Session["folderss"])) != null)
+                                    {
+                                        if ((((List<Xobnu.Domain.Entities.CCFolder>)Session["folderss"])).Count > 0)
+                                        {
+                                            var fol = (List<Xobnu.Domain.Entities.CCFolder>)Session["folderss"];
+
+                                            foreach (var fo in fol)
+                                            {
+                                                    <li>
+                                                        @if (fo.isOverFlow == true)
+                                                        {
+                                                            <a href="@Url.Action("Items", "Folder", new { id = fo.FolderID })">
+                                                                <i class="icon-group"></i>
+                                                                @fo.Name
+                                                            </a>
+                                                        }                                                       
+                                                    </li>
+                                            }
+
+                                        }
+                                    }
+                                </ul>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <a class="btn btn-sm btn-primary" data-dismiss="modal">
+                            <i class="icon-remove"></i>
+                            Close
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #dialog-confirm -->
+    </div>
+
+
+    <style type="text/css">
+        #toTop {
+            display: block;
+            position: fixed;
+            top: 96%;
+            right: 0;
+            background-color: gray;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+
+            // Hide the toTop button when the page loads.
+            $("#toTop").css("display", "none");
+
+            // This function runs every time the user scrolls the page.
+            $(window).scroll(function () {
+
+                // Check weather the user has scrolled down (if "scrollTop()"" is more than 0)
+                if ($(window).scrollTop() > 0) {
+
+                    // If it's more than or equal to 0, show the toTop button.
+                    console.log("is more");
+                    $("#toTop").fadeIn("slow");
+                }
+                else {
+                    // If it's less than 0 (at the top), hide the toTop button.
+                    console.log("is less");
+                    $("#toTop").fadeOut("slow");
+
+                }
+            });
+
+            $("#toTop").click(function () {
+
+                // Disable the default behaviour when a user clicks an empty anchor link.
+                // (The page jumps to the top instead of // animating)
+                event.preventDefault();
+
+                // Animate the scrolling motion.
+                $("html, body").animate({
+                    scrollTop: 0
+                }, "slow");
+
+            });
+          
+            $('#btnPageRefresh').click(function () {
+                try {
+                   
+                    if (window.location.pathname =='/manage/credentials/add')
+                    {
+
+
+                    }
+                    else {
+                        location.reload();
+
+                    }
+                }
+                catch (ex)
+                { }
+                
+            });
+            $('#btnHelp').click(function openPDF(url) {
+                var w = window.open(url, '_blank');
+                w.focus();
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        if ("ontouchend" in document) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+    </script>
+    <script src="~/assets/js/bootstrap.min.js"></script>
+    <script src="~/assets/js/typeahead-bs2.min.js"></script>
+
+    <!-- page specific plugin scripts -->
+
+    <script src="~/assets/js/jquery.easy-pie-chart.min.js"></script>
+
+    <!-- ace scripts -->
+
+    <script src="~/assets/js/ace-elements.min.js"></script>
+    <script src="~/assets/js/ace.min.js"></script>
+
+    <script type="text/javascript">
+
+        $('[data-rel=tooltip]').tooltip();
+    </script>
+    <script type="text/javascript">
+
+        NProgress.start();
+        $('body').show();
+        $('#nprogress .bar').css({ 'background': '#c0392b' });
+        $('#nprogress .peg').css({ 'box-shadow': '0 0 10px #c0392b, 0 0 5px #c0392b' });
+        $('#nprogress .spinner-icon').css({ 'border-top-color': '#c0392b', 'border-left-color': '#c0392b' });
+
+        jQuery(window).load(function () {
+            //setTimeout(function () { }, 1000);
+            NProgress.done(); $('.fade').removeClass('out');
+        });
+
+    </script>
+    
+</body>
+
+    </html>

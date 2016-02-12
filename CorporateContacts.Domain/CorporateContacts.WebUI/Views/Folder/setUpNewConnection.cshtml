@@ -1,0 +1,57 @@
+﻿@model CorporateContacts.WebUI.Models.ExLogOnViewModel
+@{
+    ViewBag.Title = "Manage Credentials";
+    ViewBag.PageHeader = "Set up New Connection using " + Model.Credentials.Name;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i>@Html.ActionLink("Home","Index","Admin")</li><li>Manage</li><li><a href="/Folder/ManageCredentials/">Credentials</a></li><li>Set Up Connection</li>');
+</script>
+<div class="row">
+    <div class="col-xs-12">
+
+        @if (Session["NewCredential"] != null)
+        {
+            if (Session["NewCredential"] == "Yes")
+            {
+                <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <i class="icon-remove"></i>
+                    </button>
+                    <strong>Great!</strong>
+                    You have successfully added a new Credential into your Credential List. Now you could create a connection to one of the Folders listed below,
+                    by clicking on a Folder name.
+                </div>
+            }
+        }
+
+        <div id="dialog-folder-list-for-new-connections">
+            <div class="alert alert-info bigger-110">
+                
+
+                @if ((((List<CorporateContacts.Domain.Entities.CCFolder>)Session["folderss"])) != null)
+                {
+                    if ((((List<CorporateContacts.Domain.Entities.CCFolder>)Session["folderss"])).Count > 0)
+                    {
+                        <h3>List of Folders</h3>
+                        <ul>
+                            @{var fol = (List<CorporateContacts.Domain.Entities.CCFolder>)Session["folderss"]; var fCoun = 1;}
+                            @foreach (var fo in fol)
+                            {
+                                <li>
+                                    <span class="badge badge-grey">@fCoun</span> <a href="@Url.Action("LogintoExchange", "Folder", new { src = "sec", fid = fo.FolderID })">@fo.Name</a> 
+                                </li>
+                                fCoun++;
+                            }
+                        </ul>
+                    }
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

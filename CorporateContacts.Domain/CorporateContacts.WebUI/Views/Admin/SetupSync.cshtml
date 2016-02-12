@@ -1,0 +1,93 @@
+﻿@model CorporateContacts.WebUI.Models.SetupSyncViewModel
+@{
+    ViewBag.Title = "Corporate Contacts - Setup Sync";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="page-header">
+    <h1>Setup Sync</h1>
+</div>
+<div class="row">
+    <div class="col-xs-4 no-padding-right">
+        <div class="table-header">
+            Your master sources
+           
+        </div>
+        <ul class="nav nav-list">
+            @foreach (var item in Model.MasterSources)
+            {
+                <li class="@(Model.CurrentMasterID == item.ID ? "active" : null)">
+                    @Html.ActionLink("  " + item.FolderName + "  -  " + item.SourceName , "SetupSync", new { primarySourceID = item.ID })
+                </li>                    
+            }
+        </ul>
+        <br />
+    </div>
+    <div class="col-xs-8">
+        @if (Model.CurrentMasterID == 0)
+        { 
+            <div class="table-header">Subscriptions</div>    
+            <br />      
+            <p class="alert alert-info">
+                <i class="icon-long-arrow-left"></i>&nbsp;&nbsp;&nbsp;Click on a master to view the subscriptions
+            </p>  
+        }
+        else if (Model.SubscriptionsForCurrentMaster.Count > 0)
+        {
+            <div class="table-header"><i class="icon-long6-arrow-left"></i>Subscriptions for @Model.CurrentMasterFolderName</div>
+            <div class="widget-main no-padding">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th><i class="icon-folder-close"></i>Folder Name                            </th>
+                            <th><i class="icon-user"></i>Owner</th>
+                            <th>Type                            </th>                           
+                            <th>Allow Additions           </th>
+                            <th>Ignore Existing           </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model.SubscriptionsForCurrentMaster)
+                        { 
+                            <tr>
+                                <td>@item.SubscribingFolder.FolderName</td>
+                                <td>@item.SubscribingFolder.SourceName</td>
+                                <td>@item.SubscribingFolder.FolderType</td>                                
+                                <td>@item.AllowAdditions</td>
+                                <td>@item.IgnoreExisting</td>
+                                <td>@Html.ActionLink("delete", "DeleteSub", new { subid= item.ID});</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>           
+        }
+        else
+        {
+            <div class="table-header">Subscriptions</div>   
+            <br />              
+            <p class="alert alert-success">
+                No Subscriptions found 
+            </p>               
+        }
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-4">
+        <a class="btn btn-sm btn-primary" href="@Url.Action("Index", "Exo365", new { src = "prim" })">
+            <i class="icon-pencil align-top bigger-125"></i>
+            New Source
+        </a>
+    </div>
+    @if (Model.CurrentMasterID != 0)
+    { 
+        <div class="col-xs-8">
+            <a class="btn btn-sm btn-primary" href="@Url.Action("Index", "Exo365", new { src = "sec", primid = Model.CurrentMasterID.ToString() })">
+                <i class="icon-pencil align-top bigger-125"></i>
+                New Subscription
+            </a>
+        </div>}
+</div>
+
+

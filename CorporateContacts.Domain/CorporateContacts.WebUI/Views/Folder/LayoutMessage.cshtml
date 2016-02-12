@@ -1,0 +1,21 @@
+﻿@model CorporateContacts.Domain.Entities.CCLayout
+
+@{
+    ViewBag.Title = "Layout Message";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div style="padding-top: 15px; float:right; ">
+    <a class="btn btn-sm btn-primary" href="@Url.Action("AddLayout", "Folder", new { id = Model.FolderID })">
+        <i class="icon-plus-sign align-top bigger-125"></i>
+        Add layout
+    </a>    
+    <a class="btn btn-sm btn-primary" href="@Url.Action("Items", "Folder", new { id = Model.FolderID })">
+        <i class="icon-undo align-top bigger-125"></i>
+        View Contacts
+    </a>
+</div>
+
+<div class="alert alert-warning"  style="margin-top: 65px;">
+    No layout found for this folder. Please click the button above to add layout 
+</div>

@@ -1,0 +1,14 @@
+﻿@model  Xobnu.WebUI.Models.PasswordViewModel
+
+@{
+    ViewBag.Title = "NewUser";
+}
+
+<h2>Enter a password</h2>
+@using (Html.BeginForm("Login", "SignUp", FormMethod.Post))
+{
+    @Html.HiddenFor(p => p.GUID, new { value=ViewBag.GUID});
+    @Html.EditorForModel()
+    @Html.ValidationSummary()
+    <input type="submit" value="Save" class="button-clean-gray" />
+}

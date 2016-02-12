@@ -1,0 +1,242 @@
+﻿@model CorporateContacts.WebUI.Models.SubscriptionsViewModel
+
+@{
+    ViewBag.Title = "Edit Connection";
+    ViewBag.PageHeader = "Edit Connection - " + Model.Subscriptiondetail.FolderName;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i>@Html.ActionLink("Home","Index","Admin")</li><li><a href="/Folder/ManageFolders/">Manage Folders</a></li><li><a href="/Folder/ViewConnections/' + @Model.FolderID + '">Connections</a></li><li class="active">Edit Connection</li>');
+</script>
+
+@using (Html.BeginForm("EditConnection", "Folder", FormMethod.Post))
+{ 
+    <input type="hidden" id="folderType" value="@Model.FolderType" />
+    <div class="row" style="margin-bottom: 10px;">
+        <div class="col-xs-5" style="min-width: 600px;">
+            <div style="float: right;">
+                <button class="btn btn-sm btn-primary" type="submit">
+                    <i class="icon-save align-top bigger-125"></i>
+                    Update
+                </button>
+                <a class="btn btn-sm btn-primary" href="@Url.Action("ViewConnections", "Folder", new { id = Model.FolderID })">
+                    <i class="icon-undo  align-top bigger-125"></i>
+                    Back
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-xs-5" style="min-width: 600px;">
+            <div class="widget-main no-padding">
+                @*<div class="table-header"><i class="icon-long6-arrow-left"></i>Edit for  @Model.Subscriptiondetail.FolderName </div>*@
+                <table class="table table-striped table-bordered table-hover">
+
+                    <tbody>
+                        <tr>
+                            <td>Sync Direction</td>
+                            <td>@Html.DropDownListFor(model => model.Subscriptiondetail.SyncDirection, new SelectList(new List<SelectListItem>{ new SelectListItem
+                                                    {
+                                                        Value = "CopyToCC",
+                                                        Text = "Copy TO Corporate Contacts"
+                                                    },new SelectListItem
+                                                    {
+                                                        Value = "CopyFromCC",
+                                                        Text = "Copy FROM Corporate Contacts"
+                                                    } 
+                                                    ,new SelectListItem
+                                                    {
+                                                        Value = "TwoWay",
+                                                        Text = "Two Way Sync"
+                                                    }}, "Value", "Text"), "-- Please select direction --", new { @class = "form-control11" })</td>
+                        </tr>
+                        <tr>
+                            <td class="col-xs-3">Folder Name</td>
+                            <td class="col-xs-8">@Model.Subscriptiondetail.FolderName</td>
+                        </tr>
+                        <tr>
+                            <td>Owner</td>
+                            <td>@Model.Subscriptiondetail.Owner</td>
+                        </tr>
+                        <tr>
+                            <td>Type</td>
+                            <td>@Model.Subscriptiondetail.Type</td>
+                        </tr>
+                        <tr>
+                            <td>Ignore Existing</td>
+                            <td>@Html.EditorFor(m => m.Subscriptiondetail.IgnoreExisting)</td>
+                        </tr>
+                        <tr>
+                            <td>Category Filter Used</td>
+                            <td>
+                                <div style="float: left; width: 10%">@Html.EditorFor(m => m.Subscriptiondetail.CategoryFilterUsed)</div>
+                                <div style="float: left; margin-left: 5px; width: 87%">@Html.TextBoxFor(m => m.Subscriptiondetail.CategoryFilterValues, new { @class = "form-control" })</div>
+                                <div style="float: right; width: 89%; display:none;" id="categoryEx">Use semi-colon to delimit mutliple categories
+                                    <br />
+                                    e.g Blue; Red; this is one long category; green</div>
+                            </td>
+
+                        </tr>
+                        @if (Model.FolderType == 1)
+                        {
+                            <tr>
+                                <td>Copy Photos</td>
+                                <td>@Html.EditorFor(m => m.Subscriptiondetail.CopyPhotos)</td>
+                            </tr>
+                        }
+                        @if (Model.FolderType == 2)
+                        {
+                            <tr>
+                                <td>Turn Off Reminders</td>
+                                <td>@Html.EditorFor(m => m.Subscriptiondetail.TurnOffReminders)</td>
+                            </tr>
+                        }
+                        <tr style="display: none" id="tagsubject">
+                            <td>Tag All Subjects</td>
+                            <td>@Html.EditorFor(x => x.Subscriptiondetail.tagSubject)
+                                <span class="btn btn-xs btn-white tooltip-info" data-rel="tooltip" data-placement="right" style="margin-left: 5px;" title="Tag appointment subjects with initials of calendar it is coming from"><i class="icon-info-sign align-top "></i></span></td>
+                        </tr>
+                        <tr style="display: none" id="subjecttag">
+                            <td>Subject Tag</td>
+                            <td>@Html.EditorFor(x => x.Subscriptiondetail.SubjectTag)
+                                <span class="btn btn-xs btn-white tooltip-info" data-rel="tooltip" data-placement="right" style="margin-left: 5px;" title="The initials to be used to add to the beginning of appointment subjects' e.g. DKT"><i class="icon-info-sign align-top "></i></span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+    <br />
+    <br />
+    @Html.HiddenFor(model => model.FolderID)
+    @Html.HiddenFor(model => model.Subscriptiondetail.ConnectionID)  
+     
+    <div class="row">
+        <div class="col-xs-5" style="min-width: 600px;">
+            <div class="alert alert-warning" id="msgsync" style="display: none;">Please select sync direction</div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-xs-5" style="min-width: 600px;">
+            <div style="float: right;">
+                <button class="btn btn-sm btn-primary" type="submit" id="btnsubmit">
+                    <i class="icon-save align-top bigger-125"></i>
+                    Update
+                </button>
+                <a class="btn btn-sm btn-primary" href="@Url.Action("ViewConnections", "Folder", new { id = Model.FolderID })">
+                    <i class="icon-undo  align-top bigger-125"></i>
+                    Back
+                </a>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $("#Subscriptiondetail_SyncDirection").change(function () {
+        $("#msgsync").hide();
+    });
+
+    $("form").on("submit", function (event) {
+        event.preventDefault();
+        // Validate form, returning on failure.
+        if ($("#Subscriptiondetail_SyncDirection option:selected").index() == '0') {
+            $("#msgsync").show();
+            return
+        };
+        $(this).off("submit");
+        this.submit();
+    });
+
+    $(document).ready(function () {
+        // Hide and Show CategoryFilterUsed textbox
+        if ($('#Subscriptiondetail_CategoryFilterUsed').is(":checked")) {
+            $('#Subscriptiondetail_CategoryFilterValues').show();
+            $('#categoryEx').show();
+        }
+        else {
+            $('#Subscriptiondetail_CategoryFilterValues').hide();
+            $('#categoryEx').hide();
+        }
+
+        $('#Subscriptiondetail_CategoryFilterUsed').change(function () {
+            if ($(this).is(":checked")) {
+                $('#Subscriptiondetail_CategoryFilterValues').show();
+                $('#categoryEx').show();
+            }
+            else {
+                $('#Subscriptiondetail_CategoryFilterValues').hide();
+                $('#categoryEx').hide();
+            }
+        });
+
+        // show hide Tah Subject
+        if ($('#Subscriptiondetail_tagSubject').is(":checked") && $("#Subscriptiondetail_SyncDirection option:selected").index() == 1 && $("#folderType").val() == 2) {
+            $('#subjecttag').show();
+        }
+
+        if ($("#Subscriptiondetail_SyncDirection option:selected").index() == 1 && $("#folderType").val() == 2) {
+            $('#tagsubject').show();
+        }
+
+    });
+
+    $('#Subscriptiondetail_SyncDirection').change(function () {
+
+        if ($("#Subscriptiondetail_SyncDirection option:selected").index() == 1 && $("#folderType").val() == 2) {
+            $("#tagsubject").show();
+            if ($('#Subscriptiondetail_tagSubject').is(":checked")) {
+                $('#subjecttag').show();
+            }
+            else {
+                $('#subjecttag').hide();
+            }
+        }
+        else { $("#tagsubject").hide(); $('#subjecttag').hide(); $("#TagAllSubject").prop('checked', false); $('#SubjectTag').val(''); }
+
+    });
+
+    $('#Subscriptiondetail_tagSubject').change(function () {
+        if ($(this).is(":checked")) {
+            $('#subjecttag').show();
+        }
+        else {
+            $('#subjecttag').hide();
+        }
+
+    });
+
+    $('#Subscriptiondetail_SubjectTag').keypress(function (event) {
+        if ($('#Subscriptiondetail_SubjectTag').val().length > 19) {
+            event.preventDefault();
+        }
+
+    });
+
+    $("#btnsubmit").click(function () {
+        if ($("#Subscriptiondetail_SyncDirection option:selected").index() != 1) {
+
+            $("#Subscriptiondetail_tagSubject").val(false);
+            $("#Subscriptiondetail_SubjectTag").val(null);
+        }
+
+        if ($('#Subscriptiondetail_tagSubject').is(":checked")) {
+        }
+        else { $("#Subscriptiondetail_SubjectTag").val(null); }
+    });
+
+</script>
+<script type="text/javascript">
+    jQuery(function ($) {
+
+        $('[data-rel=tooltip]').tooltip();
+        $('[data-rel=popover]').popover({ html: true });
+    });
+</script>

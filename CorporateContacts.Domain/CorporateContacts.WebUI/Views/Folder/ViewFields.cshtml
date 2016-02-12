@@ -1,0 +1,83 @@
+﻿@model CorporateContacts.WebUI.Models.AddContactViewModel
+
+@{
+    ViewBag.Title = "View Folder Fields";
+    ViewBag.PageHeader = "Folder Fields";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i>@Html.ActionLink("Home","Index","Admin")</li><li>Manage</li><li><a href="/Folder/ManageFolders/">Folders</a></li><li class="active">Folder Fields</li>');
+</script>
+
+<div class="row">
+    <div class="col-xs-12">
+       
+        
+            <div style="margin-bottom: 15px; float: right;">
+
+                @if ((((CorporateContacts.Domain.Entities.Account)Session["account"]).PlanID) == 4)
+                {
+                    <a class="btn btn-sm btn-primary" href="@Url.Action("Field", "Folder", new { id = Model.FolderFields.FirstOrDefault().FolderID })">
+                        <i class="icon-plus-sign align-top bigger-125"></i>
+                        Add Field
+                    </a>
+                }
+                @*<a class="btn btn-sm btn-primary" href="@Url.Action("SelectFolderFields", "Folder", new { id = Model.FolderFields.FirstOrDefault().FolderID })">
+                    <i class=" icon-inbox align-top bigger-125"></i>
+                    Add Fields by Schemas
+                </a>*@
+                <a class="btn btn-sm btn-primary" href="@Url.Action("ManageFolders", "Folder")">
+                    <i class="icon-undo align-top bigger-125"></i>
+                    Back
+                </a>               
+            </div>
+        
+    </div>
+    <div class="col-xs-12">
+        @* <h4>Folders @Html.ActionLink("(Add Folder)", "index")</h4>*@
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Caption</th>
+                        <th>Restriction</th>
+                        <th>Restriction Values</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var field in Model.FolderFields)
+                    {
+                        <tr>
+                            <td>@field.FieldName </td>
+                            <td>@field.FieldType </td>
+                            <td>@field.FieldCaption</td>
+                            <td>@field.Restriction </td>
+                            <td>@field.RestrictionValues </td>
+
+                            @if (field.isMandatory != true)
+                            {
+                                <td>
+                                    <a style="margin-left: 10px;">@Html.ActionLink("Delete", "Deletefield", new { ID = field.FieldID, fid = field.FolderID }, new { @class = "btn btn-xs btn-primary" })</a>
+                                    <a style="margin-left: 10px;">@Html.ActionLink("Edit", "EditFolderField", new { ID = field.FieldID, fid = field.FieldID }, new { @class = "btn btn-xs btn-primary" })</a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>&nbsp;-&nbsp;</td>
+                            }
+
+
+</tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,36 @@
+﻿@model CorporateContacts.Domain.Entities.CCFolder
+
+@{
+    ViewBag.Title = "Folder";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Folder</h2>
+
+@using (Html.BeginForm("EditFolder", "Folder", FormMethod.Post))
+{
+    
+     <p>Folder Name</p> @Html.EditorFor(m => m.Name)@Html.ValidationMessageFor(m => m.Name)<br />   
+    <p>Type</p> @Html.DropDownListFor(model => model.Type, new SelectList(new List<SelectListItem>{ new SelectListItem
+                                                    {
+                                                        Value = "0",
+                                                        Text = "Custom"
+                                                    },new SelectListItem
+                                                    {
+                                                        Value = "1",
+                                                        Text = "Contact"
+                                                    },new SelectListItem
+                                                    {
+                                                        Value = "2",
+                                                        Text = "Appointment"
+                                                    } 
+                                                    ,new SelectListItem
+                                                    {
+                                                        Value = "3",
+                                                        Text = "Task"
+                                                    }}, "Value", "Text"), "--please select--") 
+    <br />
+    <br />
+    <input type="submit" value="Add" class="btn btn-sm btn-primary" />
+
+}

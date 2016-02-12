@@ -1,0 +1,60 @@
+﻿@{
+    ViewBag.Title = "Verification Link Sent";
+    Layout = "~/Views/Login/_LoginLayout.cshtml";
+}
+
+<div class="row  center-all-items" style="margin-left: -2px;">
+    <div style="display: table-cell;vertical-align: middle;">
+        <center>
+            <div style="max-width: 600px;background: rgba(0, 0, 0, 0.35);padding: 1px;border-radius: 15px;box-shadow: 0 7px 27px rgb(247, 247, 247);">
+                <h2 class=" lighter bigger" style="color: #ffffff;margin-bottom:25px;max-width:350px;">
+                    Verification Link resent
+                </h2>
+                <h4 class=" lighter bigger" style="color: #ffffff;margin-top:-20px;margin-bottom:25px;max-width:500px;">
+                    We have sent you an email, Please check your email and active your account.
+                </h4> 
+            </div>
+                       
+            <a onclick="location.href='@Url.Action("Login", "Login")'" style="width:350px;max-width:350px;margin-top:15px;" class="btn btn-sm btn-primary btn-login-submit">
+                <i class="icon-arrow-left"></i>
+                Back to Login
+            </a>
+        </center>
+    </div>
+</div>
+
+
+
+
+
+    <script type="text/javascript">
+        window.jQuery || document.write("<script src='assets/js/jquery-2.0.3.min.js'>" + "<" + "/script>");
+    </script>
+
+    <script type="text/javascript">
+        if ("ontouchend" in document) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+    </script>
+
+    <!-- inline scripts related to this page -->
+
+    @* <script type="text/javascript">
+
+        function show_box(id) {
+            jQuery('.widget-box.visible').removeClass('visible');
+            jQuery('#' + id).addClass('visible');
+        }
+
+    </script>*@
+
+    <style>
+        .validation-summary-errors {
+            font-weight: bold;
+            color: #f00;
+        }
+
+        .login-layout .widget-box {
+            background-color: #ECE7E7;
+        }
+    </style>
+
+

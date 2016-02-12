@@ -1,0 +1,139 @@
+﻿@model CorporateContacts.Domain.Entities.CCFolderField
+
+@{
+    ViewBag.Title = "Edit Folder Field";
+    ViewBag.PageHeader = "Edit Folder Field";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i>@Html.ActionLink("Home","Index","Admin")/li><li>Manage</li><li><a href="/Folder/ManageFolders/">Folders</a></li><li><a href="/Folder/ViewFields/@Model.FolderID">Folder Fields</a></li><li class="active">Edit Field</li>');
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        if ($('#ddRestriction').val() == 'list') {
+            $("#txtareaRestriction").show();
+            $('#txtareares').val($('#RestrictionValues').val());
+        }
+
+        else {
+            $("#txtareaRestriction").hide();
+        }
+
+
+        $("#ddFieldType").change(function () {
+            var fieldtype = $(this).val();
+            var items;
+            $("#txtareaRestriction").hide();
+            if (fieldtype == "string") {
+                items += "<option value='" + "none" + "'>" + "none" + "</option>";
+                items += "<option value='" + "list" + "'>" + "list" + "</option>";
+            }
+            else if (fieldtype == "number") {
+
+                items += "<option value='" + "none" + "'>" + "none" + "</option>";
+            }
+            else if (fieldtype == "long") {
+
+                items += "<option value='" + "none" + "'>" + "none" + "</option>";
+            }
+            else if (fieldtype == "bool") {
+
+                items += "<option value='" + "none" + "'>" + "none" + "</option>";
+            }
+            else if (fieldtype == "DateTime") {
+
+                items += "<option value='" + "none" + "'>" + "none" + "</option>";
+            }
+            else {
+
+                items += "<option value='" + "none" + "'>" + "none" + "</option>";
+                items += "<option value='" + "list" + "'>" + "list" + "</option>";
+            }
+
+            $('#ddRestriction').html(items);
+
+        });
+
+
+        $("#ddRestriction").change(function () {
+            var restriction = $(this).val();
+            if (restriction == "none") {
+                $("#txtareaRestriction").hide();
+            }
+            else {
+                $("#txtareaRestriction").show();
+            }
+        });
+
+
+
+        $("#btnsave").click(function () {
+
+            $("#RestrictionValues").val($('#txtareares').val());
+        });
+
+
+    });
+</script>
+
+
+<div class="col-xs-12">
+
+
+    <div style="margin-bottom: 15px; float: right;">
+        <a class="btn btn-sm btn-primary" href="@Url.Action("ViewFields", "Folder", new { id = Model.FolderID })">
+            <i class="icon-undo align-top bigger-125"></i>
+            Back
+        </a>
+    </div>
+
+</div>
+
+
+
+<div class="col-sm-12">
+    <div class="widget-box">
+        
+        <div class="widget-body" style="border-top:1px solid #CCC;">
+            <div class="widget-main">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div style="color: red">
+                            @if (ViewBag.Message != null)
+                            { @ViewBag.Message }
+                        </div>
+
+                        @using (Html.BeginForm("Field", "Folder", FormMethod.Post))
+                        {
+                            @Html.HiddenFor(m => m.FolderID)
+                            @Html.HiddenFor(m => m.FieldID)
+                            <div style="margin-top: 10px;">Field Name</div> @Html.TextBoxFor(m => m.FieldName, new { @class = "form-control" })@Html.ValidationMessageFor(m => m.FieldName)
+                            <div style="margin-top: 10px;">Field Type</div>@Html.DropDownListFor(m => m.FieldType, new SelectList(new string[] { "string", "number", "bool", "category","long","DateTime" }), new { id = "ddFieldType", @class = "form-control" });
+                            <div style="margin-top: 10px;">Field Caption</div> @Html.TextBoxFor(m => m.FieldCaption, new { @class = "form-control" })@Html.ValidationMessageFor(m => m.FieldCaption)
+                            <div style="margin-top: 10px;">Restriction</div>@Html.DropDownListFor(m => m.Restriction, new SelectList(new string[] { "none", "list" }), new { id = "ddRestriction", @class = "form-control" });
+                            @Html.HiddenFor(model => model.RestrictionValues)
+    
+                            <div id="txtareaRestriction">
+                                <div style="margin-top: 10px;">Restriction Values</div>
+                                <textarea rows="4" id='txtareares' cols="50" name="resti" class="form-control"></textarea>
+                            </div>                          
+                            <hr>                           
+                            <button class="btn btn-sm btn-primary" type="submit" id="btnsave">
+                                <i class="icon-save  bigger-110"></i>
+                                Save
+                            </button>                            
+                        }
+
+                    </div>
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>

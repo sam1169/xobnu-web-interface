@@ -1,0 +1,194 @@
+﻿@model CorporateContacts.Domain.Entities.CCFolder
+
+@{
+    ViewBag.Title = "Folder";
+    ViewBag.PageHeader = "Create New Folder";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i>@Html.ActionLink("Home","Index","Admin")</li><li>Manage</li><li class="active">Add</li>');
+</script>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div style="float: right;">
+            <a class="btn btn-sm btn-primary" href="@Url.Action("ManageFolders", "Folder")">
+                <i class="icon-rotate-left align-top bigger-125"></i>
+                Back
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="widget-box">
+            <div class="widget-header widget-header-flat">
+                <h4 class="smaller">
+                    <i class="icon-folder-close smaller-80"></i>
+                    Folder Details
+                </h4>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            @using (Html.BeginForm("EditFolder", "Folder", FormMethod.Post))
+                            {
+
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+
+                                        <label class="block clearfix ">
+                                            <span class="block input-icon input-icon-right">
+                                                @Html.TextBoxFor(m => m.Name, new { placeholder = "Please Enter Folder Name", @class = "form-control" })
+                                                <i class=" icon-folder-open"></i>
+                                            </span>
+                                        </label>
+                                        <label class="block clearfix">
+                                            <span class="block input-icon input-icon-right">
+
+                                                @if (((CorporateContacts.Domain.Entities.Account)Session["account"]).PlanID == 4)
+                                                {
+                                                    @Html.DropDownListFor(model => model.Type, new SelectList(new List<SelectListItem>{ new SelectListItem
+                                                    {
+                                                        Value = "1",
+                                                        Text = "Contact"
+                                                    },new SelectListItem
+                                                    {
+                                                        Value = "2",
+                                                        Text = "Appointment"
+                                                    },new SelectListItem
+                                                    {
+                                                        Value = "3",
+                                                        Text = "Crime Diary Appoinment"
+                                                    }
+
+                                                    }, "Value", "Text"), "-- Please select type --", new { @class = "form-control", @id = "ddlFolerType" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.DropDownListFor(model => model.Type, new SelectList(new List<SelectListItem>{ new SelectListItem
+                                                    {
+                                                        Value = "1",
+                                                        Text = "Contact"
+                                                    },new SelectListItem
+                                                    {
+                                                        Value = "2",
+                                                        Text = "Appointment"
+                                                    }}, "Value", "Text"), "-- Please select type --", new { @class = "form-control", @id = "ddlFolerType" })
+                                                }
+
+
+
+                                            </span>
+                                        </label>
+                                        <div style="color: red;">
+                                            @Html.ValidationSummary()
+                                        </div>
+
+                                    </div>
+                                    <div class="clearfix ">
+
+                                        <button class="btn btn-sm btn-primary" type="submit" id="btnAdd">
+                                            <i class="icon-save  bigger-110"></i>
+                                            Save
+                                        </button>
+
+                                        <button class="btn btn-sm" type="reset">
+                                            <i class="icon-undo bigger-110"></i>
+                                            Reset
+                                        </button>
+
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                    <hr>
+                    <div id="addloading" style="display: none; margin-left:15px;">Creating new Folder..&nbsp;&nbsp;<img src="~/Content/Images/ajax-loader.gif" alt="" /></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+  
+
+    <div class="col-sm-6">
+        <!-- #dialog-message -->
+        <div id="dialog-confirm-calendar-available" class="hide">
+            <div class="alert alert-info bigger-110">
+                Calendar Sync is not Available in your Current Plan. If you wish to upgrade Account, you could do it now.
+            </div>
+
+            <div class="space-6"></div>
+
+            <p class="bigger-110 bolder center grey">
+                Upgrade Account now?
+            </p>
+        </div>
+        <!-- #dialog-confirm -->
+    </div>
+
+    <link rel="stylesheet" href="~/assets/css/jquery-ui-1.10.3.full.min.css" />
+    <script src="~/assets/js/jquery-ui-1.10.3.full.min.js"></script>
+    <script src="~/assets/js/fuelux/fuelux.spinner.min.js"></script>
+
+    <script>
+
+        var calendarSyncAvailable = "Yes";
+
+        @if (ViewBag.CalendarSyncAvailable == "No")
+    {
+        <text>
+        calendarSyncAvailable = "No";
+        </text>
+    }
+
+
+
+        $("#btnAdd").click(function () {
+            var name = $("#Name").val();
+            var type = $("#Type").val();
+            if (name != '' && type != '') {
+                $('form').submit(function () {
+                    $("#btnAdd").prop('disabled', true);
+                    $("#addloading").show();
+                });
+            }
+        });
+
+        $("#ddlFolerType").change(function () {
+            var selection = $("#ddlFolerType").val();
+            if (calendarSyncAvailable == "No" & selection == "2") {
+                $("#dialog-confirm-calendar-available").removeClass('hide').dialog({
+                    resizable: false,
+                    modal: true,
+                    title: "Calendar Sync not Available",
+                    title_html: true,
+                    buttons: [
+                        {
+                            html: "<i class='icon-info-sign bigger-110'></i>&nbsp; Upgrade Now",
+                            "class": "btn btn-danger btn-xs",
+                            click: function () {
+                                window.location.href = "@Url.Action("BillingOptions", "Admin", new { id = 1 })";
+                            }
+                        }
+                        ,
+                        {
+                            html: "<i class='icon-credit-card bigger-110'></i>&nbsp; Cancel",
+                            "class": "btn btn-xs",
+                            click: function () {
+                                $("#dialog-confirm-calendar-available").dialog("close");
+                                $("#ddlFolerType").val(1);
+                            }
+                        }
+                    ]
+                });
+            }
+        })
+
+    </script>

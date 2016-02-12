@@ -1,0 +1,220 @@
+﻿@model CorporateContacts.WebUI.Models.SignUpViewModel
+@{
+    ViewBag.Title = "Your Details";
+    Layout = "~/Views/Login/_LoginLayout.cshtml";
+}
+
+
+<div class="row  center-all-items sign-up-form" style="margin-left: -2px;">
+    <div style="display: table-cell;vertical-align: middle;">
+        <center>
+            <div style="max-width: 500px;background: rgba(0, 0, 0, 0.35);padding: 1px;border-radius: 15px;box-shadow: 0 7px 27px rgb(247, 247, 247);">
+                <h2 class=" lighter bigger" style="color: #ffffff;margin-bottom:25px;">
+                    New User Registration
+                </h2>
+                @using (Html.BeginForm("SaveAccount", "SignUp", FormMethod.Post, new { @id = "saveAccountForm" }))
+                {
+                    <div style="color: #ffffff;">
+                        @if (ViewBag.AccountNameValidation != null)
+                        {<i class="icon-exclamation-sign"></i> @ViewBag.AccountNameValidation }
+                    </div>
+                    <label class="block clearfix">
+                        <span class="block input-icon input-icon-right">
+                            @Html.TextBoxFor(m => m.Account.AccountName, new { placeholder = "Name of your organization", @class = "form-control login-input" })
+                            <i class="icon-building"></i>
+                        </span>
+                    </label>
+                    <label class="block clearfix">
+                        <span class="block input-icon input-icon-right">
+                            @Html.TextBoxFor(m => m.User.FullName, new { placeholder = "Full Name", @class = "form-control login-input" })
+                            <i class="icon-user"></i>
+                        </span>
+                    </label>
+                    <div style="color: #ffffff;">
+                        @if (ViewBag.EmailValidation != null)
+                        {<i class="icon-exclamation-sign"></i> @ViewBag.EmailValidation }
+                    </div>
+                    <label class="block clearfix">
+                        <span class="block input-icon input-icon-right">
+                            @Html.TextBoxFor(m => m.User.Email, new { placeholder = "Email", @class = "form-control login-input", onblur = "if(this.value=='')this.value='Email'", onfocus = "if(this.value=='Email')this.value='' ", type = "email" })
+
+                            <i class="icon-envelope icon-white"></i>
+                        </span>
+                    </label>
+
+                    <label class="block clearfix">
+                        <span class="block input-icon input-icon-right">
+                            @Html.PasswordFor(m => m.User.Password, new { placeholder = "Password", @class = "form-control login-input", onblur = "if(this.value=='')this.value='Password'", onfocus = "if(this.value=='Password')this.value='' ", onkeyup = "passwordStrength(this.value)" })
+                            <i class="icon-lock"></i>
+                        </span>
+                    </label>
+                    <label id="pwdStrengthBlock" class="block clearfix" style="display:none !important;">
+                        <div id="passwordDescription" style="font-family: 'Open Sans'; font-size: 13px; color: #ffffff;"></div>
+                        <div id="passwordStrength" class="strength0"></div>
+                    </label>
+                    <label class="block clearfix">
+                        <span class="block input-icon input-icon-right">
+                            @Html.PasswordFor(m => m.User.ConfirmPassword, new { placeholder = "Confirm Password", @class = "form-control login-input", onblur = "if(this.value=='')this.value='Password'", onfocus = "if(this.value=='Password')this.value='' " })
+                            <i class="icon-retweet"></i>
+                        </span>
+                    </label>
+                    <label class="block clearfix">
+                        @Html.DropDownListFor(model => model.Account.TimeZone, new SelectList(Model.TimeZoneList, "ID", "DisplayName"), "-- Please select TimeZone --", new { @class = "col-xs-12  login-input" })
+                    </label>
+                    <label class="block clearfix">
+                        <span class="block input-icon input-icon-right">
+                            @Html.TextBoxFor(m => m.Account.Telephone, new { placeholder = "Telephone Number", @class = "form-control login-input" })
+                            <i class="icon-mobile-phone"></i>
+                        </span>
+                    </label>
+
+
+
+                    @*<label class="block">
+                    <input type="checkbox" class="ace" />
+                    <span class="lbl">I accept the
+                        <a href="#">User Agreement</a>
+                    </span>
+                </label>*@
+
+                    @Html.ValidationSummary()
+
+
+    <div class="clearfix" style="margin-bottom: 20px;">
+        <button type="reset" class="btn btn-sm btn-primary btn-login-submit" id="reset">
+            <i class="icon-refresh"></i>
+            Reset
+        </button><br />
+
+        <button type="submit" style="margin-top: 10px;" class="btn btn-sm btn-primary btn-login-submit">
+            Register
+            <i class="icon-arrow-right icon-on-right"></i>
+        </button>
+    </div>
+                }
+                </div>
+</center>
+</div>
+</div>
+
+
+        
+
+        <script type="text/javascript">
+            window.jQuery || document.write("<script src='assets/js/jquery-2.0.3.min.js'>" + "<" + "/script>");
+        </script>
+
+        <script type="text/javascript">
+            if ("ontouchend" in document) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+        </script>
+
+        <!-- inline scripts related to this page -->
+        @* <script type="text/javascript">
+
+                function show_box(id) {
+                    jQuery('.widget-box.visible').removeClass('visible');
+                    jQuery('#' + id).addClass('visible');
+                }
+
+            </script>*@
+
+        <style>
+            .validation-summary-errors {
+                font-weight: bold;
+                color: #f00;
+            }
+
+            #passwordStrength {
+                height: 10px;
+                display: block;
+                float: left;
+                 border-radius:10px;
+                border:1px solid #ffffff;
+            }
+
+           
+            .strength0 {
+                width: 0px;
+                background: #f7f7f7;
+                
+            }
+
+            .strength1 {
+                width: 50px;
+                background: #ff0000;
+            }
+
+            .strength2 {
+                width: 100px;
+                background: #ff5f5f;
+            }
+
+            .strength3 {
+                width: 150px;
+                background: #56e500;
+            }
+
+            .strength4 {
+                background: #4dcd00;
+                width: 200px;
+            }
+
+            .strength5 {
+                background: #399800;
+                width: 100%;
+            }
+        </style>
+
+        <script>         
+
+            function passwordStrength(password) {
+                var desc = new Array();
+                desc[0] = "Very Weak";
+                desc[1] = "Weak";
+                desc[2] = "Better";
+                desc[3] = "Medium";
+                desc[4] = "Strong";
+                desc[5] = "Strongest";
+
+                var score = 0;
+
+                //if password bigger than 6 give 1 point
+                if (password.length > 6) score++;
+
+                //if password has both lower and uppercase characters give 1 point
+                if ((password.match(/[a-z]/)) && (password.match(/[A-Z]/))) score++;
+
+                //if password has at least one number give 1 point
+                if (password.match(/\d+/)) score++;
+
+                //if password has at least one special caracther give 1 point
+                if (password.match(/.[!,@@,#,$,%,^,&,*,?,_,~,-,(,)]/)) score++;
+
+                //if password bigger than 12 give another 1 point
+                if (password.length > 12) score++;
+
+                //document.getElementById("passwordDescription").innerHTML = desc[score];
+                document.getElementById("passwordStrength").className = "strength" + score;
+
+                if (score == 0) {
+                    $('#pwdStrengthBlock').attr('style', 'display:none !important;');
+                }
+                else {
+                    $('#pwdStrengthBlock').attr('style', 'display:block !important;');
+                }
+
+                
+                
+            }
+
+            $('#reset').click(function () {
+                passwordStrength('');
+            });
+
+            $(document).ready(function () {
+                $('#Account_TimeZone').val(getTimezoneName());
+            });
+
+        </script>
+
+

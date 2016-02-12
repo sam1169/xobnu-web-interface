@@ -1,0 +1,23 @@
+﻿@model CorporateContacts.Domain.Entities.CCFolderField
+
+@{
+    ViewBag.Title = "FieldMessage";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>No fields found for this folder. Please click the link below to add fields </h2>
+
+ @*@Html.ActionLink("Add Field", "Field", new { id = Model.FolderID });*@
+
+
+
+<div style ="margin-bottom :15px;">     
+    <a class="btn btn-sm btn-primary" href="@Url.Action("Field", "Folder", new { id = Model.FolderID  })">
+        <i class="icon-pencil align-top bigger-125"></i>
+        Add Field
+    </a>
+     <a class="btn btn-sm btn-primary" href="@Url.Action("SelectFolderFields", "Folder", new { id = Model.FolderID  })">
+        <i class="icon-pencil align-top bigger-125"></i>
+        Add Fields By Schemas
+    </a>
+</div>

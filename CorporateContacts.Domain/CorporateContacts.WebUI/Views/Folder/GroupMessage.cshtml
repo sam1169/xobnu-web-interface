@@ -1,0 +1,11 @@
+﻿@model CorporateContacts.Domain.Entities.CCGroup
+
+@{
+    ViewBag.Title = "Group Message";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>No group found for this folder. Please click the link below to add group </h2>
+
+
+@Html.ActionLink("Add Group", "AddGroup", new { id = Model.FolderID })

@@ -1,0 +1,168 @@
+﻿@model CorporateContacts.WebUI.Models.MappingFieldsViewModel
+
+@{
+    ViewBag.Title = "Select Mapping Fields";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i>@Html.ActionLink("Home","Index","Admin")</li><li><a href="/Folder/ManageFolders/">Manage Folders</a></li><li class="active">Mapping Fields</li>');
+</script>
+
+
+@section JavaScript
+{
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <style>
+        #sortable1, #sortable2, #sortable3 {
+            list-style-type: none;
+            margin: 2px;
+            padding: 0;
+            float: left;
+            margin-right: 10px;
+            padding: 5px;
+            min-width: 283px;
+        }
+
+            #sortable1 li, #sortable2 li, #sortable3 li {
+                margin: 5px;
+                padding: 5px;
+                width: 260px;
+                cursor: pointer;
+            }
+    </style>
+    <script>
+        $(function () {
+            $("ul.droptrue").sortable({
+                connectWith: "ul"
+            });
+
+            $("ul.dropfalse").sortable({
+                connectWith: "ul",
+                dropOnEmpty: false
+            });
+
+            $("#sortable1, #sortable2, #sortable3").disableSelection();
+        });
+    </script>
+}
+
+<div class="page-header">
+    <h1>Select Mapping Fields</h1>
+</div>
+
+@using (Html.BeginForm("SelectMappingFields", "Folder", FormMethod.Post))
+{    
+    <div class="row" style="max-width: 1100px;">
+        <div class="col-xs-4">
+            <button type="submit" class="btn btn-primary btn-sm">
+                <i class="icon-save icon-white"></i>Save               
+            </button>
+            <button type="button" class="btn btn-sm btn-primary" id="btnadd" style="float: right;">
+                <i class="icon-share icon-white"></i>Add All               
+            </button>
+        </div>
+        <div class="col-xs-4">
+            <button type="button" class="btn btn-primary btn-sm" id="btnremove" style="float: right;">
+                <i class="icon-reply icon-white"></i>Remove All               
+            </button>
+        </div>
+    </div>
+    <div class="row" style="max-width: 1100px;">
+        <div class="col-xs-4">
+            <div class="widget-box">
+                <div class="widget-header header-color-blue2">
+                    <h4 class="lighter smaller">Mapping fields</h4>
+                </div>
+                <div class="widget-body" style="overflow-y: auto; max-height: 600px">
+                    <div id="sortable">
+                        <ul id="sortable1" class="droptrue" style="min-height: 600px">
+                            @foreach (var item in Model.AllMappingFields)
+                            {
+                                <li id="" class="ui-state-default">@item</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-4">
+            <div class="widget-box">
+                <div class="widget-header header-color-blue2">
+                    <h4 class="lighter smaller">Added fields</h4>
+                </div>
+                <div id="selection" class="widget-body" style="overflow-y: auto; max-height: 600px">
+                    <ul id="sortable3" class="droptrue" style="min-height: 600px">
+                        @foreach (var item in Model.SavedMappingFields)
+                        {
+                            <li id="" class="ui-state-default">@item</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="row" style="max-width: 1100px;">
+        <div class="col-xs-8">
+            <div style="float:right">
+            <button type="submit" class="btn btn-primary btn-sm">
+                <i class="icon-save icon-white"></i>Save               
+            </button>
+            <a class="btn btn-sm btn-primary" href="@Url.Action("ViewConnections", "Folder", new { id = Model.FolderID })">
+                <i class="icon-undo align-top bigger-125"></i>
+                View Connections
+            </a>
+                 
+                </div>
+        </div>
+    </div>
+    @Html.Hidden("fields") 
+    @Html.HiddenFor(model => model.FolderID)
+    @Html.HiddenFor(model => model.SubscriptionID)
+
+}
+
+<script>
+    $("form").on("submit", function (event) {
+        event.preventDefault();
+        // Validate form, returning on failure.
+        var myselection = new Array();
+        $('#selection').find('li').each(function (index) {
+            console.log(index + ": " + $(this).text());
+            myselection[index] = $(this).text();
+        });
+        console.log(JSON.stringify(myselection));
+        $('#fields').val(JSON.stringify(myselection));
+        $(this).off("submit");
+        this.submit();
+    });
+
+    $("#btnadd").click(function (e) {
+        e.preventDefault();
+        $('#sortable').find('li').each(function (index) {
+            var val = $(this).text();
+            $("#selection ul").append('<li id="" class="ui-state-default">' + val + '</li>');
+        });
+        $('#sortable ul').empty();
+
+    });
+
+    $("#btnremove").click(function (e) {
+        e.preventDefault();
+
+        $('#selection').find('li').each(function (index) {
+            var val = $(this).text();
+            $("#sortable ul").append('<li id="" class="ui-state-default">' + val + '</li>');
+        });
+        $('#selection ul').empty();
+
+    });
+
+
+</script>
+

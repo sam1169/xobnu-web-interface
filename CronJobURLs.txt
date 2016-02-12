@@ -1,0 +1,29 @@
+List of CronJobURls
+
+----------------------------------------------------------------------------------------------------------------------
+
+Test Server
+
+1. https://test.corporate-contacts.com/api/CronJob/checkAccountTrialExpiry/
+   * To expire accounts on trial
+   * Executed on a Daily Basis
+
+2. https://test.corporate-contacts.com/api/CronJob/freezeAccount/
+   * To freeze accounts if folders found with more than the Items per folder limit
+   * Executed on a Daily Basis
+
+----------------------------------------------------------------------------------------------------------------------
+
+Staging Server
+
+1. https://staging.corporate-contacts.com/api/CronJob/checkAccountTrialExpiry/
+   * To expire accounts on trial
+   * Executed on a Daily Basis
+
+2. https://staging.corporate-contacts.com/api/CronJob/freezeAccount/
+   * To freeze accounts if folders found with more than the Items per folder limit
+   * Executed on a Daily Basis
+
+----------------------------------------------------------------------------------------------------------------------
+
+Live Server

@@ -1,0 +1,141 @@
+﻿@*@model List<String>*@
+@model CorporateContacts.WebUI.Models.GroupFieldsViewModel
+@{
+    ViewBag.Title = "Select Group Fields";
+    ViewBag.PageHeader = "Select Group Fields";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section JavaScript
+{
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <style>
+        #sortable1, #sortable2, #sortable3 {
+            list-style-type: none;
+            margin: 2px;
+            padding: 0;
+            float: left;
+            margin-right: 10px;
+            padding: 5px;
+            min-width: 283px;
+        }
+
+            #sortable1 li, #sortable2 li, #sortable3 li {
+                margin: 5px;
+                padding: 5px;
+                width: 260px;
+                cursor: pointer;
+            }
+    </style>
+    <script>
+        $(function () {
+            $("ul.droptrue").sortable({
+                connectWith: "ul"
+            });
+
+            $("ul.dropfalse").sortable({
+                connectWith: "ul",
+                dropOnEmpty: false
+            });
+
+            $("#sortable1, #sortable2, #sortable3").disableSelection();
+        });
+    </script>
+}
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i>@Html.ActionLink("Home","Index","Admin")</li><li><a href="/Folder/ManageFolders/">Manage Folders</a></li><li class="active">Select Group Fields</li>');
+</script>
+
+@using (Html.BeginForm("SelectGroupFields", "Folder", FormMethod.Post))
+{
+   <div class="row" style="max-width:900px">
+        <div class="col-xs-10">
+            <div style="float: right;">
+                <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="icon-user icon-white"></i>Save               
+                </button>
+                 <a class="btn btn-sm btn-primary" href="@Url.Action("ManageLayoutsAndGroups", "Folder", new { id = Model.FolderID })">
+                <i class="icon-undo align-top bigger-125"></i>
+                View Groups
+            </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row" style="max-width:900px">
+        <div class="col-xs-5">
+            <div class="widget-box">
+                <div class="widget-header header-color-blue2">
+                    <h4 class="lighter smaller">All fields</h4>
+                </div>
+                <div class="widget-body" style="overflow-y: auto; max-height: 600px">
+                    <div id="sortable">
+                        <ul id="sortable1" class="droptrue" style="min-height: 600px">
+                            @foreach (var item in Model.AllFields)
+                            {
+                                <li id="" class="ui-state-default">@item</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-5">
+            <div class="widget-box">
+                <div class="widget-header header-color-blue2">
+                    <h4 class="lighter smaller">Added fields</h4>
+                </div>
+                <div id="selection" class="widget-body" style="overflow-y: auto; max-height: 600px">
+                    <ul id="sortable3" class="droptrue" style="min-height: 600px">
+                        @foreach (var item in Model.SavedFields)
+                        {
+                            <li id="" class="ui-state-default">@item</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+    <div class="row" style="max-width:900px">
+        <div class="col-xs-10">
+            <div style="float: right;">
+                <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="icon-user icon-white"></i>Save               
+                </button>
+                 <a class="btn btn-sm btn-primary" href="@Url.Action("ManageLayoutsAndGroups", "Folder", new { id = Model.FolderID })">
+                <i class="icon-undo align-top bigger-125"></i>
+                View Groups
+            </a>
+            </div>
+        </div>
+    </div>
+    @Html.Hidden("hid1")
+    @Html.HiddenFor(model => model.GroupID)
+    @Html.HiddenFor(model => model.FolderID)
+    @Html.HiddenFor(model => model.IsSave)
+
+
+}
+
+<script>
+    $("form").on("submit", function (event) {
+        event.preventDefault();
+        // Validate form, returning on failure.
+        var myselection = new Array();
+        $('#selection').find('li').each(function (index) {
+            console.log(index + ": " + $(this).text());
+            myselection[index] = $(this).text();
+        });
+        console.log(JSON.stringify(myselection));
+        $('#hid1').val(JSON.stringify(myselection));
+        $(this).off("submit");
+        this.submit();
+    });
+
+</script>

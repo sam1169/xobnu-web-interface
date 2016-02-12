@@ -1,0 +1,351 @@
+﻿@model CorporateContacts.WebUI.Models.ManageFoldersViewModel
+@{
+    ViewBag.Title = "Manage Folders";
+    ViewBag.PageHeader = "Manage Folders";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i>@Html.ActionLink("Home","Index","Admin")</li><li>Manage</li><li class="active">Folders</li>');
+</script>
+
+<link rel="stylesheet" href="~/assets/css/ace.min.css" />
+<link rel="stylesheet" href="~/assets/css/ace-rtl.min.css" />
+<link rel="stylesheet" href="~/assets/css/ace-skins.min.css" />
+
+<script src="assets/js/ace-extra.min.js"></script>
+
+    <div class="row">
+        <div class="col-xs-12">
+            @if ((((CorporateContacts.Domain.Entities.User)Session["user"]).UserType) == "Admin")
+            {
+                if ((((CorporateContacts.Domain.Entities.Account)Session["account"]).isOverFlow != true))
+                {
+                    <a class="btn btn-sm btn-primary" href="@Url.Action("AddFolder", "Folder")">
+                        <i class="icon-plus align-top bigger-125"></i>
+                        Add Folder
+                    </a>
+                }
+                else
+                {
+                    <a class="btn btn-sm disabled" href="#">
+                        <i class="icon-plus align-top bigger-125"></i>
+                        Add Folder
+                    </a>
+                }
+                <br />
+                <br />
+            }
+            
+
+            @if (Model.Folders.ToList().Count > 0)
+            {
+                if (Model.Credentials.ToList().Count <= 0)
+                {
+                    if ((((CorporateContacts.Domain.Entities.Account)Session["account"]).isOverFlow != true))
+                    {
+                        <div class="widget-box">
+                            <div class="widget-header widget-header-flat">
+                                <h4 class="smaller">Managing your Folders</h4>
+                            </div>
+                            <div class="widget-body">
+                                <div class="widget-main">
+
+                                    <ul>
+                                        <li>
+                                            <i style="margin-left: -15px;" class="icon-circle green"></i>
+                                            Once you have created a new Folder, you are able to make changes to it, such as changing the name, updating the fields available, adding new Connections, deleting the Folder and much more.
+                                        </li>
+                                        <br />
+                                        <li>
+                                            <i style="margin-left: -15px;" class="icon-circle red"></i>
+                                            Now, lets setup a new Connection to a Folder. To get started click on the &nbsp; <img style="width:30px;" src="~/assets/img/icons-blue/edit-connection-blue.png" />  &nbsp; icon in front of
+                                            the Folder in which you wish to set up a new Connection.
+                                        </li>
+                                        @*<li>
+                                                <i class="icon-ok bigger-110 green"></i>
+                                                <a>Click here to create your First Folder</a>
+                                            </li>*@
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                    }
+                }
+
+                <div class="folder-normal-view">
+
+                    @foreach (var folder in Model.Folders)
+                    {
+                        //onmouseover='$("#folder-settings-bar-@folder.FolderID").attr("style", "display:block;width:140px;height:50px;margin-top: -60px;");' onmouseout='$("#folder-settings-bar-@folder.FolderID").attr("style", "display:none;width:140px;height:50px;margin-top: -60px;");'
+
+                        <div class="col-xs-3" >
+                            <center>
+                                <a style="z-index: 9999;position: absolute;  margin-left: 110px;margin-top: 30px;" class="no-text-decoration" title="Edit Folder" data-rel="tooltip" href="@Url.Action("EditFolder", "Folder", new { ID = folder.FolderID })">
+                                    <img style="width:30px;" src="~/assets/img/icons-white/edit-folder-white.png" />
+                                </a>
+
+                                <img style="max-width:150px;width:100%;height:auto;" src="~/Content/Images/folder-image.png" />
+                            </center>
+                            <center>
+                                <div id="folder-settings-bar-@folder.FolderID" style="width:140px;height:50px;margin-top: -55px;display:block;">
+                                    <a class="no-text-decoration" title="Edit Connection" data-rel="tooltip" href="@Url.Action("ViewConnections", "Folder", new { ID = folder.FolderID })">
+                                        <img style="width:25px;" src="~/assets/img/icons-white/edit-connection-white.png" />
+                                    </a>
+
+                                    @if ((((CorporateContacts.Domain.Entities.User)Session["user"]).UserType) == "Admin")
+                                    {
+                                        <a class="no-text-decoration" title="Folder Fields" data-rel="tooltip" href="@Url.Action("ViewFields", "Folder", new { ID = folder.FolderID })">
+                                            <img style="width:25px;" src="~/assets/img/icons-white/edit-field-white.png" />
+                                        </a>
+                                        @*<a class="no-text-decoration" title="Edit Layout" data-rel="tooltip" href="@Url.Action("ManageLayoutsAndGroups", "Folder", new { ID = folder.FolderID })">
+                                            <img style="width:25px;" src="~/assets/img/icons-white/edit-layout-white.png" />
+                                        </a>
+                                        <a class="no-text-decoration" title="Edit Group" data-rel="tooltip" href="@Url.Action("ManageLayoutsAndGroups", "Folder", new { ID = folder.FolderID })">
+                                            <img style="width:25px;" src="~/assets/img/icons-white/edit-group-white.png" />
+                                        </a>*@
+
+
+                                        @*<a class="btn btn-sm btn-primary" href="@Url.Action("EditFolder", "Folder", new { ID = folder.FolderID })">Edit Folder </a>
+                                            <a class="btn btn-sm btn-primary" href="@Url.Action("ViewFields", "Folder", new { ID = folder.FolderID })">Edit Fields  </a>
+                                            <a class="btn btn-sm btn-primary" href="@Url.Action("ManageLayoutsAndGroups", "Folder", new { ID = folder.FolderID })">Edit Layouts and Groups  </a>*@
+                                    }
+                                    @*<a class="btn btn-sm btn-primary" href="@Url.Action("ViewConnections", "Folder", new { ID = folder.FolderID })">Edit Connections  </a>*@
+                                    @if ((((CorporateContacts.Domain.Entities.User)Session["user"]).UserType) == "Admin")
+                                    {
+                                        @*<a class="btn btn-sm btn-primary id-btn-dialog2" href="#" id="@folder.FolderID">Delete</a>*@
+                                        @*<a title="Delete" data-rel="tooltip" href="#" id="@folder.FolderID">
+                                                <img style="width:40px;" src="~/assets/img/icons-blue/delete-blue.png" />
+                                            </a>*@
+                                    }
+
+
+                                </div>
+                            </center>
+                            <center><span style="color:#000000;">@folder.Name</span></center>
+                        </div>
+
+
+                    }
+
+                </div>
+               
+                <div class="folder-mobile-view">
+                    <div class="widget-main no-padding">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead class="thin-border-bottom">
+                                    <tr>
+                                        <th>Folder Name</th>
+                                        <th>Options</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach (var folder in Model.Folders)
+                                {
+                                        <tr>
+                                            <td>@folder.Name</td>
+                                            <td>
+                                                    <a class="no-text-decoration" title="Edit Connection" data-rel="tooltip" href="@Url.Action("ViewConnections", "Folder", new { ID = folder.FolderID })">
+                                                        <img style="width:35px;" src="~/assets/img/icons-blue/edit-connection-blue.png" />
+                                                    </a>
+
+                                                @if ((((CorporateContacts.Domain.Entities.User)Session["user"]).UserType) == "Admin")
+                                                {
+                                                    <a class="no-text-decoration" title="Folder Fields" data-rel="tooltip" href="@Url.Action("ViewFields", "Folder", new { ID = folder.FolderID })">
+                                                        <img style="width:35px;" src="~/assets/img/icons-blue/edit-field-blue.png" />
+                                                    </a>
+                                                    @*<a class="no-text-decoration" title="Edit Layout" data-rel="tooltip" href="@Url.Action("ManageLayoutsAndGroups", "Folder", new { ID = folder.FolderID })">
+                                                        <img style="width:35px;" src="~/assets/img/icons-blue/edit-layout-blue.png" />
+                                                    </a>
+                                                    <a class="no-text-decoration" title="Edit Group" data-rel="tooltip" href="@Url.Action("ManageLayoutsAndGroups", "Folder", new { ID = folder.FolderID })">
+                                                        <img style="width:35px;" src="~/assets/img/icons-blue/edit-group-blue.png" />
+                                                    </a>*@
+                                                    <a class="no-text-decoration" title="Edit Folder" data-rel="tooltip" href="@Url.Action("EditFolder", "Folder", new { ID = folder.FolderID })">
+                                                        <img style="width:35px;" src="~/assets/img/icons-blue/edit-folder-blue.png" />
+                                                    </a>
+
+                                                    @*<a class="btn btn-sm btn-primary" href="@Url.Action("EditFolder", "Folder", new { ID = folder.FolderID })">Edit Folder </a>
+                                        <a class="btn btn-sm btn-primary" href="@Url.Action("ViewFields", "Folder", new { ID = folder.FolderID })">Edit Fields  </a>
+                                        <a class="btn btn-sm btn-primary" href="@Url.Action("ManageLayoutsAndGroups", "Folder", new { ID = folder.FolderID })">Edit Layouts and Groups  </a>*@
+                                            }
+                                            @*<a class="btn btn-sm btn-primary" href="@Url.Action("ViewConnections", "Folder", new { ID = folder.FolderID })">Edit Connections  </a>*@
+
+                                            @if ((((CorporateContacts.Domain.Entities.User)Session["user"]).UserType) == "Admin")
+                                            {
+                                                @*<a class="btn btn-sm btn-primary id-btn-dialog2" href="#" id="@folder.FolderID">Delete</a>*@
+                                                @*<a title="Delete" data-rel="tooltip" href="#" id="@folder.FolderID">
+                                        <img style="width:40px;" src="~/assets/img/icons-blue/delete-blue.png" />
+                                    </a>*@
+                                            }
+                                        </td>
+
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>                
+            }
+            else
+            {
+                <br />
+
+                if ((((CorporateContacts.Domain.Entities.User)Session["user"]).UserType) == "Admin")
+                {
+
+                    <div class="widget-box">
+                        <div class="widget-header widget-header-flat">
+                            <h4 class="smaller">Managing your Folders</h4>
+                        </div>
+                        <div class="widget-body">
+                            <div class="widget-main">
+
+                                <ul>
+                                    <li>
+                                        <i style="margin-left: -15px;" class="icon-circle green"></i>
+                                        Here you are able to manage all your Folders saved within Corporate Contacts.
+                                    </li>
+                                    <br />
+                                    <li>
+                                        <i style="margin-left: -15px;" class="icon-circle red"></i>
+                                        To Create a new Folder, simple click on the   &nbsp;  
+                                        
+                                            @if ((((CorporateContacts.Domain.Entities.Account)Session["account"]).isOverFlow != true))
+                                            {
+                                                <a class="btn btn-sm btn-primary" href="@Url.Action("AddFolder", "Folder")">
+                                                    <i class="icon-plus align-top bigger-125"></i>
+                                                    Add Folder
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-sm disabled" href="#">
+                                                    <i class="icon-plus align-top bigger-125"></i>
+                                                    Add Folder
+                                                </a>
+                                            }
+                                        
+                                        &nbsp; Button
+                                    </li>
+                                    @*<li>
+                                            <i class="icon-ok bigger-110 green"></i>
+                                            <a>Click here to create your First Folder</a>
+                                        </li>*@
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <p class="alert alert-warning">
+                        No Folders found
+                    </p>
+                }
+            }
+
+            <br />
+            <div id="deleteloading" style="display: none;">Folder is deleting...&nbsp;&nbsp;<img src="~/Content/Images/ajax-loader.gif" alt="" /></div>
+          
+        </div>
+    </div>
+
+    <div class="col-sm-6">
+
+        <!-- #dialog-message -->
+
+        <div id="dialog-confirm" class="hide">
+            <div class="alert alert-info bigger-110">
+                This will permanently delete the folder and all related data  including connections.
+                Do you really want to delete this data?
+            </div>
+
+            <div class="space-6"></div>
+
+            <p class="bigger-110 bolder center grey">
+                <i class="icon-hand-right blue bigger-120"></i>
+                Are you sure?
+            </p>
+        </div>
+        <!-- #dialog-confirm -->
+    </div>
+    <!-- ./span -->
+
+    <link rel="stylesheet" href="~/assets/css/jquery-ui-1.10.3.full.min.css" />
+    <script src="~/assets/js/jquery-ui-1.10.3.full.min.js"></script>
+    <script src="~/assets/js/fuelux/fuelux.spinner.min.js"></script>
+
+    <script>
+        $(".id-btn-dialog2").on('click', function (e) {
+            e.preventDefault();
+            var folderID = $(this).attr('id');
+
+            $("#dialog-confirm").removeClass('hide').dialog({
+                resizable: false,
+                modal: true,
+                title: "Delete folder",
+                title_html: true,
+                buttons: [
+                    {
+                        html: "<i class='icon-trash bigger-110'></i>&nbsp; Delete all items",
+                        "class": "btn btn-danger btn-xs",
+                        click: function () {
+                            window.location.href = '/Folder/DeleteFolder/' + folderID;
+                            $(this).dialog("close");
+                            $("#deleteloading").show();
+                        }
+                    }
+                    ,
+                    {
+                        html: "<i class='icon-remove bigger-110'></i>&nbsp; Cancel",
+                        "class": "btn btn-xs",
+                        click: function () {
+                            $(this).dialog("close");
+                            $("#deleteloading").hide();
+                        }
+                    }
+                ]
+            });
+        });
+
+        $("#folder-settings-bar").hover(function () {
+            $('.flyout').fadeToggle();
+        });
+
+    </script>
+
+<style>
+      .ace-settings-container {
+    position: absolute;
+    right: 0;
+    top: auto;
+    z-index: 12;
+    }
+
+    .btn.btn-app.ace-settings-btn.btn-xs {
+    width: 20px;
+    }
+
+    .btn.btn-app.btn-xs>.icon {
+    display: block;
+    font-size: 24px;
+    line-height: 24px;
+    margin: 0;
+}
+        .btn.btn-app > .icon {
+            display: block;
+            font-size: 42px;
+            margin: 0 0 4px;
+            line-height: 36px;
+            min-width: 0;
+            padding: 0;
+        }
+</style>
+

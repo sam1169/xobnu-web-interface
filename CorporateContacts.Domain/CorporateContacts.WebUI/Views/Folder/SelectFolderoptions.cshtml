@@ -1,0 +1,189 @@
+﻿@model CorporateContacts.WebUI.Models.SelectFolderViewModel
+@{
+    ViewBag.Title = "Selected Folder Options";
+    ViewBag.PageHeader = "Selected Folder Options";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i>@Html.ActionLink("Home","Index","Admin")</li><li>Manage</li><li><a href="/Folder/ManageFolders/">Folders</a></li><li class="active">Connections</li>');
+</script>
+@using (Html.BeginForm("SelectFolderoptionss", "Folder", FormMethod.Post))
+{
+    <input type="hidden" id="folderType" value="@Model.FolderType" />
+    <div class="col-xs-12 col-sm-5 widget-container-span ui-sortable" style="min-width: 675px;">
+        <div class="widget-box">
+            <div class="widget-header header-color-blue2">
+                <h4 class="lighter smaller">Options</h4>
+            </div>
+        </div>
+        <div class="widget-body">
+            <div style="padding: 10px">
+                <div class="row">
+                    <div class="col-xs-3">Sync Direction</div>
+                    <div class="col-xs-3">
+                        @Html.DropDownListFor(model => model.SyncDirection, new SelectList(new List<SelectListItem>{ new SelectListItem
+                                                    {
+                                                        Value = "CopyToCC",
+                                                        Text = "Copy TO Corporate Contacts"
+                                                    },new SelectListItem
+                                                    {
+                                                        Value = "CopyFromCC",
+                                                        Text = "Copy FROM Corporate Contacts"
+                                                    } 
+                                                    ,new SelectListItem
+                                                    {
+                                                        Value = "TwoWay",
+                                                        Text = "Two Way Sync"
+                                                    }}, "Value", "Text"), "-- Please select direction --", new { @class = "form-control11" })
+                    </div>
+                </div>
+                <div class="space"></div>
+                <div class="row">
+                    <div class="col-xs-3">Ignore existing</div>
+                    <div class="col-xs-1">@Html.EditorFor(x => x.IgnoreExisting)</div>
+                </div>
+                <div class="space"></div>
+                <div class="row">
+                    <div class="col-xs-3">Category Filter Used</div>
+                    <div class="col-xs-1" style="float: left;">@Html.EditorFor(x => x.CategoryFilterUsed)</div>
+                    <div class="col-xs-7" style="float: left; margin-left: 5px;">@Html.TextBoxFor(m => m.CategoryFilterValues, new { @class = "form-control" })
+                        <span style="display:none;" id="categoryEx">Use semi-colon to delimit mutliple categories
+                                    <br />
+                            e.g Blue; Red; this is one long category; green</span>
+                    </div>
+                </div>
+                @if (Model.FolderType == 1)
+                {
+                    <div class="space"></div>
+                    <div class="row">
+                        <div class="col-xs-3">Copy Photos</div>
+                        <div class="col-xs-1">@Html.EditorFor(x => x.CopyPhotos)</div>
+                    </div>
+                }
+                @if (Model.FolderType == 2)
+                {
+                    <div class="space"></div>
+                    <div class="row">
+                        <div class="col-xs-3">Turn Off Reminders</div>
+                        <div class="col-xs-1">@Html.EditorFor(x => x.TurnOffReminders)</div>
+                    </div>
+                }
+
+                <div class="space"></div>
+                <div class="row" style="display: none" id="tagsubject">
+                    <div class="col-xs-3">Tag All Subjects</div>
+                    <div class="col-xs-1">@Html.EditorFor(x => x.TagAllSubject)</div>
+                    <span class="btn btn-xs btn-white tooltip-info" data-rel="tooltip" data-placement="right" title="Tag appointment subjects with initials of calendar it is coming from"><i class="icon-info-sign align-top "></i></span>
+                </div>
+                <div class="space"></div>
+                <div class="row" style="display: none" id="subjecttag">
+                    <div class="col-xs-3">Subject Tag</div>
+                    <div class="col-xs-7">@Html.EditorFor(x => x.SubjectTag)
+
+                        <span class="btn btn-xs btn-white tooltip-info" data-rel="tooltip" data-placement="right" style="margin-left: 5px;" title="The initials to be used to add to the beginning of appointment subjects' e.g. DKT"><i class="icon-info-sign align-top "></i></span>
+                    </div>
+                </div>
+                <div class="space"></div>
+                <div class="row">
+                    <div class="col-xs-3"></div>
+                    <div class="col-xs-7">
+                        <div class="alert alert-warning" id="msgsync" style="display: none;">Please select sync direction</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(model => model.PrimarySourceId)
+    @Html.HiddenFor(model => model.SelectedFolderName)
+    @Html.HiddenFor(model => model.SelectedFolderOwnerInfo)
+    @Html.HiddenFor(model => model.CredentialID) 
+    @Html.HiddenFor(model => model.UniqueId)  
+    @Html.HiddenFor(model => model.SelectedFolderId) 
+
+    
+    <div class="col-xs-12 col-sm-8 widget-container-span ui-sortable" style="margin-top: 15px;">
+        <button type="submit" class="btn btn-primary btn-sm" id="btnsubmit" style ="float:left;">
+            <i class="icon-save icon-white"></i>&nbsp; Save
+        </button>
+         <div id="addloading" style="display: none; float:left; margin-left:15px;">Saving selected options to Folder..&nbsp;&nbsp;<img src="~/Content/Images/ajax-loader.gif" alt="" /></div>
+    </div>
+    
+}
+
+<script>
+
+    //$('#TurnOffReminders').checked = true;
+    $("#TurnOffReminders").prop("checked", true);
+
+    $("#SyncDirection").change(function () {
+        $("#msgsync").hide();
+    });
+
+    $("form").on("submit", function (event) {
+        event.preventDefault();
+        // Validate form, returning on failure.
+        if ($("#SyncDirection option:selected").index() == '0') {
+            $("#msgsync").show();
+            return
+        };
+        $(this).off("submit");
+
+        $("#btnsubmit").prop('disabled', true);
+        $("#addloading").show();
+        this.submit();
+    });
+
+    $(document).ready(function () {
+        // Hide and Show CategoryFilterUsed textbox
+
+        $('#CategoryFilterValues').hide();
+
+
+        $('#CategoryFilterUsed').change(function () {
+            if ($(this).is(":checked")) {
+                $('#CategoryFilterValues').show();
+                $('#categoryEx').show();
+            }
+            else {
+                $('#CategoryFilterValues').hide();
+                $('#categoryEx').hide();
+            }
+
+        });
+
+    });
+
+    $("#SyncDirection").change(function () {
+
+        if ($("#SyncDirection option:selected").index() == 1 && $("#folderType").val() == 2) { $("#tagsubject").show(); }
+        else { $("#tagsubject").hide(); $('#subjecttag').hide(); $("#TagAllSubject").prop('checked', false); $('#SubjectTag').val(''); }
+
+    });
+
+    $('#TagAllSubject').change(function () {
+        if ($(this).is(":checked")) {
+            $('#subjecttag').show();
+        }
+        else {
+            $('#subjecttag').hide();
+        }
+
+    });
+
+    $('#SubjectTag').keypress(function (event) {
+        if ($('#SubjectTag').val().length > 19) {
+            event.preventDefault();
+        }
+
+    });
+</script>
+<script type="text/javascript">
+    jQuery(function ($) {
+
+        $('[data-rel=tooltip]').tooltip();
+        $('[data-rel=popover]').popover({ html: true });
+    });
+</script>

@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EB4927C4-8F5E-456A-8318-550C47D756F1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CorporateContacts.Domain</RootNamespace>
+    <AssemblyName>CorporateContacts.Domain</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>C:\Users\sam\Desktop\corporate contacts projects\corporate-contacts-web-master\CorporateContacts.Domain\bin\Debug\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>C:\Users\sam\Desktop\corporate contacts projects\corporate-contacts-web-master\CorporateContacts.Domain\bin\Debug\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Abstract\IAccountRepo.cs" />
+    <Compile Include="Abstract\ICCErrorLogRepo.cs" />
+    <Compile Include="Abstract\ICCHealthMsgs.cs" />
+    <Compile Include="Abstract\ICCHistoryLogRepo.cs" />
+    <Compile Include="Abstract\ICCItemRepo.cs" />
+    <Compile Include="Abstract\ICCFieldMappingsRepo.cs" />
+    <Compile Include="Abstract\ICCFieldValuesRepo.cs" />
+    <Compile Include="Abstract\ICCFolderFieldRepo.cs" />
+    <Compile Include="Abstract\ICCFolderRepo.cs" />
+    <Compile Include="Abstract\ICCGroupFieldRepo.cs" />
+    <Compile Include="Abstract\ICCGroupRepo.cs" />
+    <Compile Include="Abstract\ICCLayoutGroupRepo.cs" />
+    <Compile Include="Abstract\ICCLayoutRepo.cs" />
+    <Compile Include="Abstract\ICCLogonLogRepo.cs" />
+    <Compile Include="Abstract\ICCNoteRepo.cs" />
+    <Compile Include="Abstract\ICCConnectionsRepo.cs" />
+    <Compile Include="Abstract\ICCSyncFieldsRepo.cs" />
+    <Compile Include="Abstract\ICCSyncItems.cs" />
+    <Compile Include="Abstract\ICCTokenRepo.cs" />
+    <Compile Include="Abstract\ICredentialRepo.cs" />
+    <Compile Include="Abstract\IFeatureRepo.cs" />
+    <Compile Include="Abstract\IFolderFieldRepo.cs" />
+    <Compile Include="Abstract\IFolderRepo.cs" />
+    <Compile Include="Abstract\INotificationManager.cs" />
+    <Compile Include="Abstract\IPasswordValidator.cs" />
+    <Compile Include="Abstract\IPlanRepo.cs" />
+    <Compile Include="Abstract\IPurchasedFeatureRepo.cs" />
+    <Compile Include="Abstract\IUserRepo.cs" />
+    <Compile Include="Concrete\EFAccountRepo.cs" />
+    <Compile Include="Concrete\EFCCErrorLogRepo.cs" />
+    <Compile Include="Concrete\EFCCHealthMsgs.cs" />
+    <Compile Include="Concrete\EFCCHistoryLogRepo.cs" />
+    <Compile Include="Concrete\EFCCItemRepo.cs" />
+    <Compile Include="Concrete\EFCCFieldMappingRepo.cs" />
+    <Compile Include="Concrete\EFCCFolderFieldRepo.cs" />
+    <Compile Include="Concrete\EFCCFolderRepo.cs" />
+    <Compile Include="Concrete\EFCCGroupFieldRepo.cs" />
+    <Compile Include="Concrete\EFCCGroupRepo.cs" />
+    <Compile Include="Concrete\EFCCLayoutGroupRepo.cs" />
+    <Compile Include="Concrete\EFCCLogonLogRepo.cs" />
+    <Compile Include="Concrete\EFCCNoteRepo.cs" />
+    <Compile Include="Concrete\EFCCConnectionsRepo.cs" />
+    <Compile Include="Concrete\EFCCSyncField.cs" />
+    <Compile Include="Concrete\EFCCTokenRepo.cs" />
+    <Compile Include="Concrete\EFCredentialRepo.cs" />
+    <Compile Include="Concrete\EFDbContextAccounts.cs" />
+    <Compile Include="Concrete\EFDBContextClient.cs" />
+    <Compile Include="Concrete\EFDbContextErrorLog.cs" />
+    <Compile Include="Concrete\EFDbContextLogonLog.cs" />
+    <Compile Include="Concrete\EFFeatureRepo.cs" />
+    <Compile Include="Concrete\EFFolderFieldRepo.cs" />
+    <Compile Include="Concrete\EFFolderRepo.cs" />
+    <Compile Include="Concrete\EFLayoutRepo.cs" />
+    <Compile Include="Concrete\EFPlanRepo.cs" />
+    <Compile Include="Concrete\EFPurchasedProdRepo.cs" />
+    <Compile Include="Concrete\EFUserRepo.cs" />
+    <Compile Include="Concrete\EmailNotificationManager.cs" />
+    <Compile Include="Concrete\EFCCFieldValueRepo.cs" />
+    <Compile Include="Concrete\EFCCSyncItems.cs" />
+    <Compile Include="Entities\Account.cs" />
+    <Compile Include="Entities\CCErrorLog.cs" />
+    <Compile Include="Entities\CCGlobalValues.cs" />
+    <Compile Include="Entities\CCHealthMsgs.cs" />
+    <Compile Include="Entities\CCHistoryLog.cs" />
+    <Compile Include="Entities\CCItems.cs" />
+    <Compile Include="Entities\CCContactWithFields.cs" />
+    <Compile Include="Entities\CCFieldMapping.cs" />
+    <Compile Include="Entities\CCFieldValue.cs" />
+    <Compile Include="Entities\CCFolder.cs" />
+    <Compile Include="Entities\CCFolderField.cs" />
+    <Compile Include="Entities\CCGroup.cs" />
+    <Compile Include="Entities\CCGroupField.cs" />
+    <Compile Include="Entities\CCLayout.cs" />
+    <Compile Include="Entities\CCLayoutGroup.cs" />
+    <Compile Include="Entities\CCGroupsWithFieldsAndValues.cs" />
+    <Compile Include="Entities\CClayoutWithGroups.cs" />
+    <Compile Include="Entities\CCLogonLog.cs" />
+    <Compile Include="Entities\CCNote.cs" />
+    <Compile Include="Entities\CCConnection.cs" />
+    <Compile Include="Entities\CCSyncFields.cs" />
+    <Compile Include="Entities\CCSyncItems.cs" />
+    <Compile Include="Entities\CCToken.cs" />
+    <Compile Include="Entities\CCViewCalendarItem.cs" />
+    <Compile Include="Entities\CCViewItems.cs" />
+    <Compile Include="Entities\Credential.cs" />
+    <Compile Include="Entities\Feature.cs" />
+    <Compile Include="Entities\Folder.cs" />
+    <Compile Include="Entities\FolderField.cs" />
+    <Compile Include="Entities\JqGridModel.cs" />
+    <Compile Include="Entities\Subscription.cs" />
+    <Compile Include="Entities\Notification.cs" />
+    <Compile Include="Entities\Plan.cs" />
+    <Compile Include="Entities\PurchasedFeatureDetails.cs" />
+    <Compile Include="Entities\PurchasedFeature.cs" />
+    <Compile Include="Entities\SubscriptionDto.cs" />
+    <Compile Include="Entities\User.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\PagedList.css" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

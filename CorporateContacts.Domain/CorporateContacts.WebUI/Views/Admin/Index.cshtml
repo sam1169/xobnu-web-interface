@@ -1,0 +1,515 @@
+﻿@model CorporateContacts.WebUI.Models.AdminViewModel
+@{
+    ViewBag.Title = "Corporate Contacts - Dashboard";
+    ViewBag.PageHeader = "Admin Dashboard";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";    
+}
+
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon active"></i>@Html.ActionLink("Home","Index","Admin")</li>');
+    var SelectedCheckBoxID = '';
+</script>
+
+@*<div class="page-header">
+    <h1>Home
+                                    <small>
+                                        <i class="icon-double-angle-right"></i>
+                                    </small>
+        </h1>
+    </div>*@
+<div class="row">
+    <div class="col-sm-12 infobox-container">
+        <div class="widget-box transparent">
+            <div class="widget-header widget-header-flat">
+                <h4 class="lighter pull-left">
+                    <i class="icon-signal"></i>
+                    Account Summary
+                </h4>
+            </div>
+ 
+                    <div class="widget-body">
+                        <div class="widget-main padding-4">
+                            <a href="@Url.Action("ManageFolders", "Folder")">
+                                <div class="infobox infobox-green  ">
+                                    <div class="infobox-icon">
+                                        <i class="icon-custom-folder"></i>
+                                    </div>
+
+                                    <div class="infobox-data">
+                                        <span class="infobox-data-number">@Model.noOfFolders</span>
+                                        <div class="infobox-content">Folders</div>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <a href="@Url.Action("ManageFolders", "Folder")">
+                                <div class="infobox infobox-blue  ">
+                                    <div class="infobox-icon">
+                                        <i class="icon-custom-connection"></i>
+                                    </div>
+
+                                    <div class="infobox-data">
+                                        <span class="infobox-data-number">@Model.noOfConnections / @Model.NoOfConnection</span>
+                                        <div class="infobox-content">Connections</div>
+                                    </div>
+
+                                </div>
+                            </a>
+                            <a href="@Url.Action("AccountOptions", "Admin")">
+                                <div class="infobox infobox-pink  ">
+                                    <div class="infobox-icon">
+
+                                        <i class="icon-custom-user"></i>
+                                    </div>
+
+                                    <div class="infobox-data">
+                                        <span class="infobox-data-number">@Model.noOfUsers</span>
+                                        <div class="infobox-content">Users</div>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="@Url.Action("BillingOptions", "Admin", new { id = 1 })">
+                                <div class="infobox infobox-red  ">
+                                    <div class="infobox-icon">
+                                        <i class="icon-custom-subscription"></i>
+                                    </div>
+
+                                    <div class="infobox-data">
+                                        <span class="infobox-data-number">@Model.noOfSubscriptionsPurchased</span>
+                                        <div class="infobox-content">Subscriptions</div>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="#">
+                                <div class="infobox infobox-orange2">
+                                    <div class="infobox-icon">
+                                        <i class="icon-custom-items"></i>
+                                    </div>
+
+                                    <div class="infobox-data">
+                                        <span class="infobox-data-number">@Model.noOfTotalItems</span>
+                                        <div class="infobox-content">Items</div>
+                                    </div>
+
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="space-6"></div>
+
+
+            </div>
+        </div>
+
+
+
+
+
+
+@if (Model.FoldersInfor.Count() > 0)
+{
+    var flag = 0;
+
+    foreach (var folder in Model.FoldersInfor)
+    {
+        if (folder.NumberOfConnections > 0)
+        {
+            flag = 1;
+        }
+    }
+
+    if (Model.ConnectionsInfor.ToList().Count > 0)
+    {
+        foreach (var conn in Model.ConnectionsInfor)
+        {
+            if (conn.Count() <= 0)
+            {
+                if (flag != 1)
+                {
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="widget-box">
+                                <div class="widget-header widget-header-flat">
+                                    <h4 class="smaller">Great, you’re getting along with Corporate Contacts really well.</h4>
+                                </div>
+                                <div class="widget-body">
+                                    <div class="widget-main">
+
+                                        <ul>
+                                            <li>
+                                                <i style="margin-left: -15px;" class="icon-circle green"></i>
+                                                @if (Model.FoldersInfor.Count() == 1)
+                                                {
+                                                    <span>You have created a Folder successfully.</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>You created the Folders successfully.</span>
+                                                }
+                                            </li>
+                                            <li>
+                                                <i style="margin-left: -15px;" class="icon-circle red"></i>
+                                                Now, let’s set up a Connection to one of your Folders. To get started click on  <a href="@Url.Action("ManageFolders", "Folder")">Manage Folders</a>.
+                                            </li>
+                                            @*<li>
+                                                    <i class="icon-ok bigger-110 green"></i>
+                                                    <a>Click here to create your First Folder</a>
+                                                </li>*@
+                                        </ul>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+                }
+
+                break;
+            }
+        }
+    }
+
+
+    foreach (var folder in Model.FoldersInfor)
+    {
+        if (folder.NumberOfConnections < 1)
+        {
+
+
+
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">
+            <i class="icon-remove"></i>
+        </button>
+        <strong>Alert!</strong>
+
+        You have Folders without Connections. To connect a Folder with a Connection, click on <a href="@Url.Action("ManageFolders", "Folder")">
+            Manage > Folders</a>
+            <br>
+</div>
+    <br />
+            break;
+        }
+    }
+
+    <div id="changePauseStateLoading" style="display: none;">Applying Requested Changes...&nbsp;&nbsp;<img src="~/Content/Images/ajax-loader.gif" alt="" /></div>
+    <br/>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="table-header">Folders   </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Number Of Items</th>
+                            <th>Number Of Connections</th>
+                            <th style="width:100px">Sync Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        
+
+                        @foreach (var folder in Model.FoldersInfor)
+                        {
+                                
+                            <tr>
+                                @if ((((CorporateContacts.Domain.Entities.Account)Session["account"]).isOverFlow != true))
+                                {
+                                    <td>
+                                        <a href="@Url.Action("Items", "Folder", new { id = folder.FolderID })">
+                                            @folder.FolderName
+                                        </a>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>                                       
+                                            @folder.FolderName                                       
+                                    </td>
+                                }
+                                
+                                
+                               
+
+                                @{
+                            switch (folder.FolderType)
+                            {
+                                case 0:
+                                    <td>Custom</td>
+                                    break;
+
+                                case 1:
+                                    <td>Contact</td>                                                              
+                                    break;
+
+                                case 2:
+                                    <td>Appointment</td>                              
+                                    break;
+
+                                case 3:
+                                    <td>Task</td>                                
+                                    break;
+                            }
+   
+                                }
+
+                                <td>@folder.NumberOfItems </td>
+                                <td>@folder.NumberOfConnections </td>
+                                <td class="toggle-buttons">
+
+                                    @if (folder.IsPaused)
+                                    {
+
+                                        <ul class='tg-list' style=" margin-left: 10px;">
+                                            <li class='tg-list-item' title="Paused" data-rel="tooltip">
+                                                <input class='tgl tgl-ios' id='chk-fold-@folder.FolderID' type='checkbox' unchecked onchange="SelectedCheckBoxID = '1-@folder.FolderID';">
+                                                <label class='tgl-btn' for='chk-fold-@folder.FolderID'></label>
+                                            </li>
+                                        </ul>
+
+                                        @*<center>
+                                            <a style="width:100%;background-color:#ff0000 !important;  border: none;" class="btn btn-sm btn-primary" href="@Url.Action("ChangeSyncState", "Admin", new { ActionType = "Folder", ID = folder.FolderID, Value = "1" })">Resume</a>
+                                        </center>*@
+                                    }
+                                    else
+                                    {
+
+                                        <ul class='tg-list' style=" margin-left: 10px;">
+                                            <li class='tg-list-item' title="Running" data-rel="tooltip">
+                                                <input class='tgl tgl-ios' id='chk-fold-@folder.FolderID' type='checkbox' checked onchange="SelectedCheckBoxID = '0-@folder.FolderID';">
+                                                <label class='tgl-btn' for='chk-fold-@folder.FolderID'></label>
+                                            </li>
+                                        </ul>
+                                        @*<center>
+                                            <a style="width:100%;background-color:#0BBE3D !important;  border: none;" class="btn btn-sm btn-primary" href="@Url.Action("ChangeSyncState", "Admin", new { ActionType = "Folder", ID = folder.FolderID, Value = "0" })">Pause</a>
+                                        </center>*@
+                                    }
+
+
+                                </td>
+                            </tr>
+                        
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+                        foreach (var conn in Model.ConnectionsInfor)
+                        {
+                            if (conn.Count() > 0)
+                            {
+                            
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="table-header">               
+                <a style="color:white" href="@Url.Action("Items", "Folder", new { id = conn[0].FolderID })">@conn[0].FolderName
+                </a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Folder Name</th>
+                            <th>Type</th>
+                            <th>Last Sync Time</th>
+                            <th>Syncing Now?</th>
+                            <th style="width:100px">Sync Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var con in conn)
+                        {
+                            <tr class="@con.rowClass">
+                                <td>@con.ConnctionFolderName</td>
+                                <td>@con.Type</td>
+                                <td>@con.LastSyncTime</td>
+                                <td>@con.IsRunning</td>
+                                <td class="toggle-buttons">
+                                    @if (con.IsPaused)
+                                    {
+                                        
+                                        <ul class='tg-list' style=" margin-left: 10px;">
+                                            <li class='tg-list-item' title="Paused" data-rel="tooltip">
+                                                <input class='tgl tgl-ios' id='chk-con-@con.ConnectionID' type='checkbox' unchecked onchange="SelectedCheckBoxID = '1-@con.ConnectionID';">
+                                                <label class='tgl-btn' for='chk-con-@con.ConnectionID'></label>
+                                            </li>
+                                        </ul>
+                                            @*<center>
+                                                <a style="width:100%;background-color:#ff0000 !important;  border: none;" class="btn btn-sm btn-primary" href="@Url.Action("ChangeSyncState", "Admin", new { ActionType = "Connection", ID = con.ConnectionID, Value = "1" })">Resume</a>
+                                            </center>*@
+                                    }
+                                    else
+                                    {
+                                        <ul class='tg-list' style=" margin-left: 10px;">
+                                            <li class='tg-list-item' title="Running" data-rel="tooltip">
+                                                <input class='tgl tgl-ios' id='chk-con-@con.ConnectionID' type='checkbox' checked onchange="SelectedCheckBoxID = '0-@con.ConnectionID';">
+                                                <label class='tgl-btn' for='chk-con-@con.ConnectionID'></label>
+                                            </li>
+                                        </ul>
+                                            @*<center>
+                                                <a style="width:100%;background-color:#0BBE3D !important;  border: none;" class="btn btn-sm btn-primary" href="@Url.Action("ChangeSyncState", "Admin", new { ActionType = "Connection", ID = con.ConnectionID, Value = "0" })">Pause</a>
+                                            </center>*@
+                                    }
+
+
+</td>
+                            </tr>
+
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+                            }
+                        }
+
+                        
+}
+else
+{
+
+        <div class="widget-box">
+            <div class="widget-header widget-header-flat">
+                <h4 class="smaller">New to Corporate Contacts? Lets get you started with..</h4>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main">
+
+                    <ul>
+                        <li>
+                            <i style="margin-left: -15px;" class="icon-circle green"></i>
+                            This is your Admin Dashboard. Here you will be able to see all the Folders created within Corporate Contacts and their associated Connections.
+                        </li>
+                        <li>
+                            <i style="margin-left: -15px;" class="icon-circle green"></i>
+                            On the left of your screen is the navigation bar, which gives you access to the main areas of Corporate Contacts.
+                        </li>
+                        <li>
+                            <i style="margin-left: -15px;" class="icon-circle green"></i>
+                            <a href="@Url.Action("ManageFolders", "Folder")">Manage > Folders</a> : as the name suggests it allows you to manage all your Corporate Contacts Folders and their associated Connections.<br/>
+                            <a href="@Url.Action("AccountOptions", "Admin")">Account > Options</a> : this lets you customize your profile, create new users, change passwords<br />
+                            <a href="@Url.Action("BillingOptions", "Admin", new { id = 1 })">Account > Billing</a> : this lets you customize subscriptions<br />
+                            <a href="http://corporatecontacts.freshdesk.com/support/home">Support</a> : help is just one click away. Select Support to access our Knowledge Database or request direct assistance.
+                        </li>
+                        <li>
+                            <i style="margin-left: -15px;" class="icon-circle red"></i>
+                            To create your first Folder, let's click on <a href="@Url.Action("ManageFolders", "Folder")">Manage > Folders</a>
+                        </li>
+                        @*<li>
+                                <i class="icon-ok bigger-110 green"></i>
+                                <a>Click here to create your First Folder</a>
+                            </li>*@
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+}
+
+
+                            @*<span class="label label-success arrowed-in arrowed-in-right pull-left">
+                                    Version :
+                                    @if (ViewBag.version != null)
+                                    { @ViewBag.version }
+                                </span>*@
+
+
+                            <div class="col-sm-6">
+                                <!-- #dialog-message -->
+                                <div id="dialog-confirm" class="hide">
+                                    <div class="alert alert-info bigger-110">
+                                        <span id="lblConfirmMsg"></span>
+                                    </div>
+
+                                    <div class="space-6"></div>
+
+                                    <p class="bigger-110 bolder center grey">
+                                        Are you sure you want to proceed?
+                                    </p>
+                                </div>
+                                <!-- #dialog-confirm -->
+                            </div>
+
+                            <link rel="stylesheet" href="~/assets/css/jquery-ui-1.10.3.full.min.css" />
+                            <script src="~/assets/js/jquery-ui-1.10.3.full.min.js"></script>
+                            <script src="~/assets/js/fuelux/fuelux.spinner.min.js"></script>
+
+                            <script>
+                                $("input[type=checkbox]").on('change', function (e) {
+                                    e.preventDefault();
+                                    var chkBoxID = $(this).attr('id');
+                                    var actionType = '';
+                                    var ID = '';
+                                    var toggleValue = '';
+
+                                    if (((String(chkBoxID)).match('chk-con-') != null)) {
+                                        actionType = 'Connection';
+                                        ID = chkBoxID.replace('chk-con-', '');
+                                        toggleValue = SelectedCheckBoxID.substring(0, 1);
+                                        if (toggleValue == '1')
+                                            $('#lblConfirmMsg').html('This will start the selected connection');
+                                        else
+                                            $('#lblConfirmMsg').html('This will pause the selected connection');
+                                    }
+                                    else if (((String(chkBoxID)).match('chk-fold-') != null)) {
+                                        actionType = 'Folder';
+                                        ID = chkBoxID.replace('chk-fold-', '');
+                                        toggleValue = SelectedCheckBoxID.substring(0, 1);
+                                        if (toggleValue == '1')
+                                            $('#lblConfirmMsg').html('This will start the selected folder and its associated connections');
+                                        else
+                                            $('#lblConfirmMsg').html('This will pause the selected folder and its associated connections');
+                                    }
+
+
+
+                                    $("#dialog-confirm").removeClass('hide').dialog({
+                                        resizable: false,
+                                        modal: true,
+                                        title: "Change State",
+                                        title_html: true,
+                                        buttons: [
+                                            {
+                                                html: "<i class='icon-info-sign bigger-110'></i>&nbsp; Apply Change",
+                                                "class": "btn btn-danger btn-xs",
+                                                click: function () {
+                                                    window.location.href = '/Admin/ChangeSyncState?ActionType=' + actionType + '&ID=' + ID + '&Value=' + toggleValue;
+                                                    $(this).dialog("close");
+                                                    $("#changePauseStateLoading").show();
+                                                }
+                                            }
+                                            ,
+                                            {
+                                                html: "<i class='icon-remove bigger-110'></i>&nbsp; Cancel",
+                                                "class": "btn btn-xs",
+                                                click: function () {
+                                                    $(this).dialog("close");
+                                                    var chkBox = document.getElementById(chkBoxID);
+                                                    if (chkBox.checked) {
+                                                        document.getElementById(chkBoxID).checked = false;
+                                                    }
+                                                    else {
+                                                        document.getElementById(chkBoxID).checked = true;
+                                                    }
+                                                    $("#changePauseStateLoading").hide();
+                                                }
+                                            }
+                                        ]
+                                    });
+                                });
+                            </script>

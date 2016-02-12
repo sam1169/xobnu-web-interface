@@ -1,0 +1,189 @@
+﻿@model CorporateContacts.WebUI.Models.SystemAdminDashboardViewModel
+@{
+    ViewBag.Title = "System Admin Dashboard";
+    ViewBag.PageHeader = "Corporate Contacts Admin Dashboard";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script>  
+    $('.breadcrumb').html('<li><i class="icon-home home-icon active"></i><a href="/CorporateContactsAdmin/">Home</a></li>');
+</script>
+
+<script src="~/js/jquery.datetimepicker.js"></script>
+<link href="~/css/jquery.datetimepicker.css" rel="stylesheet" />
+<script src="~/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="~/assets/js/jquery.ui.touch-punch.min.js"></script>
+<script src="~/assets/js/jquery.slimscroll.min.js"></script>
+
+<script src="~/js/Chart.js"></script>
+
+
+<div class="row">
+    <div class="col-sm-12 infobox-container">
+        <div class="widget-box transparent">
+            <div class="widget-header widget-header-flat">
+                <h4 class="lighter pull-left">
+                    <i class="icon-signal"></i>
+                    Corporate Contacts Summary
+                </h4>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main padding-4">
+                    <a href="#">
+                        <div class="infobox infobox-green  ">
+                            <div class="infobox-icon">
+                                <i class="icon-comments"></i>
+                            </div>
+
+                            <div class="infobox-data">
+                                <span class="infobox-data-number">@Model.FolderCount</span>
+                                <div class="infobox-content">Folders</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="#">
+                        <div class="infobox infobox-blue  ">
+                            <div class="infobox-icon">
+                                <i class="icon-twitter"></i>
+                            </div>
+
+                            <div class="infobox-data">
+                                <span class="infobox-data-number">@Model.AccountCount</span>
+                                <div class="infobox-content">Accounts</div>
+                            </div>
+
+                        </div>
+                    </a>
+                    <a href="">
+                        <div class="infobox infobox-pink  ">
+                            <div class="infobox-icon">
+                                <i class="icon-shopping-cart"></i>
+                            </div>
+
+                            <div class="infobox-data">
+                                <span class="infobox-data-number">@Model.ConnectionCount</span>
+                                <div class="infobox-content">Connections</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="">
+                        <div class="infobox infobox-red  ">
+                            <div class="infobox-icon">
+                                <i class="icon-beaker"></i>
+                            </div>
+
+                            <div class="infobox-data">
+                                <span class="infobox-data-number">@Model.ItemCount</span>
+                                <div class="infobox-content">Items</div>
+                            </div>
+                        </div>
+                    </a>
+                    @*<a href="">
+                        <div class="infobox infobox-orange2">
+                            <div class="infobox-icon">
+                                <i class="icon-beaker"></i>
+                            </div>
+
+                            <div class="infobox-data">
+                                <span class="infobox-data-number">@Model.ItemsCount</span>
+                                <div class="infobox-content">ItemCount</div>
+                            </div>
+
+                        </div>
+                    </a>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="well">
+            <h4 class="green smaller lighter">Error Log for Last 3 Days</h4>
+
+            <div class="dialogs">
+                @foreach (var errLog in Model.ErrorLogHistoryLimited)
+                {
+
+                    <div class="itemdiv dialogdiv">
+                        <div class="user" style="border: 1px solid #dde4ed; padding: 5px 8px 8px; border-left-width: 2px; margin-right: 1px;width:80px;border-radius:5px;background-color:#F5F5F5;">
+                            <span style="  display: block;font-size: 15px;margin: 2px 0 4px;position: relative;color: #d53f40;">@errLog.LogID</span>
+                        </div>
+                        <div class="body" style="margin-left: 90px;">
+                            <div class="time">
+                            <i class="icon-time"></i>
+                            <span class="green">@errLog.DateTime</span>
+                        </div>
+
+                            <div class="name">
+                                <a href="#">@errLog.ErrorType</a> - <a href="#modal-form" data-toggle="modal" onclick="showStackErrorTraceDetails('@errLog.AccountID','@errLog.ErrorStackTrace','@errLog.ErrorType','@errLog.Source','@errLog.LogID','@errLog.ErrorMsg');">More Details</a>
+                            </div>
+                            <div class="text">@errLog.ErrorMsg</div>
+
+                            <div class="tools">
+                                <a href="#" class="btn btn-minier btn-info">
+                                    <i class="icon-only icon-share-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                }
+
+            </div>     
+
+
+             
+
+
+
+            </div>
+
+    </div>
+</div>
+
+<div id="modal-form" class="modal" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#219FD1;">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="blue bigger white" style="color:#ffffff !important;">Error Log Details<span id="errorDetails"></span></h4>
+            </div>
+
+            <div class="modal-body overflow-visible">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="widget-box">
+                            <div class="widget-header">
+                                <h4 id="errorStackTraceHeading">Package Details</h4>
+                            </div>
+
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <span id="errorStackTraceContent"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $('.dialogs').slimScroll({
+        height: '300px'
+    });
+
+    function showStackErrorTraceDetails(accountID,stackTrace,errorType,source, errorID, errorMsg)
+    {
+        alert('test');
+        $('#errorStackTraceContent').html('Account ID : ' + accountID +'<br/>' + 'Error Type : ' + errorType +'<br/>' + 'Error Message : ' + errorMsg +'<br/>' + 'Stack Trace :' +  stackTrace);
+        $('#errorStackTraceHeading').html('Error fired in ' + source);
+        $('#errorDetails').html(' - Log ID : ' + errorID);
+    }
+
+</script>

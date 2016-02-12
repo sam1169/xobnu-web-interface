@@ -1,0 +1,452 @@
+﻿@model CorporateContacts.WebUI.Models.FolderFieldsSelectModel
+@{
+    ViewBag.Title = "Select Folder Fields";
+    ViewBag.PageHeader = "Folder Fields";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section JavaScript
+{
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <style>
+        #sortable1, #sortable2, #sortable3 {
+            list-style-type: none;
+            margin: 2px;
+            padding: 0;
+            float: left;
+            margin-right: 10px;
+            padding: 5px;
+            min-width: 283px;
+        }
+
+            #sortable1 li, #sortable2 li, #sortable3 li {
+                margin: 5px;
+                padding: 5px;
+                width: 260px;
+                cursor: pointer;
+            }
+    </style>
+    <script>
+        $(function () {
+            $("ul.droptrue").sortable({
+                connectWith: "ul"
+            });
+
+            $("ul.dropfalse").sortable({
+                connectWith: "ul",
+                dropOnEmpty: false
+            });
+
+            $("#sortable1, #sortable2, #sortable3").disableSelection();
+        });
+    </script>
+}
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i>@Html.ActionLink("Home","Index","Admin")</li><li><a href="/Folder/ManageFolders/">Manage Folders</a></li><li><a href="/Folder/ViewFields/' + @Model.FolderID + '">Folder Fields</a></li><li class="active">Fields by Schema</li>');
+</script>
+
+
+@using (Html.BeginForm("SelectFolderFields", "Folder", FormMethod.Post))
+{
+    <div class="row" style="max-width: 1100px;">
+        <div class="col-xs-12">
+            <div style="float: right">
+                <button type="button" id="btnremoveall" class="btn btn-primary btn-sm">
+                    <i class="icon-eraser icon-white"></i>&nbsp; Remove All               
+                </button>
+                <button type="button" id="btnaddall" class="btn btn-primary btn-sm">
+                    <i class="icon-plus-sign icon-white"></i>Add All               
+                </button>
+                <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="icon-save icon-white"></i>&nbsp; Save               
+                </button>                
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row" style="max-width: 1100px;">
+        <div class="col-xs-4">
+            <div class="widget-box" >
+                <div class="widget-header header-color-blue2">
+                    <h4 class="lighter smaller">All fields</h4>
+                </div>
+                <div class="widget-body" style="overflow-y: auto; max-height: 600px">
+                    <div id="sortable">
+                        <ul id="sortable1" class="droptrue" style="min-height: 600px">
+                            @foreach (var item in Model.SelectFolderFieldsSchemas)
+                            {
+                                <li id="" class="ui-state-default">@item</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-4">
+            <div class="widget-box" >
+                <div class="widget-header header-color-blue2">
+                    <h4 class="lighter smaller">Selected fields</h4>
+                </div>
+                <div id="selection" class="widget-body" style="overflow-y: auto; max-height: 600px">
+                    <ul id="sortable3" class="droptrue" style="min-height: 600px">
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-4">
+            <div class="widget-box">
+                <div class="widget-header header-color-blue2">
+                    <h4 class="lighter smaller">Templates</h4>
+                </div>
+                <div class="widget-body" style="overflow-y: auto; max-height: 600px; min-height: 600px; padding: 20px">
+                    @if (Model.Type == 1)
+                    {
+                        <button id="csimple" class="btn btn-info btn-block">Corporate Simple</button>
+                        <button id="csstd" class="btn btn-primaryr btn-block">Corporate Standard</button>
+                        <button id="hsimple" class="btn btn-yellow btn-block">Home Simple</button>
+                        <button id="hstd" class="btn btn-success btn-block">Home Standard</button>
+                        <button id="fulloutlook" class="btn btn-primary btn-block">Full Outlook</button>
+                    }
+                    else if (Model.Type == 2)
+                    {
+                        @*<button id="asimple" class="btn btn-info btn-block">Appointment Simple</button>*@
+                        <button id="asstd" class="btn btn-primaryr btn-block">Appointment Standard</button>
+                        <button id="cdiary" class="btn btn-yellow btn-block">Crime Diary</button>
+                    }
+
+                    else
+                    {
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>   
+    <br/>
+    <div class="row" style="max-width: 1100px;">
+        <div class="col-xs-12">
+            <div style="float: right">
+                <button type="button" id="btnremoveallb" class="btn btn-primary btn-sm">
+                    <i class="icon-eraser icon-white"></i>&nbsp; Remove All               
+                </button>
+                <button type="button" id="btnaddallb" class="btn btn-primary btn-sm">
+                    <i class="icon-plus-sign icon-white"></i>&nbsp; Add All               
+                </button>
+                <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="icon-save icon-white"></i>&nbsp; Save               
+                </button>                
+            </div>
+        </div>
+    </div>
+
+    @Html.Hidden("fields")
+    @Html.HiddenFor(model => model.FolderID)
+    
+}
+<script>
+
+    $(document).ready(function () {
+
+        $('#selection ul').empty();
+         @foreach (var item in Model.SavedFields)
+         { 
+            <text>
+        $('#selection ul').append('<li id="" class="ui-state-default">@item</li>');
+        $("#sortable1 li:contains('@item')").remove();
+            </text>
+             
+         }
+    });
+
+    $("#fulloutlook").click(function (e) {
+        e.preventDefault();
+        $('#selection ul').empty();
+        $('#sortable ul').empty();
+        @foreach (var item in Model.SelectFolderFieldsSchemas)
+        { 
+            <text>            $('#selection ul').append('<li id="" class="ui-state-default">@item</li>');            </text>
+        }
+    });
+
+    $("#btnaddall").click(function (e) {
+        e.preventDefault();
+        $('#selection ul').empty();
+        $('#sortable ul').empty();
+            @foreach (var item in Model.SelectFolderFieldsSchemas)
+            { 
+            <text>            $('#selection ul').append('<li id="" class="ui-state-default">@item</li>');            </text>
+            }
+    });
+
+    $("#btnaddallb").click(function (e) {
+        e.preventDefault();
+        $('#selection ul').empty();
+        $('#sortable ul').empty();
+              @foreach (var item in Model.SelectFolderFieldsSchemas)
+              { 
+            <text>            $('#selection ul').append('<li id="" class="ui-state-default">@item</li>');            </text>
+              }
+    });
+
+    $("#btnremoveall").click(function (e) {
+        e.preventDefault();
+        $('#selection ul').empty();
+        $('#sortable ul').empty();
+                @foreach (var item in Model.SelectFolderFieldsSchemas)
+                { <text>            $('#sortable ul').append('<li id="" class="ui-state-default">@item</li>');            </text>
+                }
+    });
+
+    $("#btnremoveallb").click(function (e) {
+        e.preventDefault();
+        $('#selection ul').empty();
+        $('#sortable ul').empty();
+                    @foreach (var item in Model.SelectFolderFieldsSchemas)
+                    { <text>            $('#sortable ul').append('<li id="" class="ui-state-default">@item</li>');            </text>
+                    }
+    });
+
+    $("#csimple").click(function (e) {
+        e.preventDefault();
+        $('#selection ul').empty();
+        $('#sortable ul').empty();
+            @foreach (var item in Model.SelectFolderFieldsSchemas)
+            { <text>            $('#sortable ul').append('<li id="" class="ui-state-default">@item</li>');            </text>
+            }
+        $("#selection ul").append('<li id="" class="ui-state-default">First Name</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Last Name</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Job Title</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Company</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Mobile Phone</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Business Phone</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Email Address</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Categories</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Notes</li>');
+        $("#sortable1 li:contains('First Name')").remove();
+        $("#sortable1 li:contains('Last Name')").remove();
+        $("#sortable1 li:contains('Job Title')").remove();
+        $("#sortable1 li:contains('Company')").remove();
+        $("#sortable1 li:contains('Mobile Phone')").remove();
+        $("#sortable1 li:contains('Business Phone')").remove();
+        $("#sortable1 li:contains('Email Address')").remove();
+        $("#sortable1 li:contains('Categories')").remove();
+        $("#sortable1 li:contains('Notes')").remove();
+    });
+
+    $("#asimple").click(function (e) {
+        e.preventDefault();
+        $('#selection ul').empty();
+        $('#sortable ul').empty();
+            @foreach (var item in Model.SelectFolderFieldsSchemas)
+            { <text>            $('#sortable ul').append('<li id="" class="ui-state-default">@item</li>');            </text>
+            }
+        $("#selection ul").append('<li id="" class="ui-state-default">Subject</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Start Time</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">End Time</li>');        
+        $("#selection ul").append('<li id="" class="ui-state-default">Notes</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Location</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Categories</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Is All Day Event</li>');
+        $("#sortable1 li:contains('Subject')").remove();
+        $("#sortable1 li:contains('Start Time')").remove();
+        $("#sortable1 li:contains('End Time')").remove();       
+        $("#sortable1 li:contains('Notes')").remove();
+        $("#sortable1 li:contains('Location')").remove();
+        $("#sortable1 li:contains('Categories')").remove();
+        $("#sortable1 li:contains('Is All Day Event')").remove();
+    });
+
+    $("#cdiary").click(function (e) {
+        e.preventDefault();
+        $('#selection ul').empty();
+        $('#sortable ul').empty();
+            @foreach (var item in Model.SelectFolderFieldsSchemas)
+            { <text>            $('#sortable ul').append('<li id="" class="ui-state-default">@item</li>');            </text>
+            }
+        $("#selection ul").append('<li id="" class="ui-state-default">Subject</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Start Time</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Location</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">End Time</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Is Reminder Set</li>');
+        //$("#selection ul").append('<li id="" class="ui-state-default">RTF Body</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Lawyer Name</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Case Manager</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">TSDiary ID</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">AppointmentID</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Categories</li>');
+        $("#sortable1 li:contains('Start Time')").remove();
+        $("#sortable1 li:contains('Location')").remove();
+        $("#sortable1 li:contains('End Time')").remove();
+        $("#sortable1 li:contains('Subject')").remove();
+        $("#sortable1 li:contains('Is Reminder Set')").remove();
+        //$("#sortable1 li:contains('RTF Body')").remove();
+        $("#sortable1 li:contains('Lawyer Name')").remove();
+        $("#sortable1 li:contains('Case Manager')").remove();
+        $("#sortable1 li:contains('TSDiary ID')").remove();
+        $("#sortable1 li:contains('AppointmentID')").remove();
+        $("#sortable1 li:contains('Categories')").remove();
+    });
+
+    $("#csstd").click(function (e) {
+        e.preventDefault();
+        $('#selection ul').empty();
+        $('#sortable ul').empty();
+            @foreach (var item in Model.SelectFolderFieldsSchemas)
+            { <text>            $('#sortable ul').append('<li id="" class="ui-state-default">@item</li>');            </text>
+            }
+        $("#selection ul").append('<li id="" class="ui-state-default">First Name</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Last Name</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Job Title</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Company</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Mobile Phone</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Business Phone</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Business Fax</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Business Address Street</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Business Address City</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Business Address State</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Business Address Postal Code</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Business Address Country</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Business Phone 2</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Company Main Phone</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Email Address</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Email2 Address</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Categories</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Notes</li>');
+        $("#sortable1 li:contains('First Name')").remove();
+        $("#sortable1 li:contains('Last Name')").remove();
+        $("#sortable1 li:contains('Job Title')").remove();
+        $("#sortable1 li:contains('Company')").remove();
+        $("#sortable1 li:contains('Mobile Phone')").remove();
+        $("#sortable1 li:contains('Business Phone')").remove();
+        $("#sortable1 li:contains('Business Fax')").remove();
+        $("#sortable1 li:contains('Business Address Street')").remove();
+        $("#sortable1 li:contains('Business Address City')").remove();
+        $("#sortable1 li:contains('Business Address State')").remove();
+        $("#sortable1 li:contains('Business Address Postal Code')").remove();
+        $("#sortable1 li:contains('Business Address Country')").remove();
+        $("#sortable1 li:contains('Business Phone 2')").remove();
+        $("#sortable1 li:contains('Company Main Phone')").remove();
+        $("#sortable1 li:contains('Email Address')").remove();
+        $("#sortable1 li:contains('Email2 Address')").remove();
+        $("#sortable1 li:contains('Categories')").remove();
+        $("#sortable1 li:contains('Notes')").remove();
+    });
+
+    $("#asstd").click(function (e) {
+        e.preventDefault();
+        $('#selection ul').empty();
+        $('#sortable ul').empty();
+            @foreach (var item in Model.SelectFolderFieldsSchemas)
+            { <text>            $('#sortable ul').append('<li id="" class="ui-state-default">@item</li>');            </text>
+            }
+        $("#selection ul").append('<li id="" class="ui-state-default">Subject</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Start Time</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">End Time</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Notes</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Location</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Categories</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Is All Day Event</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Is Meeting</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Optional Attendees</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Required Attendees</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Resources</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Is Reminder Set</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Reminder Minutes Before Start</li>');
+        //$("#selection ul").append('<li id="" class="ui-state-default">Company</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Private</li>');
+        $("#sortable1 li:contains('Subject')").remove();
+        $("#sortable1 li:contains('Start Time')").remove();
+        $("#sortable1 li:contains('End Time')").remove();
+        $("#sortable1 li:contains('Notes')").remove();
+        $("#sortable1 li:contains('Location')").remove();
+        $("#sortable1 li:contains('Categories')").remove();
+        $("#sortable1 li:contains('Is All Day Event')").remove();
+        $("#sortable1 li:contains('Is Meeting')").remove();
+        $("#sortable1 li:contains('Optional Attendees')").remove();
+        $("#sortable1 li:contains('Required Attendees')").remove();
+        $("#sortable1 li:contains('Resources')").remove();
+        $("#sortable1 li:contains('Is Reminder Set')").remove();
+        $("#sortable1 li:contains('Reminder Minutes Before Start')").remove();
+        //$("#sortable1 li:contains('Company')").remove();
+        $("#sortable1 li:contains('Private')").remove();
+    });
+
+
+    $("#hsimple").click(function (e) {
+        e.preventDefault();
+        $('#selection ul').empty();
+        $('#sortable ul').empty();
+            @foreach (var item in Model.SelectFolderFieldsSchemas)
+            { <text>            $('#sortable ul').append('<li id="" class="ui-state-default">@item</li>');            </text>
+            }
+        $("#selection ul").append('<li id="" class="ui-state-default">First Name</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Last Name</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Mobile Phone</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Home Phone</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Email Address</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Categories</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Notes</li>');
+        $("#sortable1 li:contains('First Name')").remove();
+        $("#sortable1 li:contains('Last Name')").remove();
+        $("#sortable1 li:contains('Mobile Phone')").remove();
+        $("#sortable1 li:contains('Home Phone')").remove();
+        $("#sortable1 li:contains('Email Address')").remove();
+        $("#sortable1 li:contains('Categories')").remove();
+        $("#sortable1 li:contains('Notes')").remove();
+    });
+
+
+    $("#hstd").click(function (e) {
+        e.preventDefault();
+        $('#selection ul').empty();
+        $('#sortable ul').empty();
+        @foreach (var item in Model.SelectFolderFieldsSchemas)
+        { <text>            $('#sortable ul').append('<li id="" class="ui-state-default">@item</li>');            </text>
+        }
+        $("#selection ul").append('<li id="" class="ui-state-default">First Name</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Last Name</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Mobile Phone</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Home Address Street</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Home Address City</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Home Address State</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Home Address Postal Code</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Home Address Country</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Home Phone</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Email Address</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Categories</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Notes</li>');
+        $("#sortable1 li:contains('First Name')").remove();
+        $("#sortable1 li:contains('Last Name')").remove();
+        $("#sortable1 li:contains('Mobile Phone')").remove();
+        $("#sortable1 li:contains('Home Address Street')").remove();
+        $("#sortable1 li:contains('Home Address City')").remove();
+        $("#sortable1 li:contains('Home Address State')").remove();
+        $("#sortable1 li:contains('Home Address Postal Code')").remove();
+        $("#sortable1 li:contains('Home Address Country')").remove();
+        $("#sortable1 li:contains('Home Phone')").remove();
+        $("#sortable1 li:contains('Email Address')").remove();
+        $("#sortable1 li:contains('Categories')").remove();
+        $("#sortable1 li:contains('Notes')").remove();
+    });
+
+
+</script>
+<script>
+    $("form").on("submit", function (event) {
+        event.preventDefault();
+        // Validate form, returning on failure.
+        var myselection = new Array();
+        $('#selection').find('li').each(function (index) {
+            console.log(index + ": " + $(this).text());
+            myselection[index] = $(this).text();
+        });
+        console.log(JSON.stringify(myselection));
+        $('#fields').val(JSON.stringify(myselection));
+        $(this).off("submit");
+        this.submit();
+    });
+
+</script>

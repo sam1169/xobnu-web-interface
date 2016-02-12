@@ -1,0 +1,300 @@
+﻿@model CorporateContacts.WebUI.Models.AppointmentViewModel
+
+@{
+
+    ViewBag.PageHeader = "Appointment List in " + Model.FolderDetails.Name;
+    ViewBag.Title = "Appointment List";
+
+
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";}
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i>@Html.ActionLink("Home","Index","Admin")</li><li>Folders</li><li class="active">@Model.FolderDetails.Name</li>');
+</script>
+
+<link rel="stylesheet" href="~/assets/css/fullcalendar.css" />
+
+<link rel="stylesheet" href="~/assets/css/jquery-ui-1.10.3.full.min.css" />
+<script src="~/assets/js/jquery-ui-1.10.3.full.min.js"></script>
+<script src="~/assets/js/fuelux/fuelux.spinner.min.js"></script>
+
+@if (((double)(Model.limitationsObj.folderList.Where(f => f.fold.FolderID == Model.FolderDetails.FolderID).FirstOrDefault().itemCount) / (double)Model.limitationsObj.maxItemCountPerFolder) * 100 >= 80)
+{
+    <div class="alert alert-block alert-warning">
+        <i class="fa fa-exclamation yellow"></i>
+        You have used <strong class="yellow"> @(Model.limitationsObj.folderList.Where(f => f.fold.FolderID == Model.FolderDetails.FolderID).FirstOrDefault().itemCount) / @Model.limitationsObj.maxItemCountPerFolder </strong> of your available Item Count per Folder.
+    </div>
+}
+
+<div class="row" style="float: right; margin-bottom: 20px;">
+    <div class="col-xs-12">
+
+        <i class="align-top "></i>
+
+        @*<a class="btn btn-sm btn-primary" id="screenHelp" href="#helpScreenModal" data-toggle="modal">
+                <i class=" icon-exclamation-sign align-top bigger-125"></i>
+                Help
+            </a>*@
+
+        @*<a class="btn btn-sm btn-primary" id="viewhistory" href="#history-table" data-toggle="modal">
+                <i class=" icon-inbox align-top bigger-125"></i>
+                View History
+            </a>*@
+
+        @if ((((CorporateContacts.Domain.Entities.Account)Session["account"]).isOverFlow != true))
+        {
+
+            if (Model.limitationsObj.maxItemCountPerFolder > Model.limitationsObj.folderList.Where(f => f.fold.FolderID == Model.FolderDetails.FolderID).FirstOrDefault().itemCount)
+            {
+                if (Model.FolderDetails.Type == 2)
+                {
+                      <a class="btn btn-sm btn-primary" href="@Url.Action("AppointmentListView", "Folder", new { ID = Model.FolderDetails.FolderID })">
+                        <i class="icon-list align-top bigger-125"></i>
+                        View Appointments List
+                    </a>
+                    <a class="btn btn-sm btn-primary" href="@Url.Action("AddContact", "Folder", new { ID = Model.FolderDetails.FolderID, state = 0 })">
+                        <i class="icon-plus-sign align-top bigger-125"></i>
+                        Add Appointment
+                    </a>
+                }
+            }
+            else
+            {
+                if (Model.FolderDetails.Type == 2)
+                {
+                  
+                    <a class="btn btn-sm btn-danger tooltip-error" href="#max-item-count-reached-model" data-toggle="modal" data-rel="tooltip" title="Max Item Count for Folder Reached">
+                        <i class="icon-plus-sign align-top bigger-125"></i>
+                        Add Appointment
+                    </a>
+                }
+            }
+        }
+        else
+        {
+            if ((((CorporateContacts.Domain.Entities.User)Session["user"]).UserType) == "Admin")
+            {                
+                if (Model.FolderDetails.Type == 2)
+                {
+                  
+
+                    <a class="btn btn-sm disabled" href="#">
+                        <i class="icon-plus-sign align-top bigger-125"></i>
+                        Add Appointment
+                    </a>
+                }
+            }
+        }
+
+        <a class="btn btn-sm btn-primary" href="@Url.Action("Index", "Admin")">
+            <i class="icon-undo align-top bigger-125"></i>
+            Back
+        </a>
+
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="col-sm-12">
+            <div class="space"></div>
+
+            <div id="calendar"></div>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="~/assets/js/jquery.ui.touch-punch.min.js"></script>
+<script src="~/assets/js/fullcalendar.min.js"></script>
+<script src="~/assets/js/bootbox.min.js"></script>
+
+
+
+<script type="text/javascript">
+    jQuery(function ($) {
+
+        /* initialize the external events
+        -----------------------------------------------------------------*/
+
+        $('#external-events div.external-event').each(function () {
+
+            // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+            // it doesn't need to have a start or end
+            var eventObject = {
+                title: $.trim($(this).text()) // use the element's text as the event title
+            };
+
+            // store the Event Object in the DOM element so we can get to it later
+            $(this).data('eventObject', eventObject);
+
+            // make the event draggable using jQuery UI
+            $(this).draggable({
+                zIndex: 999,
+                revert: true,      // will cause the event to go back to its
+                revertDuration: 0  //  original position after the drag
+            });
+
+        });
+
+        /* initialize the calendar
+	-----------------------------------------------------------------*/
+
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+
+        var calendar = $('#calendar').fullCalendar({
+            buttonText: {
+                prev: '<i class="icon-chevron-left"></i>',
+                next: '<i class="icon-chevron-right"></i>'
+            },
+
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            events: [
+
+                @{var itemCount = Model.AppointmentListObjs.Count; var countStart = 0;}
+
+                @foreach (var item in Model.AppointmentListObjs)
+                {
+                    <text>
+                        {
+                            title: '@item.subject',
+                            start: new Date(@item.startYear, @item.startMonth-1, @item.startDay, @item.startHrs, @item.startMins),
+                            end: new Date(@item.endYear, @item.endMonth-1, @item.endDay, @item.endHrs, @item.endMins),
+                            id:@item.ItemID,
+                            allDay: false,
+                            axisFormat: 'H:mm',
+                            timeFormat: {
+                                agenda: 'H:mm{ - H:mm}'
+                            }
+                        }
+                    </text>
+
+                    if (countStart != (itemCount - 1))
+                    {
+                        <text>
+                            ,
+                        </text>
+                    }
+                    countStart++;
+                }
+
+            ]
+            ,
+            height:500,
+            editable: true,
+            droppable: true, // this allows things to be dropped onto the calendar !!!            
+            drop: function (date, allDay) { // this function is called when something is dropped
+
+                // retrieve the dropped element's stored Event Object
+                var originalEventObject = $(this).data('eventObject');
+                var $extraEventClass = $(this).attr('data-class');
+
+
+                // we need to copy it, so that multiple events don't have a reference to the same object
+                var copiedEventObject = $.extend({}, originalEventObject);
+
+                // assign it the date that was reported
+                copiedEventObject.start = date;
+                copiedEventObject.allDay = allDay;
+                if ($extraEventClass) copiedEventObject['className'] = [$extraEventClass];
+
+                // render the event on the calendar
+                // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+
+                // is the "remove after drop" checkbox checked?
+                if ($('#drop-remove').is(':checked')) {
+                    // if so, remove the element from the "Draggable Events" list
+                    $(this).remove();
+                }
+
+            }
+            ,
+            selectable: true,
+            selectHelper: true,
+            select: function (start, end, allDay) {
+
+                //bootbox.prompt("New Event Title2:", function (title) {
+                //    if (title !== null) {
+                //        calendar.fullCalendar('renderEvent',
+                //            {
+                //                title: title,
+                //                start: start,
+                //                end: end,
+                //                allDay: allDay
+                //            },
+                //            true // make the event "stick"
+                //        );
+                //    }
+                //});
+
+
+                //calendar.fullCalendar('unselect');
+
+            }
+            ,
+            eventClick: function (calEvent, jsEvent, view) {
+
+                var startD = new Date(calEvent.start);
+                var endD = new Date(calEvent.end);
+
+
+                var form = $("<center><h3 class='smaller'> Appointment Summary</h3> </center><p class='muted'><hr><div style='text-align:right;'><label class='col-xs-3 control-label no-padding-right' for='form-input-readonly'>Subject</label><div class='col-xs-9' style='overflow: hidden'><input disabled class='col-xs-8 col-sm-8 contact-field' type='text' id='txtTimeArrived' value='" + calEvent.title + "'/></div></div><br/><br/><div style='text-align:right;'><label class='col-xs-3 control-label no-padding-right' for='form-input-readonly'>Start Time</label><div class='col-xs-9' style='overflow: hidden'><input class='col-xs-8 col-sm-8 contact-field' disabled type='text' value='" + startD.getFullYear() + "-"+ startD.getMonth() +"-"+ startD.getDate() +" "+ startD.getHours() +":"+ startD.getMinutes() +"'/></div></div><br/><br/><div style='text-align:right;'><label class='col-xs-3 control-label no-padding-right' for='form-input-readonly'>End Time</label><div class='col-xs-9' style='overflow: hidden'><input class='col-xs-8 col-sm-8 contact-field' type='text' disabled value='" + endD.getFullYear() + "-"+ endD.getMonth() +"-"+ endD.getDate() +" "+ endD.getHours() +":"+ endD.getMinutes() +"'/></div></div></p>");
+
+                var div = bootbox.dialog({
+                    message: form,
+
+                    buttons: {
+                        "moreDetails": {
+                            "label": "<i class='icon-calendar'></i> View More Details",
+                            "className": "btn-sm btn-primary",
+                            "callback": function () {
+                                window.location.href = "/Folder/ViewLayout?id=" + calEvent.id + "&fid=@Model.FolderDetails.FolderID&pid=1";
+                            }
+                        },
+                        "delete": {
+                            "label": "<i class='icon-trash'></i> Delete Event",
+                            "className": "btn-sm btn-danger",
+                            "callback": function () { 
+                                window.location.href = "/Folder/DeleteContact/" + calEvent.id + "?fid=@Model.FolderDetails.FolderID&pid=1";
+                            }
+                        },
+                        "close": {
+                            "label": "<i class='icon-remove'></i> Close",
+                            "className": "btn-sm"
+                        }
+                    },
+                    width:500
+
+                });
+
+                form.on('submit', function () {
+                    calEvent.title = form.find("input[type=text]").val();
+                    calendar.fullCalendar('updateEvent', calEvent);
+                    div.modal("hide");
+                    return false;
+                });
+
+
+                //console.log(calEvent.id);
+                //console.log(jsEvent);
+                //console.log(view);
+
+                // change the border color just for fun
+                //$(this).css('border-color', 'red');
+
+            },
+            timeFormat: 'H(:mm)'
+        });
+
+    })
+</script>

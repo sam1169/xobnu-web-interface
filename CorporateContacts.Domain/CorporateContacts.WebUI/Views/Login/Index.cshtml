@@ -1,0 +1,67 @@
+﻿@model CorporateContacts.WebUI.Models.LogOnViewModel
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Login/_LoginLayout.cshtml";
+}
+
+
+
+
+            <div class="row welcome-msg">
+               <div style="display: table-cell;vertical-align: middle;">
+                   <center>
+                       <h1 class="white"><span style="font-size:40px;">Welcome to</span><br/>Corporate Contacts</h1>
+                       <a class="btn btn-sm btn-primary btn-getstarted" onclick="location.href='@Url.Action("SaveAccount", "SignUp")'">
+                           Get Started Today
+                       </a>
+                   </center>
+               </div>
+                    
+                
+            </div>
+            <!-- /.row -->
+        
+
+    <script type="text/javascript">
+        window.jQuery || document.write("<script src='assets/js/jquery-2.0.3.min.js'>" + "<" + "/script>");
+    </script>
+
+    <script type="text/javascript">
+        if ("ontouchend" in document) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+    </script>
+
+    <!-- inline scripts related to this page -->
+
+    <script type="text/javascript">
+
+
+        function show_box(id) {
+            jQuery('.widget-box.visible').removeClass('visible');
+            jQuery('#' + id).addClass('visible');
+        }
+    </script>
+
+    <style>
+        .validation-summary-errors {
+            font-weight: bold;
+            color: #f00;
+        }
+
+        .login-box .toolbar {
+            background: #219fd1;
+            border-top: 2px solid #597597;
+        }
+
+        .btn-primary, .btn-primary:focus {
+            background-color: #219fd1!important;
+            border-color: #219fd1;
+        }
+
+            .btn-primary:hover, .open .btn-primary.dropdown-toggle {
+                background-color: #1A7FA7!important;
+                border-color: #219fd1;
+            }
+    </style>
+
+

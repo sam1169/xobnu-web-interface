@@ -1,0 +1,79 @@
+﻿#menu
+{
+    list-style: none;
+    width: 600px;
+    margin: 0px auto;
+    height: 38px;
+    padding: 2px 20px 0px 20px;
+    font-weight: bold;
+    /* Background color and gradients */
+    background: #2ba6cb;
+}
+
+    #menu li
+    {
+        float: left;
+        display: block;
+        text-align: center;
+        position: relative;
+        padding: 11px 10px 11px 10px;
+        margin-right: 30px;
+        margin-top: 0px;
+        border: none;
+    }
+
+        #menu li:hover
+        {
+            padding: 11px 10px 11px 10px;
+            -moz-border-radius: 5px 5px 0px 0px;
+            -webkit-border-radius: 5px 5px 0px 0px;
+            border-radius: 5px 5px 0px 0px;
+            /* Background color and gradients */
+            background: #F4F4F4;
+            background: -moz-linear-gradient(top, #F4F4F4, #EEEEEE);
+            background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F4F4F4), to(#EEEEEE));
+        }
+
+        #menu li.selected
+        {
+            padding: 11px 10px 11px 10px;
+            -moz-border-radius: 5px 5px 0px 0px;
+            -webkit-border-radius: 5px 5px 0px 0px;
+            border-radius: 5px 5px 0px 0px;
+            /* Background color and gradients */
+            background: #F4F4F4;
+            background: -moz-linear-gradient(top, #F4F4F4, #EEEEEE);
+            background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F4F4F4), to(#EEEEEE));
+        }
+
+        #menu li a
+        {
+            font-size: 14px;
+            color: #EEEEEE;
+            display: block;
+            outline: 0;
+            text-decoration: none;
+        }
+
+        #menu li:hover a
+        {
+            color: #161616;
+            text-shadow: 1px 1px 1px #FFFFFF;
+        }
+
+        #menu li.selected a
+        {
+            color: #161616;
+            text-shadow: 1px 1px 1px #FFFFFF;
+        }
+
+        #menu li .drop
+        {
+            padding-right: 21px;
+            background: url("img/drop.png") no-repeat right 8px;
+        }
+
+        #menu li:hover .drop
+        {
+            background: url("img/drop.png") no-repeat right 7px;
+        }

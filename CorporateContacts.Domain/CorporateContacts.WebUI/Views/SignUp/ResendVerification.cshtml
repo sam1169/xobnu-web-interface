@@ -1,0 +1,62 @@
+﻿@model CorporateContacts.Domain.Entities.User
+@{
+    ViewBag.Title = "Resend Verification";
+    Layout = "~/Views/Login/_LoginLayout.cshtml";
+}
+
+<div class="row  center-all-items" style="margin-left: -2px;">
+    <div style="display: table-cell;vertical-align: middle;">
+        <center>
+            <div style="max-width: 600px;background: rgba(0, 0, 0, 0.35);padding: 1px;border-radius: 15px;box-shadow: 0 7px 27px rgb(247, 247, 247);">
+                <h2 class=" lighter bigger" style="color: #ffffff;margin-bottom:25px;max-width:350px;">
+                    Verify Account
+                </h2>
+                <h4 class=" lighter bigger" style="color: #ffffff;margin-top:-20px;margin-bottom:25px;max-width:500px;">
+                    You still need to activate your account, Please check your inbox for an email from us.
+                </h4>
+                <h4 class=" lighter bigger" style="color: #ffffff;margin-top:-20px;margin-bottom:25px;max-width:500px;">
+                    Please active it from your email account.
+                </h4>
+            </div>
+                <a onclick="location.href='@Url.Action("ResendVerificationLink", "SignUp", new { uid = Model.ID })'" style="width:350px;max-width:350px;margin-top:15px;" class="btn btn-sm btn-primary btn-login-submit">
+                    <i class="icon-envelope-alt"></i>
+                    Resend Verification Link
+                </a>
+</center>
+    </div>
+</div>
+
+
+    
+
+    <script type="text/javascript">
+        window.jQuery || document.write("<script src='assets/js/jquery-2.0.3.min.js'>" + "<" + "/script>");
+    </script>
+
+    <script type="text/javascript">
+        if ("ontouchend" in document) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+    </script>
+
+    <!-- inline scripts related to this page -->
+    @* <script type="text/javascript">
+
+            function show_box(id) {
+                jQuery('.widget-box.visible').removeClass('visible');
+                jQuery('#' + id).addClass('visible');
+            }
+
+        </script>*@
+
+    <style>
+        .validation-summary-errors {
+            font-weight: bold;
+            color: #f00;
+        }
+
+        .login-layout .widget-box {
+            background-color: #ECE7E7;
+        }
+    </style>
+
+
+

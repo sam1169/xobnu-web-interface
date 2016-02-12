@@ -1,0 +1,168 @@
+﻿@model CorporateContacts.Domain.Entities.CCFolderField
+
+@{
+    ViewBag.Title = "Add Folder Fields";
+    ViewBag.PageHeader = "Add Folder Fields";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#rvalue").hide();
+        $("#ddFieldType").change(function () {
+            var fieldtype = $(this).val();
+            var items;
+            $("#rvalue").hide();
+            if (fieldtype == "string") {
+                items += "<option value='" + "none" + "'>" + "none" + "</option>";
+                items += "<option value='" + "list" + "'>" + "list" + "</option>";
+            }
+            else if (fieldtype == "number") {
+
+                items += "<option value='" + "none" + "'>" + "none" + "</option>";
+            }
+            else if (fieldtype == "bool") {
+
+                items += "<option value='" + "none" + "'>" + "none" + "</option>";
+            }
+            else {
+
+                items += "<option value='" + "none" + "'>" + "none" + "</option>";
+                items += "<option value='" + "list" + "'>" + "list" + "</option>";
+            }
+
+            $('#ddRestriction').html(items);
+
+        });
+
+
+        $("#ddRestriction").change(function () {
+            var restriction = $(this).val();
+            if (restriction == "none") {
+                $("#rvalue").hide();
+            }
+            else {
+                $("#rvalue").show();
+            }
+        });
+
+        ///////////Generate auto textbox and get values //////////////
+
+        var counter = 2;
+
+        $("#addresvalue").click(function () {
+            if (counter > 10) {
+                //  alert("Only 10 textboxes allowed");
+                return false;
+            }
+            $('<div/>', { 'id': 'TextBoxDiv' + counter }).html(
+              $('<label/>').html(' ')
+            )
+            .append($('<input type="text">').attr({ 'id': 'textbox' + counter, 'name': 'textbox' + counter + 'class=form-control', 'class': 'form-control' }))
+            .appendTo('#TextBoxesGroup')
+            counter++;
+        });
+
+        $("#remresvalue").click(function () {
+            if (counter == 1) {
+                alert("No more value to remove");
+                return false;
+            }
+            counter--;
+            $("#TextBoxDiv" + counter).remove();
+        });
+        $("#btnsave").click(function () {
+            var msg = '';
+            for (i = 1; i < counter; i++) {
+
+                if ($('#textbox' + i).val() != '') {
+                    msg += $('#textbox' + i).val() + ",";
+                }
+            }
+
+            $("#RestrictionValues").val(msg);
+        });
+
+
+        // Field Name copy into caption 
+
+        $("#FieldName").focusout(function () {
+
+            $("#FieldCaption").val($("#FieldName").val());
+
+        });
+    });
+</script>
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i><a href="/Admin/">Home</a></li><li><a href="/Folder/ManageFolders/">Manage Folders</a></li><li><a href="/Folder/ViewFields/@Model.FolderID">Folder Fields</a></li><li class="active">Add Folder Fields</li>');
+</script>
+
+<div class="col-xs-12">
+    <div style="margin-bottom: 15px; float: right;">
+        <a class="btn btn-sm btn-primary" href="@Url.Action("ViewFields", "Folder", new { id = Model.FolderID })">
+            <i class="icon-undo align-top bigger-125"></i>
+            Back
+        </a>
+    </div>
+</div>
+
+<div class="col-xs-12">
+    <div class="widget-box">      
+
+        <div class="widget-body" style="border-top:1px solid #CCC;">
+            <div class="widget-main">
+                        <div style="color: red">
+                            @if (ViewBag.Message != null)
+                            { @ViewBag.Message }
+                        </div>
+                        @using (Html.BeginForm("Field", "Folder", FormMethod.Post))
+                        {
+                            @Html.HiddenFor(m => m.FolderID)
+                            <div>Field Name</div> @Html.TextBoxFor(m => m.FieldName, new { @class = "form-control" })
+                            <div style="color:red;"> @Html.ValidationMessageFor(m => m.FieldName)</div>
+                            <div style="margin-top: 10px;">Field Type</div>@Html.DropDownListFor(m => m.FieldType, new SelectList(new string[] { "string", "number", "bool", "category" }), new { id = "ddFieldType", @class = "form-control" });
+                            <div style="margin-top: 10px;">Field Caption</div> @Html.TextBoxFor(m => m.FieldCaption, new { @class = "form-control" })
+                            <div style="color:red;"> @Html.ValidationMessageFor(m => m.FieldCaption)</div>
+                            <div style="margin-top: 10px;">Restriction</div>@Html.DropDownListFor(m => m.Restriction, new SelectList(new string[] { "none", "list" }), new { id = "ddRestriction", @class = "form-control" });<br />
+                            <div id="rvalue">
+                                <div style="margin-top: 10px;">Restriction Values</div>
+                                @Html.HiddenFor(model => model.RestrictionValues)
+                                <div id='TextBoxesGroup'>
+
+                                    <div id="TextBoxDiv1">
+                                        <input type='text' id='textbox1' name='textbox1' class="form-control" />
+                                    </div>
+                                </div>
+                                <br />
+                                <a id="addresvalue" style="margin-right: 15px; cursor: pointer" class="btn btn-xs btn-info">Add Value</a>
+                                <a id="remresvalue" style="cursor: pointer" class="btn btn-xs btn-info">Remove Value</a>
+
+                            </div>
+                            <hr>
+                            <div class="clearfix ">
+
+                                <button class="btn btn-sm btn-primary" id="btnsave" type="submit">
+                                    <i class="icon-save  bigger-110"></i>
+                                    Save
+                                </button>
+
+                                <button class="btn btn-sm" type="reset">
+                                    <i class="icon-undo bigger-110"></i>
+                                    Reset
+                                </button>
+
+                            </div>
+
+                        }
+
+                   
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+

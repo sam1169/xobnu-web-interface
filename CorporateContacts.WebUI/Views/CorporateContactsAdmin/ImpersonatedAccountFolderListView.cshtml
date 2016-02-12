@@ -1,0 +1,76 @@
+﻿@model Xobnu.WebUI.Models.ImpersonateAccountsSysAdminModel
+@{
+    ViewBag.Title = "System Admin Dashboard";
+    ViewBag.PageHeader = "Folder Summary View for Account -" + Model.SelectedAccountInfo.AccountName;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon active"></i><a href="/CorporateContactsAdmin/">Home</a></li><li><a href="/CorporateContactsAdmin/ImpersonateAccount">Account List</a></li><li><a href="/CorporateContactsAdmin/ImpersonatedAccount/?AccID=@Model.SelectedAccountInfo.ID">Account Summary</a></li><li class="active">Folder List</li>');
+</script>
+
+<link rel="stylesheet" href="~/assets/css/jquery-ui-1.10.3.full.min.css" />
+<script src="~/assets/js/jquery-ui-1.10.3.full.min.js"></script>
+<script src="~/assets/js/fuelux/fuelux.spinner.min.js"></script>
+
+<div class="row">
+    <div class="form-group col-sm-12">
+        <div class="table-responsive">
+            <table id="table-folder-list-for-account" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Folder Name</th>
+                        <th>Date Created</th>
+                        <th>Item Count</th>
+                        <th>Usage</th>
+                        <th>View Items</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var folds in Model.SelectedAccountFolderList)
+                    {
+                        <tr>
+                            <td>@folds.FolderDetails.Name</td>
+                            <td>-</td>
+                            <td>@folds.ItemCount</td>
+                            <td>-</td>
+                            <td><a href="@Url.Action("ImpersonatedAccountFolderItemsView", "CorporateContactsAdmin", new { FoldID = folds.FolderDetails.FolderID })">Show</a></td>
+                            <td>
+                                <a class="no-text-decoration" title="Edit Connection" data-rel="tooltip" href="#">
+                                    <img style="width:25px;" src="~/assets/img/icons-blue/edit-connection-blue.png" />
+                                </a>
+                                <a class="no-text-decoration" title="Edit Field" data-rel="tooltip" href="#">
+                                    <img style="width:25px;" src="~/assets/img/icons-blue/edit-field-blue.png" />
+                                </a>
+                                <a class="no-text-decoration" title="Edit Layout" data-rel="tooltip" href="#">
+                                    <img style="width:25px;" src="~/assets/img/icons-blue/edit-layout-blue.png" />
+                                </a>
+                                <a class="no-text-decoration" title="Edit Group" data-rel="tooltip" href="#">
+                                    <img style="width:25px;" src="~/assets/img/icons-blue/edit-group-blue.png" />
+                                </a>
+                                <a class="no-text-decoration" title="Edit Folder" data-rel="tooltip" href="#">
+                                    <img style="width:25px;" src="~/assets/img/icons-blue/edit-folder-blue.png" />
+                                </a>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/jquery.dataTables.min.js"></script>
+<script src="~/assets/js/jquery.dataTables.bootstrap.js"></script>
+
+<script>
+    jQuery(function ($) {
+        var oTable1 = $('#table-folder-list-for-account').dataTable({
+            "aoColumns": [
+              null, null, null, null, { "bSortable": false }, { "bSortable": false }
+            ]
+        });
+    })
+</script>

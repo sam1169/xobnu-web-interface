@@ -1,0 +1,482 @@
+﻿@model CorporateContacts.WebUI.Models.ItemsViewModel
+@using PagedList.Mvc;
+
+@{    
+    if (Model.FolderDetails.Type == 1){
+        ViewBag.PageHeader = "Contact List in Folder " + Model.FolderDetails.Name;
+        ViewBag.Title = "Contact List";
+    }
+        
+    else{
+        ViewBag.PageHeader = "Appointment List in Folder " + Model.FolderDetails.Name;
+        ViewBag.Title = "Appointment List";
+    }
+        
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";}
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i>@Html.ActionLink("Home","Index","Admin")</li><li>Folders</li><li class="active">@Model.FolderDetails.Name</li>');
+</script>
+
+@*<div class="page-content">*@
+
+
+@if (((double)(Model.limitationsObj.folderList.Where(f => f.fold.FolderID == Model.FolderDetails.FolderID).FirstOrDefault().itemCount) / (double)Model.limitationsObj.maxItemCountPerFolder) * 100 >= 80)
+{
+    <div class="alert alert-block alert-warning">
+        <i class="fa fa-exclamation yellow"></i>
+        You have used <strong class="yellow"> @(Model.limitationsObj.folderList.Where(f => f.fold.FolderID == Model.FolderDetails.FolderID).FirstOrDefault().itemCount) / @Model.limitationsObj.maxItemCountPerFolder </strong> of your available Item Count per Folder.
+    </div>
+}
+
+
+
+<div class="row" style="float: right; margin-bottom: 20px;">
+    <div class="col-xs-12">
+
+        <i class="align-top "></i>
+
+        @*<a class="btn btn-sm btn-primary" id="screenHelp" href="#helpScreenModal" data-toggle="modal">
+            <i class=" icon-exclamation-sign align-top bigger-125"></i>
+            Help
+        </a>*@
+
+        @*<a class="btn btn-sm btn-primary" id="viewhistory" href="#history-table" data-toggle="modal">
+            <i class=" icon-inbox align-top bigger-125"></i>
+            View History
+        </a>*@
+
+        @if ((((CorporateContacts.Domain.Entities.Account)Session["account"]).isOverFlow != true))
+        {
+
+            if (Model.limitationsObj.maxItemCountPerFolder > Model.limitationsObj.folderList.Where(f => f.fold.FolderID == Model.FolderDetails.FolderID).FirstOrDefault().itemCount)
+            {
+                
+                    if (Model.FolderDetails.Type == 1)
+                    {
+                        <a class="btn btn-sm btn-primary" href="@Url.Action("AddContact", "Folder", new { ID = Model.FolderDetails.FolderID, state = 0 })">
+                            <i class="icon-plus-sign align-top bigger-125"></i>
+                            Add Contact
+                        </a>
+                        <a class="btn btn-sm btn-primary" href="@Url.Action("ImportContacts", "Folder", new { ID = Model.FolderDetails.FolderID })">
+                            <i class="icon-cloud-upload align-top bigger-125"></i>
+                            Import Contacts
+                        </a>
+                    }
+                    if (Model.FolderDetails.Type == 2)
+                    {
+                        <a class="btn btn-sm btn-primary" href="@Url.Action("AddContact", "Folder", new { ID = Model.FolderDetails.FolderID, state = 0 })">
+                            <i class="icon-plus-sign align-top bigger-125"></i>
+                            Add Appointment
+                        </a>
+                    }                
+            }
+            else
+            {
+                
+                    if (Model.FolderDetails.Type == 1)
+                    {
+                        <a class="btn btn-sm btn-danger tooltip-error" href="#max-item-count-reached-model" data-toggle="modal" data-rel="tooltip" title="Max Item Count for Folder Reached">
+                            <i class="icon-plus-sign align-top bigger-125"></i>
+                            Add Contact
+                        </a>
+                        <a class="btn btn-sm btn-danger tooltip-error" href="#max-item-count-reached-model" data-toggle="modal" data-rel="tooltip" title="Max Item Count for Folder Reached">
+                            <i class="icon-cloud-upload align-top bigger-125"></i>
+                            Import Contacts
+                        </a>
+                    }
+                    if (Model.FolderDetails.Type == 2)
+                    {
+                        <a class="btn btn-sm btn-danger tooltip-error" href="#max-item-count-reached-model" data-toggle="modal" data-rel="tooltip" title="Max Item Count for Folder Reached">
+                            <i class="icon-plus-sign align-top bigger-125"></i>
+                            Add Appointment
+                        </a>
+                    }         
+            }
+        }
+        else
+        {
+            if ((((CorporateContacts.Domain.Entities.User)Session["user"]).UserType) == "Admin")
+            {
+                if (Model.FolderDetails.Type == 1)
+                {
+                    <a class="btn btn-sm disabled" href="#">
+                        <i class="icon-plus-sign align-top bigger-125"></i>
+                        Add Contact
+                    </a>
+                }
+                if (Model.FolderDetails.Type == 2)
+                {
+                    <a class="btn btn-sm disabled" href="#">
+                        <i class="icon-plus-sign align-top bigger-125"></i>
+                        Add Appointment
+                    </a>
+                }
+            }
+            if (Model.FolderDetails.Type == 1)
+            {
+                <a class="btn btn-sm disabled" href="#">
+                    <i class="icon-cloud-upload align-top bigger-125"></i>
+                    Import Contacts
+                </a>
+            }
+        }
+
+        <a class="btn btn-sm btn-primary" href="@Url.Action("Index", "Admin")">
+            <i class="icon-undo align-top bigger-125"></i>
+            Back
+        </a>
+
+    </div>
+</div>
+
+
+<link href="~/assets/css/ui.jqgrid.css" rel="stylesheet" />
+<link href="~/assets/css/bootstrap.min.css" rel="stylesheet" />
+<link href="~/assets/css/font-awesome.min.css" rel="stylesheet" />
+<link href="~/assets/css/jquery-ui-1.10.3.full.min.css" rel="stylesheet" />
+<link href="~/assets/css/ace-fonts.css" rel="stylesheet" />
+<link href="~/assets/css/ace.min.css" rel="stylesheet" />
+<link href="~/assets/css/ace-rtl.min.css" rel="stylesheet" />
+<link href="~/assets/css/ace-skins.min.css" rel="stylesheet" />
+<script src="~/assets/js/ace-extra.min.js"></script>
+
+
+<div class="col-sm-6">
+    <!-- #dialog-message -->
+    <div id="max-item-count-reached-model" class="modal" tabindex="-1" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="blue bigger">Max Item Count for Folder Reached</h4>
+                </div>
+
+                <div class="modal-body overflow-visible">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            You have reached the Max Item Count for a Folder. You can resolve this by deleting Items from the Folder or uprading to a Higher Plan.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <a class="btn btn-sm btn-success" href="@Url.Action("BillingOptions", "Admin", new { id = 1 })">
+                        <i class="icon-ok"></i>
+                        Upgrade Plan 
+                    </a>
+
+                    <a class="btn btn-sm btn-primary" data-dismiss="modal">
+                        <i class="icon-remove"></i>
+                        Close
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #dialog-confirm -->
+</div>
+
+@* <h2>Item View</h2>*@
+<div id="plsWait" style="position: fixed; top: 50%; left: 50%;  z-index: 9999999;">
+    <img src="~/assets/img/ajax-loader.gif" />
+</div>
+<div class="row">
+    <div id="emailTemplatesGridContainer" class="col-xs-12 col-sm-12 col-lg-12" style="visibility: hidden;">
+        <table id="grid-table" style="width: 100%;"></table>
+        <div id="grid-pager" style="width: 100%;"></div>
+    </div>
+   
+    <div id="noRecordsMessageContainer" class="col-xs-12">
+        <div class="widget-box">
+            <div class="widget-header widget-header-flat">
+                <h4 class="smaller">Managing your Items in the Folder</h4>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main">
+
+                    <ul>
+                        <li>
+                            <i style="margin-left: -15px;" class="icon-circle green"></i>
+                            Here, you are able to manage all your Items (Contacts/Appointments) in the selected Folder.
+                        </li>
+                        <br />
+                        <li>
+                            <i style="margin-left: -15px;" class="icon-circle green"></i>
+                            Right now, you do not have any Items in the Folder. If you have added a Connection to this Folder, Items will be synchronized to it shortly. To set up a new Connection, 
+                            click on <a href="@Url.Action("ManageFolders", "Folder")">Manage Folders</a>
+                        </li>
+                        <br />
+                        <li>
+                            <i style="margin-left: -15px;" class="icon-circle red"></i>
+                            Can't wait till things get synchronized? No worries. You can easily create your own   
+
+                            @if ((((CorporateContacts.Domain.Entities.Account)Session["account"]).isOverFlow != true))
+                            {
+                                if (Model.FolderDetails.Type == 1)
+                                {
+                                    <span>Contact Item by clicking on &nbsp; </span>
+                                    <a class="btn btn-sm btn-primary" href="@Url.Action("AddContact", "Folder", new { ID = Model.FolderDetails.FolderID, state = 0 })">
+                                        <i class="icon-plus-sign align-top bigger-125"></i>
+                                        Add Contact
+                                    </a>
+                                    <span>&nbsp; or import a list by simply clicking on  &nbsp;</span>
+                                    <a class="btn btn-sm btn-primary" href="@Url.Action("ImportContacts", "Folder", new { ID = Model.FolderDetails.FolderID })">
+                                        <i class="icon-cloud-upload align-top bigger-125"></i>
+                                        Import Contacts
+                                    </a>
+                                }
+                                if (Model.FolderDetails.Type == 2)
+                                {<span>Appointment Item by clicking on &nbsp;</span>
+                                    <a class="btn btn-sm btn-primary" href="@Url.Action("AddContact", "Folder", new { ID = Model.FolderDetails.FolderID, state = 0 })">
+                                        <i class="icon-plus-sign align-top bigger-125"></i>
+                                        Add Appointment
+                                    </a>
+                                }
+                            }
+                            else
+                            {
+                                if (Model.FolderDetails.Type == 1)
+                                {
+                                    <span>Contact Item by clicking on &nbsp; </span>
+                                    <a class="btn btn-sm disabled" href="#">
+                                        <i class="icon-plus-sign align-top bigger-125"></i>
+                                        Add Contact
+                                    </a>
+                                                                    <span>&nbsp; or import a list by simply clicking on  &nbsp;</span>
+                                    <a class="btn btn-sm disabled" href="#">
+                                        <i class="icon-cloud-upload align-top bigger-125"></i>
+                                        Import Contacts
+                                    </a>
+                                }
+                                if (Model.FolderDetails.Type == 2)
+                                {<span>Appointment Item by clicking on &nbsp;</span>
+                                <a class="btn btn-sm disabled" href="#">
+                                    <i class="icon-plus-sign align-top bigger-125"></i>
+                                    Add Appointment
+                                </a>
+                                }
+                            }
+                        </li>
+                        @*<li>
+                                <i class="icon-ok bigger-110 green"></i>
+                                <a>Click here to create your First Folder</a>
+                            </li>*@
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+   
+</div>
+
+@Scripts.Render("~/bundles/jquery")
+<script src="~/assets/js/jqGrid/jquery.jqGrid.min.js"></script>
+<script src="~/assets/js/jqGrid/i18n/grid.locale-en.js"></script>
+<script src="~/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="~/assets/js/jquery.ui.touch-punch.min.js"></script>
+<script src="~/js/ItemsTemplatesList.js"></script>
+<script src="~/js/CalendarItemsTemplatesList.js"></script>
+<script src="~/js/CrimeDiaryItemsTemplatesList.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var typ = '@Model.FolderDetails.Type';
+        if (typ == 1) {
+            createItemsTemplateGrid('@Model.FolderDetails.FolderID', '@Model.FolderDetails.Type', '@Model.FolderDetails.Name');
+        }
+        else {
+            var isExistCrimeDiaryFields = '@Model.IsCrimeDiaryFields';
+           
+            if (isExistCrimeDiaryFields == 'False') {
+                createCalendarItemsTemplateGrid('@Model.FolderDetails.FolderID', '@Model.FolderDetails.Type', '@Model.FolderDetails.Name');
+            }
+            else {
+                createCrimeDiaryItemsTemplateGrid('@Model.FolderDetails.FolderID', '@Model.FolderDetails.Type', '@Model.FolderDetails.Name');
+            }
+        }
+    });
+</script>
+
+
+<style>
+    .ui-jqgrid .ui-jqgrid-bdiv {
+        position: relative;
+        margin: 0;
+        padding: 0;
+        overflow: hidden !important;
+        text-align: left;
+    }
+
+    .ui-jqgrid .loading {
+        position: absolute;
+        top: 45%;
+        left: 45%;
+        width: auto;
+        height: auto;
+        z-index: 101;
+        padding: 6px;
+        margin: 5px;
+        text-align: center;
+        display: none;
+        font-weight: bold;
+        font-size: 12px;
+        background-color: #FFF;
+        border: 0px solid #8eb8d1 !important;
+        color: #e2b018;
+    }
+
+    .table-header {
+        background-color: #219fd1;
+    }
+
+    .nav-list li.active > a:after {
+        border-right-color: #219fd1;
+    }
+
+    .nav-list > li.active:after {
+        border: 2px solid #219fd1;
+    }
+
+    .nav-list li.active > a:after {
+        border-right-color: #219fd1;
+    }
+
+    .navbar {
+        background: #219fd1;
+    }
+
+    .btn-primary, .btn-primary:focus {
+        background-color: #219fd1!important;
+        border-color: #219fd1;
+    }
+
+        .btn-primary:hover, .open .btn-primary.dropdown-toggle {
+            background-color: #1A7FA7!important;
+            border-color: #219fd1;
+        }
+
+          .ace-settings-container {
+    position: absolute;
+    right: 0;
+    top: auto;
+    z-index: 12;
+    }
+
+    .btn.btn-app.ace-settings-btn.btn-xs {
+    width: 20px;
+    }
+
+    .btn.btn-app.btn-xs>.icon {
+    display: block;
+    font-size: 24px;
+    line-height: 24px;
+    margin: 0;
+}
+        .btn.btn-app > .icon {
+            display: block;
+            font-size: 42px;
+            margin: 0 0 4px;
+            line-height: 36px;
+            min-width: 0;
+            padding: 0;
+        }
+</style>
+
+
+
+<script src="~/assets/js/jquery.dataTables.min.js"></script>
+<script src="~/assets/js/jquery.dataTables.bootstrap.js"></script>
+
+<script src="~/assets/js/jquery-ui-1.10.3.full.min.js"></script>
+<script src="~/assets/js/fuelux/fuelux.spinner.min.js"></script>
+
+<script>
+    $("#viewhistory").click(function () {
+        var historyTableData = '';
+        $('#plsWait').show();
+        $('#history-table-title').html('Changes done to Folder Items - Loading Items... Please wait..');
+        $.ajax({
+            url: '@Url.Action("GetChangeHistoryForFolder", "Folder")',
+            type: 'GET',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            async: true,
+            data: { ID: @Model.FolderDetails.FolderID }, //JSON.stringify(recruiter),
+            success: function (result) {
+                
+                if (result == '') {
+                    $('#history-table-inner-content').html('<td>No change found</td>');
+                    $('#history-table-title').html('Changes done to Folder Items');
+                    $('[data-rel=tooltip]').tooltip();
+                    $('#plsWait').hide();
+                    var oTable1 = $('#history-log-list').dataTable({
+                        "aoColumns": [null, null, null, 
+                          { "bSortable": false },{ "bSortable": false },{ "bSortable": false }
+                        ]
+                    });
+                }
+                else {
+                    historyTableData = result;
+                    $('#history-table-inner-content').html(historyTableData);
+                    $('#history-table-title').html('Changes done to Folder Items');
+                    $('[data-rel=tooltip]').tooltip();
+                    $('#plsWait').hide();
+                    var oTable1 = $('#history-log-list').dataTable({
+                        "aoColumns": [null, null, null, 
+                          { "bSortable": false },{ "bSortable": false },{ "bSortable": false }
+                        ]
+                    });
+                }
+            },
+            error: function (result) {
+                $('#history-table-inner-content').html('<td>No change found</td>');
+                $('#history-table-title').html('Changes done to Folder Items');
+                $('#plsWait').hide();
+                var oTable1 = $('#history-log-list').dataTable({
+                    "aoColumns": [null, null, null, 
+                      { "bSortable": false },{ "bSortable": false },{ "bSortable": false }
+                    ]
+                });
+            }
+        });
+    });
+
+    function ConfirmRevertChange(histLogID,type,actionTypeVal)
+    {
+        //alert('yeaaaaaaaaaa');
+        $("#dialog-confirm").removeClass('hide').dialog({
+            resizable: false,
+            modal: true,
+            title: "Roll Back Change",
+            title_html: true,
+            buttons: [
+                {
+                    html: "<i class='icon-info-sign bigger-110'></i>&nbsp; Revert Change",
+                    "class": "btn btn-danger btn-xs",
+                    click: function () {
+                        //alert('yeaaaaaaaaaa Revert');
+                        window.location.href = '/Folder/RevertChanges?HistLogID='+histLogID+'&type=' + type+'&actionType=' + actionTypeVal;
+                        $(this).dialog("close");
+                        $("#revertChangeLoading").show();
+                    }
+                }
+                ,
+                {
+                    html: "<i class='icon-remove bigger-110'></i>&nbsp; Cancel",
+                    "class": "btn btn-xs",
+                    click: function () {
+                        $(this).dialog("close");
+                        //alert('yeaaaaaaaaaa close');                        
+                        $("#revertChangeLoading").hide();
+                    }
+                }
+            ]
+        });
+    }
+
+    jQuery(function($) {
+       
+    })
+
+</script>

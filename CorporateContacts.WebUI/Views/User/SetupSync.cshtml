@@ -1,0 +1,16 @@
+﻿@{
+    ViewBag.Title = "Setup Sync";
+    var userObj = Session["user"] as Xobnu.Domain.Entities.User;
+    if (userObj.UserType == "Admin")
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else 
+    {
+        Layout = "~/Views/Shared/_UserLayout.cshtml";
+    }    
+}
+
+<h2>Primary Sources</h2>
+
+@Html.ActionLink("New Source", "Login","NewSource");

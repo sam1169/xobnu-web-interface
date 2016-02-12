@@ -1,0 +1,148 @@
+﻿@model Xobnu.Domain.Entities.CCFolder
+
+@{
+    ViewBag.Title = "Edit-" + @Model.Name;
+    ViewBag.PageHeader = "Edit Folder";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i>@Html.ActionLink("Home","Index","Admin")</li><li>Manage</li><li><a href="/Folder/ManageFolders/">Folders</a></li><li class="active">Edit Folder</li>');
+</script>
+<div class="row">
+    <div class="col-xs-12">
+
+
+        <div style="margin-bottom: 15px; float: right;">
+            <a class="btn btn-sm btn-primary" href="@Url.Action("ManageFolders", "Folder")">
+                <i class="icon-undo align-top bigger-125"></i>
+                Back
+            </a>
+        </div>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12" style="min-width: 500px">
+        <div class="widget-box">
+            <div class="widget-header widget-header-flat">
+                <h4 class="smaller">
+                    <i class="icon-folder-close smaller-80"></i>
+                    Edit  @Model.Name
+                </h4>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            @using (Html.BeginForm("EditFolder", "Folder", FormMethod.Post))
+                            {
+                                @Html.HiddenFor(m => m.FolderID)
+                                @Html.HiddenFor(m => m.Type)
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+
+                                        <label class="block clearfix ">
+                                            <span class="block input-icon input-icon-right">
+                                                @Html.TextBoxFor(m => m.Name, new { placeholder = "Please Enter Folder Name", @class = "form-control" })
+                                                <i class=" icon-folder-open"></i>
+                                            </span>
+                                        </label>
+                                        <div style="color: red;">
+                                            @Html.ValidationSummary()
+                                        </div>
+
+                                    </div>
+                                    <div class="clearfix ">
+
+                                        <button class="btn btn-sm btn-primary" type="submit">
+                                            <i class="icon-pencil  bigger-110"></i>
+                                            Update
+                                        </button>
+                                        <a class="btn btn-sm btn-primary" href="#" id="id-btn-dialog2">
+                                            <i class="icon-trash align-top bigger-125"></i>
+                                            Delete
+                                        </a>                                        
+                                        <button class="btn btn-sm" type="reset">
+                                            <i class="icon-undo bigger-110"></i>
+                                            Reset
+                                        </button>
+
+                                    </div>
+                                    <br />
+                                    <div id="deleteloading" style="display: none;">Deleting Folder...&nbsp;&nbsp;<img src="~/Content/Images/ajax-loader.gif" alt="" /></div>
+
+                                </div>
+
+                            }
+
+                        </div>
+                    </div>
+
+
+
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+
+        <!-- #dialog-message -->
+
+        <div id="dialog-confirm" class="hide">
+            <div class="alert alert-info bigger-110">
+                This will permanently delete the folder and all related data  including connections.
+                Do you really want to delete this data?
+            </div>
+
+            <div class="space-6"></div>
+
+            <p class="bigger-110 bolder center grey">
+                <i class="icon-hand-right blue bigger-120"></i>
+                Are you sure?
+            </p>
+        </div>
+        <!-- #dialog-confirm -->
+    </div>
+    <!-- ./span -->
+</div>
+    <link rel="stylesheet" href="~/assets/css/jquery-ui-1.10.3.full.min.css" />
+    <script src="~/assets/js/jquery-ui-1.10.3.full.min.js"></script>
+    <script src="~/assets/js/fuelux/fuelux.spinner.min.js"></script>
+
+    <script>
+        $("#id-btn-dialog2").on('click', function (e) {
+            e.preventDefault();
+
+            $("#dialog-confirm").removeClass('hide').dialog({
+                resizable: false,
+                modal: true,
+                title: "Delete folder",
+                title_html: true,
+                buttons: [
+                    {
+                        html: "<i class='icon-trash bigger-110'></i>&nbsp; Delete all items",
+                        "class": "btn btn-danger btn-xs",
+                        click: function () {
+                            window.location.href = '@Url.Action("DeleteFolder", "Folder", new { id = Model.FolderID })';
+                            $(this).dialog("close");
+                            $("#deleteloading").show();
+                        }
+                    }
+                    ,
+                    {
+                        html: "<i class='icon-remove bigger-110'></i>&nbsp; Cancel",
+                        "class": "btn btn-xs",
+                        click: function () {
+                            $(this).dialog("close");
+                            $("#deleteloading").hide();
+                        }
+                    }
+                ]
+            });
+        });
+    </script>

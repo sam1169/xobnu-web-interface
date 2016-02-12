@@ -1,0 +1,140 @@
+﻿@using CorporateContacts.WebUI.Helpers
+@model CorporateContacts.WebUI.Models.SelectFolderViewModel
+@{
+    ViewBag.Title = "Select Folder";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section CSS
+    {
+    <style>
+        #folderlist ul
+        {
+            list-style-type: none;
+        }
+
+        #folderlist .All
+        {
+            background: url(/Content/Images/Folder.png) no-repeat top left;
+            padding: 0px 0 0 20px;
+        }
+
+        #folderlist .Contact
+        {
+            background: url(/Content/Images/FolderCont.png) no-repeat top left;
+            padding: 0px 0 0 20px;
+        }
+
+        #folderlist .Appointment
+        {
+            background: url(/Content/Images/FolderAppt.png) no-repeat top left;
+            padding: 0px 0 0 20px;
+        }
+
+        #folderlist .Task
+        {
+            background: url(/Content/Images/FolderTask.png) no-repeat top left;
+            padding: 0px 0 0 20px;
+        }
+    </style>
+
+}
+<div class="page-header">
+    <h1>Pick a folder</h1>
+</div>
+@using (Html.BeginForm("SelectFolder", "Exo365", FormMethod.Post, new { primid = Model.PrimarySourceId }))
+{
+    <div class="row">
+        <div class="col-xs-12 col-sm-4 widget-container-span ui-sortable">
+            <div class="widget-box">
+                <div class="widget-header header-color-blue2">
+                    <h4 class="lighter smaller">Select a contacts folder</h4>
+                </div>
+                <div class="widget-body">
+                    <br />
+                    <div id="folderlist" style="overflow: scroll; max-height: 600px;">
+                        @(Html.TreeView(Model.FolderList)
+                            .EmptyContent("No folders found!")
+                            .Children(m => m.ChildFolders)
+                            .HtmlAttributes(new { id = "tree" })
+                            .ChildrenHtmlAttributes(new { @class = "subItem" })
+                            .ItemText(m => m.Name)
+                            .ItemTemplate(
+                                        @<text>
+                        <a class="@item.FolderClass" href="@item.Id">@item.Name</a>
+                        </text>)
+                        )
+                    </div>
+                </div>
+                @Html.HiddenFor(x => x.SelectedFolderId)
+                @Html.HiddenFor(x => x.SelectedFolderName)
+                @Html.HiddenFor(x => x.PrimarySourceId, new { value = Model.PrimarySourceId })
+                @Html.HiddenFor(x => x.AddingPrimary, new { value = Model.AddingPrimary })
+                @Html.HiddenFor(x => x.SelectedFolderOwnerInfo, new { value = Model.SelectedFolderOwnerInfo })
+                <br />
+                <p id="selectedfoldertext" class="alert"></p>
+                <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="icon-user icon-white"></i>Done
+                </button>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-4 widget-container-span ui-sortable">
+            @if (!Model.AddingPrimary)
+            { 
+                <div class="widget-box">
+                    <div class="widget-header header-color-blue2">
+                        <h4 class="lighter smaller">Options</h4>
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div style="padding: 10px">
+
+                        <div class="space"></div>
+                        <div class="row">
+                            <div class="col-xs-3">Ignore existing</div>
+                            <div class="col-xs-1"></div>@Html.EditorFor(x => x.IgnoreExisting)
+                        </div>
+                        <div class="space"></div>
+                        <div class="row">
+                            <div class="col-xs-3">Two-way sync</div>
+                            <div class="col-xs-1"></div>@Html.EditorFor(x => x.TwoWay)
+                        </div>
+                        <div class="space"></div>
+                        <div class="row">
+                            <div class="col-xs-3">Allow additions</div>
+                            <div class="col-xs-1"></div>@Html.EditorFor(x => x.AllowAdditions)
+                        </div>
+                        <div class="space"></div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    $('#folderlist').on('click', 'li a', function (e) {
+        e.preventDefault();
+        if ($(this).hasClass('Contact')) {
+            $('#SelectedFolderId').val($(this).attr('href'));
+            $('#SelectedFolderName').val($(this).text());
+            $('#selectedfoldertext').text('You have selected "' + $(this).text() + '"');
+            $('#selectedfoldertext').addClass('alert-info');
+            $('#selectedfoldertext').removeClass('alert-warning')
+        }
+        else {
+            $('#SelectedFolderId').val('');
+            $('#SelectedFolderName').val($(this).text());
+            $('#selectedfoldertext').text('Please select a Contact folder');
+            $('#selectedfoldertext').removeClass('alert-info')
+            $('#selectedfoldertext').addClass('alert-warning');
+        }
+    });
+
+    $("form").on("submit", function (event) {
+        event.preventDefault();
+        // Validate form, returning on failure.
+        if ($('#SelectedFolderId').val() == '') return;
+        $(this).off("submit");
+        this.submit();
+    });
+</script>
+

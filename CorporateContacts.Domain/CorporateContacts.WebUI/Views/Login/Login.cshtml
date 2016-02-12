@@ -1,0 +1,114 @@
+﻿@model CorporateContacts.WebUI.Models.LogOnViewModel
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Login/_LoginLayout.cshtml";
+}
+
+
+<div class="row  center-all-items" style="margin-left: -2px;">
+    <div style="display: table-cell;vertical-align: middle;">
+        <center>
+            <div style="max-width: 500px;background: rgba(0, 0, 0, 0.35);padding: 1px;border-radius: 15px;box-shadow: 0 7px 27px rgb(247, 247, 247);">
+                <h2 class=" lighter bigger" style="color: #ffffff;">
+                    Login to Corporate Contacts
+                </h2>
+                @using (Html.BeginForm("Login", "Login", FormMethod.Post))
+                {
+                    <label class="block clearfix" style="margin-top:25px;">
+                        <span class="block input-icon input-icon-right" style="max-width:350px;">
+                            @Html.TextBoxFor(model => model.EmailAddress, new { placeholder = "Email", @class = "form-control login-input", onblur = "if(this.value=='')this.value='Email'", onfocus = "if(this.value=='Email')this.value='' ", type = "email" })
+
+                            <i class="icon-user icon-white"></i>
+                        </span>
+                    </label>
+
+                    <label class="block clearfix" style="margin-top:10px;">
+                        <span class="block input-icon input-icon-right" style="max-width:350px;">
+                            @Html.PasswordFor(model => model.Password, new { placeholder = "Password", @class = "form-control login-input", onblur = "if(this.value=='')this.value='Password'", onfocus = "if(this.value=='Password')this.value='' " })
+                            <i class="icon-lock"></i>
+                        </span>
+                    </label>
+
+                    <div class="space"></div>
+
+                    <div class="clearfix">
+                        <button type="submit" class="btn btn-sm btn-primary btn-login-submit" style="max-width:350px;width:350px;">
+                            <i class="icon-key"></i>
+                            Login
+                        </button>
+                        <br />
+                        <a style="max-width:350px;width:350px;line-height:20px;margin-top:10px;" class="btn btn-sm btn-primary btn-login-submit" onclick="location.href='@Url.Action("ForgotPassword", "Login")'">
+                            <i class="icon-key"></i>
+                            Forgot your password?
+                        </a>
+                    </div>
+
+
+                    <footer class="clearfix">
+                        @Html.ValidationSummary(true)
+                        <div style="color: #ffffff;">
+                            @if (ViewBag.Message != null)
+                            { @ViewBag.Message }
+                        </div>
+                    </footer>
+
+    <div class="space-4" style="margin-bottom: 20px;"></div>
+                }
+                </div>
+</center>
+        
+
+    </div>
+    </div>
+
+
+
+
+
+    
+    <!-- /.row -->
+
+
+    <script type="text/javascript">
+        window.jQuery || document.write("<script src='assets/js/jquery-2.0.3.min.js'>" + "<" + "/script>");
+    </script>
+
+    <script type="text/javascript">
+        if ("ontouchend" in document) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+    </script>
+
+    <!-- inline scripts related to this page -->
+
+    <script type="text/javascript">
+
+
+        function show_box(id) {
+            jQuery('.widget-box.visible').removeClass('visible');
+            jQuery('#' + id).addClass('visible');
+        }
+    </script>
+
+    <style>
+        .validation-summary-errors {
+            font-weight: bold;
+            color: #f00;
+        }
+
+        .login-box .toolbar {
+            background: #219fd1;
+            border-top: 2px solid #597597;
+        }
+
+        .btn-primary, .btn-primary:focus {
+            background-color: #219fd1 !important;
+            border-color: #219fd1;
+        }
+
+            .btn-primary:hover, .open .btn-primary.dropdown-toggle {
+                background-color: #1A7FA7 !important;
+                border-color: #219fd1;
+            }
+    </style>
+
+

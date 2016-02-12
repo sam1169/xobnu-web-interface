@@ -1,0 +1,234 @@
+﻿@model CorporateContacts.WebUI.Models.ImpersonateAccountsSysAdminModel
+@{
+    ViewBag.Title = "System Admin Dashboard";
+    ViewBag.PageHeader = "Account Details of " + Model.SelectedAccountInfo.AccountName;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/js/jquery.datetimepicker.js"></script>
+<link href="~/css/jquery.datetimepicker.css" rel="stylesheet" />
+@*<script src="~/assets/js/jquery.easy-pie-chart.min.js"></script>
+<script src="~/assets/js/jquery.sparkline.min.js"></script>
+<script src="~/assets/js/flot/jquery.flot.min.js"></script>
+<script src="~/assets/js/flot/jquery.flot.pie.min.js"></script>
+<script src="~/assets/js/flot/jquery.flot.resize.min.js"></script>*@
+<script src="~/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="~/assets/js/jquery.ui.touch-punch.min.js"></script>
+<script src="~/assets/js/jquery.slimscroll.min.js"></script>
+
+<script src="~/js/Chart.js"></script>
+
+<script>
+
+    $('.breadcrumb').html('<li><i class="icon-home home-icon active"></i><a href="/CorporateContactsAdmin/">Home</a></li><li><a href="/CorporateContactsAdmin/ImpersonateAccount">Account List</a></li><li class="active">Account Summary</li>');
+</script>
+<div class="row">
+    <div class="col-sm-12 infobox-container">
+        <div class="widget-box transparent">
+            <div class="widget-header widget-header-flat">
+                <h4 class="lighter pull-left">
+                    <i class="icon-signal"></i>
+                    Account Summary
+                </h4>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main padding-4">
+                    <a href="@Url.Action("ImpersonatedAccountFolderListView", "CorporateContactsAdmin", new { AccID = Model.SelectedAccountInfo.ID })">
+                        <div class="infobox infobox-green  ">
+                            <div class="infobox-icon">
+                                <i class="icon-custom-folder"></i>
+                            </div>
+
+                            <div class="infobox-data">
+                                <span class="infobox-data-number">@Model.FolderCount</span>
+                                <div class="infobox-content">Folders</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="@Url.Action("ImpersonatedAccountConnectionListView", "CorporateContactsAdmin", new { AccID = Model.SelectedAccountInfo.ID })">
+                        <div class="infobox infobox-blue  ">
+                            <div class="infobox-icon">
+                                <i class="icon-custom-connection"></i>
+                            </div>
+
+                            <div class="infobox-data">
+                                <span class="infobox-data-number">@Model.ConnectionCount</span>
+                                <div class="infobox-content">Connections</div>
+                            </div>
+
+                        </div>
+                    </a>
+                    <a href="">
+                        <div class="infobox infobox-pink  ">
+                            <div class="infobox-icon">
+                                <i class="icon-custom-user"></i>
+                            </div>
+
+                            <div class="infobox-data">
+                                <span class="infobox-data-number">@Model.UserCount</span>
+                                <div class="infobox-content">Users</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="">
+                        <div class="infobox infobox-red  ">
+                            <div class="infobox-icon">
+                                <i class="icon-custom-subscription"></i>
+                            </div>
+
+                            <div class="infobox-data">
+                                <span class="infobox-data-number">@Model.SubscriptionCount</span>
+                                <div class="infobox-content">Subscriptions</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="">
+                        <div class="infobox infobox-orange2">
+                            <div class="infobox-icon">
+                                <i class="icon-custom-items"></i>
+                            </div>
+
+                            <div class="infobox-data">
+                                <span class="infobox-data-number">@Model.ItemsCount</span>
+                                <div class="infobox-content">ItemCount</div>
+                            </div>
+
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="space-6"></div>
+
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-8">
+        <div class="widget-box transparent">
+            <div class="widget-header widget-header-flat">
+                <h4 class="lighter">
+                    <i class="icon-signal"></i>
+                    Sync History
+                </h4>
+
+                @*<div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="icon-chevron-up"></i>
+                        </a>
+                    </div>*@
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main padding-4">
+                    <canvas id="canvas" height="100" width="300"></canvas>
+                </div><!-- /widget-main -->
+            </div><!-- /widget-body -->
+        </div><!-- /widget-box -->
+    </div>
+    <div class="col-sm-4">
+        <div class="widget-box transparent">
+            <div class="widget-header widget-header-flat">
+                <h4 class="lighter">
+                    <i class="icon-signal"></i>
+                    Account Details
+                </h4>
+            </div>
+            <div class="widget-body">
+                <h5>Account Owner : @Model.SelectedAccountOwner</h5>
+                <h5>Last Accessed Date : </h5>
+                <a class="btn btn-primary" href="#">
+                    <i class="icon-undo align-top bigger-110"></i>
+                    Upgrade Account
+                </a>
+            </div><!-- /widget-box -->
+        </div>
+    </div>
+</div>
+
+<script>
+    jQuery(function ($) {
+
+
+        //var randomScalingFactor = function () { return Math.round(Math.random() * 100) };
+        var lineChartData = {
+            labels: ["@Model.SyncDates[0].ToString()", "@Model.SyncDates[1].ToString()", "@Model.SyncDates[2].ToString()", "@Model.SyncDates[3].ToString()", "@Model.SyncDates[4].ToString()", "@Model.SyncDates[5].ToString()", "@Model.SyncDates[6].ToString()"],
+            datasets: [
+				{
+				    label: "My First dataset",
+				    fillColor: "rgba(151,187,205,0.2)",
+				    strokeColor: "rgba(151,187,205,1)",
+				    pointColor: "rgba(151,187,205,1)",
+				    pointStrokeColor: "#fff",
+				    pointHighlightFill: "#fff",
+				    pointHighlightStroke: "rgba(151,187,205,1)",
+				    data: [@Model.SyncDateUsage[0], @Model.SyncDateUsage[1], @Model.SyncDateUsage[2], @Model.SyncDateUsage[3], @Model.SyncDateUsage[4], @Model.SyncDateUsage[5], @Model.SyncDateUsage[6]]
+				}
+            ]
+
+        }
+
+        window.onload = function () {
+            var ctx = document.getElementById("canvas").getContext("2d");
+            window.myLine = new Chart(ctx).Line(lineChartData, {
+                responsive: true
+            });
+        }
+
+
+
+        $('#recent-box [data-rel="tooltip"]').tooltip({ placement: tooltip_placement });
+        function tooltip_placement(context, source) {
+            var $source = $(source);
+            var $parent = $source.closest('.tab-content')
+            var off1 = $parent.offset();
+            var w1 = $parent.width();
+
+            var off2 = $source.offset();
+            var w2 = $source.width();
+
+            if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) return 'right';
+            return 'left';
+        }
+
+
+        $('.dialogs,.comments').slimScroll({
+            height: '300px'
+        });
+
+
+        //Android's default browser somehow is confused when tapping on label which will lead to dragging the task
+        //so disable dragging when clicking on label
+        var agent = navigator.userAgent.toLowerCase();
+        if ("ontouchstart" in document && /applewebkit/.test(agent) && /android/.test(agent))
+            $('#tasks').on('touchstart', function (e) {
+                var li = $(e.target).closest('#tasks li');
+                if (li.length == 0) return;
+                var label = li.find('label.inline').get(0);
+                if (label == e.target || $.contains(label, e.target)) e.stopImmediatePropagation();
+            });
+
+        $('#tasks').sortable({
+            opacity: 0.8,
+            revert: true,
+            forceHelperSize: true,
+            placeholder: 'draggable-placeholder',
+            forcePlaceholderSize: true,
+            tolerance: 'pointer',
+            stop: function (event, ui) {//just for Chrome!!!! so that dropdowns on items don't appear below other items after being moved
+                $(ui.item).css('z-index', 'auto');
+            }
+        }
+        );
+        $('#tasks').disableSelection();
+        $('#tasks input:checkbox').removeAttr('checked').on('click', function () {
+            if (this.checked) $(this).closest('li').addClass('selected');
+            else $(this).closest('li').removeClass('selected');
+        });
+
+
+    })
+</script>

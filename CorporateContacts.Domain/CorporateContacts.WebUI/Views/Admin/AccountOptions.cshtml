@@ -1,0 +1,545 @@
+﻿@model CorporateContacts.WebUI.Models.AccountInfomationViewModel
+<script lang="j"></script>
+@{
+
+    ViewBag.Title = "Account Options";
+    ViewBag.PageHeader = "Account Options";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i>@Html.ActionLink("Home","Index","Admin")</li><li class="active">Account</li><li class="active">Account Options</li>');
+</script>
+
+@if (Session["NewUserInfo"] != null)
+{
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="alert alert-block alert-success">
+                <button type="button" class="close" data-dismiss="alert">
+                    <i class="icon-remove"></i>
+                </button>
+                <p>
+                    <strong>
+                        @Session["NewUserInfo"].ToString()
+                        @{Session["NewUserInfo"] = null;}
+                    </strong>
+                </p>
+
+
+            </div>
+        </div>
+    </div>
+}
+else if (@Model.BillingPlan == "Enterprise Edition")
+{ 
+<div class="alert alert-block alert-success">
+
+    <i class="icon-exclamation"></i>
+
+    You are currently using
+    <strong class="green">
+        @Model.BillingPlan Plan.
+    </strong>
+    Click <a href="@Url.Action("BillingOptions", "Admin", new { id = 1 })" class="green bolder" data-toggle="modal">HERE</a> for an instant Account Downgrade.
+</div>
+}
+else
+{
+    <div class="alert alert-block alert-success">
+
+        <i class="icon-exclamation"></i>
+
+        You are currently using
+        <strong class="green">
+            @Model.BillingPlan Plan.
+        </strong>
+         Click <a href="@Url.Action("BillingOptions", "Admin", new { id = 1 })" class="green bolder" data-toggle="modal">HERE</a> for an instant Account Upgrade.
+    </div>
+}
+<div class="row">
+    <div class="col-sm-12">
+        <div class="tabbable">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="active">
+                    <a data-toggle="tab" href="#accountInfo">
+                        <i class="green icon-home bigger-110"></i>
+                        Account Information
+                    </a>
+                </li>
+
+                <li class="">
+                    <a data-toggle="tab" href="#userList">
+                        <i class="blue fa fa-users bigger-110"></i>
+                        Users
+                    </a>
+                </li>
+
+                <li class="">
+                    <a data-toggle="tab" href="#errorLogList">
+                        <i class="red fa fa-exclamation-circle bigger-110"></i>
+                        Error Logs
+                    </a>
+                </li>
+
+                
+            </ul>
+
+            <div class="tab-content">
+                <div id="accountInfo" class="tab-pane active">
+                    <div class="row">
+                        <div class="col-sm-12" id="viewMode" style="min-width: 600px;">
+                            <div style="float: right; margin-left: 10px; margin-bottom: 5px;">
+                                <a class="btn btn-xs btn-primary" href="#" id="btnEdit">
+                                    Edit
+                                </a>
+                            </div>
+                            <div class="widget-box transparent">
+
+                                <div class="widget-body">
+                                    <div class="widget-main no-padding">
+                                        <table class="table table-bordered table-striped">
+
+                                            <tbody>
+                                                <tr>
+                                                    <td class="col-xs-4">Primary contact name</td>
+
+                                                    <td class="col-xs-7">@Model.ContactName</td>
+
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Current Plan</td>
+
+                                                    <td>@Model.BillingPlan</td>
+
+
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Billing address</td>
+
+                                                    <td>@Model.BillingAddress</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Telephone number</td>
+
+                                                    <td>@Model.TelephoneNo</td>
+
+
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Email</td>
+
+                                                    <td>@Model.EmailAddress</td>
+
+
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Time zone</td>
+
+                                                    <td>@Model.TimeZone</td>
+
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /widget-main -->
+                                </div>
+                                <!-- /widget-body -->
+                            </div>
+                            <!-- /widget-box -->
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        @using (Html.BeginForm("EditAccountInfor", "Admin", FormMethod.Post, new { @class = "form-horizontal" }))
+                        {
+                            <div class="col-xs-12" style="min-width: 600px; display: none" id="editMode">
+                                <div style="float: right; margin-left: 10px; margin-bottom: 5px;">
+                                    <input type="submit" value="Save" class="btn btn-xs btn-primary" id="btnSave">
+                                </div>
+                                <div class="widget-main no-padding">
+                                    @* <div class="table-header"><i class="icon-long6-arrow-left"></i>Edit for FolderName </div>*@
+                                    <table class="table table-striped table-bordered table-hover">
+                                        <tbody>
+                                            <tr>
+                                                <td class="col-xs-4">Primary contact Name</td>
+                                                <td class="col-xs-7">@Model.ContactName</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Billing plan</td>
+                                                <td>@Model.BillingPlan</td>
+                                            </tr>
+                                            <tr>
+                                                <td>No Connections Purchased</td>
+                                                <td>@Model.NoOfConnection</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Billing Address</td>
+                                                <td>@Html.TextBoxFor(m => m.BillingAddress, new { @class = "col-xs-12" })</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Telephone Number</td>
+                                                <td>@Html.TextBoxFor(m => m.TelephoneNo, new { @class = "col-xs-12" })</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Email</td>
+                                                <td>@Model.EmailAddress</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>Time Zone</td>
+                                                <td>@Html.DropDownListFor(model => model.TimeZone, new SelectList(Model.TimeZoneList, "ID", "DisplayName"), "-- Please select TimeZone --", new { @class = "col-xs-12" })</td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div style="margin-top: 15px; color: #219fd1; font-weight: bold">
+                                    If you wish to change your primary contact name or email address, please contact
+                                    <br />
+                                    support@corporate-contacts.com
+                                </div>
+                            </div>
+                        }
+                    </div>                    
+                </div>
+                <div id="userList" class="tab-pane">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div style="float: left;">
+                                <a class="btn btn-sm btn-primary" href="@Url.Action("NewUser", "Admin")">
+                                    <i class="icon-plus-sign align-top bigger-125"></i>
+                                    Add New User
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Type</th>
+                                            <th>Status</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var user in Model.ListofUsers)
+                                        {
+                                            <tr>
+                                                <td>@user.FullName </td>
+                                                <td>@user.Email</td>
+                                                <td>@user.UserType</td>
+                                                <td>@user.Status</td>
+                                                <td>
+                                                    @Html.ActionLink("Delete", "DeleteUser", new { ID = user.ID }, new { @class = "btn btn-xs btn-primary" })
+                                                    @Html.ActionLink("Edit", "EditUser", new { ID = user.ID }, new { @class = "btn btn-xs btn-primary" })
+
+                                                </td>
+
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div id="errorLogList" class="tab-pane">
+                    @if (Model.ErrorLogList.Count() > 0)
+                    {
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="table-header">Error Log   </div>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Source</th>
+                                                <th>DateTime</th>
+                                                <th>Error Message</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var errorlogs in Model.ErrorLogList)
+                                            {
+                                                <tr>
+                                                    <td>@errorlogs.Source </td>
+                                                    <td>@errorlogs.DateTime </td>
+                                                    <td>@errorlogs.ErrorMsgUF </td>
+                                                </tr>
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <br />
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <p class="alert alert-success">
+                                    No Error logs found
+                                </p>
+                            </div>
+                        </div>
+                    }
+                </div>
+               
+            </div>
+        </div>
+    </div><!-- /span -->
+
+    
+</div>
+
+<div id="modal-form" class="modal" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#219FD1;">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="blue bigger white" style="color:#ffffff !important;">Instant Account Upgrade</h4>
+            </div>
+
+            <div class="modal-body overflow-visible">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="widget-box">
+                            <div class="widget-header">
+                                <h4>Package Details</h4>
+                            </div>
+
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <div class="space-6"></div>
+                                    @{
+                                        List<SelectListItem> listItems = new List<SelectListItem>();
+                                        foreach (var pln in Model.Plans)
+                                        {
+                                            listItems.Add(new SelectListItem
+                                            {
+                                                Text = pln.Name,
+                                                Value = pln.ID.ToString()
+
+                                            });
+                                        }
+                                    }
+
+                                    <div>
+                                        <label class='col-sm-3 control-label no-padding-right'>Plan </label>
+                                        @Html.DropDownListFor(model => model.PlanID, listItems, new { @class = "select", @style = "min-width:250px;" })
+                                    </div>
+                                    <div class="space-6"></div>
+                                    <div id="packquantity">
+                                        <label class='col-sm-3 control-label no-padding-right'>Quantity </label>
+                                        <input type="text" class="input-mini" id="packageQuantity" />
+                                    </div>
+                                    <div class="space-6"></div>
+                                    <div style='margin-top: 5px; margin-left: 12px; font-weight: bold;'>Total amount :<a id='totelpackageprice' style='color: red'></a></div>
+                                    <div class="space-6"></div>
+                                    <div>
+
+                                        <button class="btn btn-sm btn-primary" id="btnQuantity">
+                                            <i class="icon-pencil bigger-100"></i>
+                                            Update
+                                        </button>
+                                        <div id='spinner1' style='display: none;  margin-top: 6px;float:right;'>
+                                            Please wait..
+                                            <img src='http://www.heathrowtosouthampton.co.uk/Web/images/gif/Processing1.gif' style='margin-left: 10px' />
+                                        </div>
+                                    </div>
+
+                                    <div class="space-6"></div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="~/assets/css/jquery-ui-1.10.3.full.min.css" />
+<script src="~/assets/js/jquery-ui-1.10.3.full.min.js"></script>
+<script src="~/assets/js/fuelux/fuelux.spinner.min.js"></script>
+
+
+<script>
+
+    $("#btnEdit").click(function () {
+        $("#editMode").show();
+        $("#viewMode").hide();
+    });
+
+</script>
+
+<script>
+    jQuery(function ($) {
+        //change quantity
+        var state1 = 'NO';
+        var savedQuantity = parseInt("@Model.QuantitySaved");
+        $('#packageQuantity').ace_spinner({ value: savedQuantity, min: 1, max: 100, step: 1, on_sides: true, icon_up: 'icon-plus smaller-75', icon_down: 'icon-minus smaller-75', btn_up_class: 'btn-success', btn_down_class: 'btn-danger' });
+
+
+        $("#btnQuantity").on('click', function (e) {
+            e.preventDefault();
+            state1 = 'OK';
+
+            var Packagequantity = 1;
+            if ($("#PlanID").val() != 1) {
+                Packagequantity = $("#packageQuantity").val();
+            }
+
+            var QuantityPlan = $("#PlanID").val() + "0";
+            $.ajax({
+                url: '@Url.Action("SaveFeatures", "Admin")',
+                type: 'GET',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                async: true,
+                data: { plan: QuantityPlan, quantities: Packagequantity }, //JSON.stringify(recruiter),
+                success: function (result) {
+                    if (result == "Sucess") {
+
+                        window.location.href = '@Url.Action("AccountOptions", "Admin", new { id = 2 })';
+
+                    }
+                },
+                error: function (result) {
+                    $("#spinner1").hide();
+                    $('#notemessagefail').html("Note Save Failed");
+                }
+            });
+
+        });
+
+        $(".spinner-up").on('click', function (e) {
+
+            var QuantityPlan = $("#PlanID").val() + "0";
+            TotelPackagePrice(QuantityPlan);
+
+        });
+
+        $(".spinner-down").on('click', function (e) {
+
+            var QuantityPlan = $("#PlanID").val() + "0";
+            TotelPackagePrice(QuantityPlan);
+
+        });
+
+        var QuantityPlan = "@Model.PlanID" + "0";
+        if (QuantityPlan == 10) {
+            $("#packquantity").hide();
+        }
+        else {
+            $("#packquantity").show();
+        }
+
+        TotelPackagePrice(QuantityPlan);
+
+        $("#PlanID").change(function () {
+
+            var QuantityPlan = 10;
+
+            if ($(this).val() != 1) {
+                QuantityPlan = $(this).val() + "0";
+                $("#packquantity").show();
+            }
+            else {
+                $("#packquantity").hide();
+            }
+
+            TotelPackagePrice(QuantityPlan);
+
+
+        });
+
+        $(document).ajaxStart(function () {
+            console.log("start");
+            $("#spinner").show();
+            if (state1 == 'OK') {
+                $("#spinner1").show();
+            }
+        });
+
+        $(document).ajaxStop(function () {
+            console.log("stop");
+            if (state == 'OK') {
+                window.location.href = '@Url.Action("BillingOptions", "Admin", new { id = 2 })';
+            }
+
+        });
+
+    });
+
+    function AdditionalFeatureAmount(btnid) {
+
+        var quantity = 1;
+
+        if (btnid != 10) {
+            quantity = $("#spinner3").val();
+        }
+
+
+        $.ajax({
+            url: '@Url.Action("GetFeaturesPrice", "Admin")',
+            type: 'GET',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            async: false,
+            data: { plan: btnid, quantitites: quantity }, //JSON.stringify(recruiter),
+            success: function (result) {
+                $('#totelprice').html(" £ " + result + "/mo");
+                $("#spinner").hide();
+            },
+            error: function (result) {
+                $("#spinner").hide();
+                $('#notemessagefail').html("Note Save Failed");
+            }
+        });
+    }
+
+    function TotelPackagePrice(QuantityPlan) {
+        var planid = $("#PlanID").val();
+        var quantity = 1;
+
+        if (planid != 1) {
+            quantity = $("#packageQuantity").val();
+        }
+
+        $.ajax({
+            url: '@Url.Action("GetFeaturesPrice", "Admin")',
+            type: 'GET',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            async: false,
+            data: { plan: QuantityPlan, quantitites: quantity }, //JSON.stringify(recruiter),
+            success: function (result) {
+                $('#totelpackageprice').html(" £ " + result + "/mo");
+                $("#spinner1").hide();
+            },
+            error: function (result) {
+                $("#spinner1").hide();
+                $('#notemessagefail').html("Note Save Failed");
+            }
+        });
+    }
+</script>

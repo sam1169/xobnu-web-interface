@@ -1,0 +1,76 @@
+﻿@model CorporateContacts.Domain.Entities.CCGroup
+
+@{
+    ViewBag.Title = "Add Group";
+    ViewBag.PageHeader = "Add Group";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i>@Html.ActionLink("Home","Index","Admin")</li><li><a href="/Folder/ManageFolders/">Manage Folders</a></li><li class="active">Add New Group</li>');
+</script>
+
+<div class="row">
+<div class="col-sm-4" style="min-width:500px">
+    <div class="widget-box">
+        <div class="widget-header widget-header-flat">
+            <h4 class="smaller">
+                <i class="icon-group smaller-80"></i>
+                Add Group
+            </h4>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main">
+                <div class="row">
+                    <div class="col-xs-12">
+                        @using (Html.BeginForm("EditGroup", "Folder", FormMethod.Post))
+                        {
+                            <div class="form-group col-sm-12">                               
+
+                                <div >
+                                    @Html.TextBoxFor(m => m.GroupName, new {placeholder = "Please Enter Group Name", @class = "form-control" })                                   
+                                    <div style="color: red;">
+                                        @Html.ValidationMessageFor(m => m.GroupName)
+                                    </div>
+
+                                </div>
+                            </div>                            
+                            @Html.HiddenFor(m => m.FolderID) 
+                           
+                                                   
+                            <div style="float: left; margin-top: 0px;" class="col-sm-12">
+                                <button class="btn btn-sm btn-primary" type="submit">
+                                    <i class="icon-save align-top bigger-125"></i>
+                                    Add
+                                </button>
+                                <a class="btn btn-sm btn-primary" href="@Url.Action("ManageLayoutsAndGroups", "Folder", new { id = Model.FolderID })">
+                                    <i class="icon-undo align-top bigger-125"></i>
+                                    View Groups
+                                </a>
+                                <button class="btn btn-sm btn-default" type="reset">
+                                    <i class="icon-undo align-top bigger-125"></i>
+                                    Reset
+                                </button>
+
+                            </div>
+
+                        }
+
+                    </div>
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+
+<style>
+    .form-group input[type="text"] {
+        width: 100%;
+    }
+</style>

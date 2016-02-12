@@ -1,0 +1,222 @@
+﻿
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title</title>
+    <link rel="icon" type="image/png" href="~/Content/Images/CorporateContactsIcon32.png" />
+    <!-- <link href="~/Content/Site.css" type="text/css" rel="stylesheet" />
+       <link href="~/Content/Menu.css" type="text/css" rel="stylesheet" /> -->
+
+
+
+    <script src="~/Scripts/jquery-1.8.2.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+    <!--ace-->
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/assets/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="~/assets/css/ace-fonts.css" />
+    <!-- ace styles -->
+    <link rel="stylesheet" href="~/assets/css/ace.min.css" />
+    <link rel="stylesheet" href="~/assets/css/ace-rtl.min.css" />
+    <link rel="stylesheet" href="~/assets/css/ace-skins.min.css" />
+    <script src="~/assets/js/ace-extra.min.js"></script>
+
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="~/css/custom.css" />
+
+    <!-- Placeholder JS-->
+    <script src="~/js/placeholders.min.js"></script>
+
+    <!-- Font Icons JS-->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <script src="~/js/timeZone.js"></script>
+
+    @RenderSection("JavaScript", required: false)
+    @RenderSection("CSS", false)
+
+    <style>
+        .table-header {
+            background-color: #219fd1;
+        }
+
+        .nav-list li.active > a:after {
+            border-right-color: #219fd1;
+        }
+
+        .nav-list > li.active:after {
+            border: 2px solid #219fd1;
+        }
+
+        .nav-list li.active > a:after {
+            border-right-color: #219fd1;
+        }
+
+        .navbar {
+            background: #219fd1;
+        }
+
+        .btn-primary, .btn-primary:focus {
+            background-color: #219fd1!important;
+            border-color: #219fd1;
+        }
+
+            .btn-primary:hover, .open .btn-primary.dropdown-toggle {
+                background-color: #1A7FA7!important;
+                border-color: #219fd1;
+            }
+
+        .header-color-blue2 {
+            background: #219fd1;
+            border-color: #219fd1;
+        }
+
+        .btn-info, .btn-info:focus {
+            background-color: #219fd1!important;
+            border-color: #219fd1;
+        }
+    </style>
+
+</head>
+<body class="login-layout">
+    <div class="navbar-fixed-top navbar-default" id="navbar">
+        <script type="text/javascript">
+            try { ace.settings.check('navbar', 'fixed') } catch (e) { }
+        </script>
+        <div class="navbar-container" id="navbar-container">
+            <div class="navbar-header pull-left">
+                <a href="#" class="navbar-brand">
+                    <small>
+                        <img src="~/Content/Images/CorpConlogo2fbg.png" />
+                      @*  <span style="color: #ff0000;">Corporate</span>
+                        <span style="color: white">Contacts</span>*@
+                    </small>
+                </a>
+                <!-- /.brand -->
+            </div>
+            <div class="navbar-header pull-right" role="navigation">
+                <a class="btn btn-sm btn-primary btn-login" onclick="location.href='@Url.Action("Login", "Login")'">
+                    Login
+                </a>
+                <a class="btn btn-sm btn-primary btn-signup" onclick="location.href='@Url.Action("SaveAccount", "SignUp")'">
+                    Sign Up
+                </a>
+                    <!-- /.ace-nav -->
+</div>
+        </div>
+    </div>
+    <div class="main-container" id="main-container">
+        <script type="text/javascript">
+            try { ace.settings.check('main-container', 'fixed') } catch (e) { }
+        </script>
+
+        <div class="main-container-inner">
+           
+
+           
+
+            
+                
+
+                <div class="page-content">   
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <!-- PAGE CONTENT BEGINS -->
+                            @RenderBody()
+                            <!-- PAGE CONTENT ENDS -->
+                        </div>
+
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.page-content -->
+            
+
+            <!-- /#ace-settings-container -->
+        </div>
+        <!-- /.main-container-inner -->
+
+        <a href="#" id="toTop" class="btn-scroll-up btn btn-sm btn-inverse">
+            <i class="icon-double-angle-up icon-only bigger-110"></i>
+        </a>
+        @*<a id="toTop" href="#"> <i class="icon-double-angle-up icon-only bigger-110"></i></a>*@
+    </div>
+    <!-- /.main-container -->
+    <div class="footer">
+        <div style="width:100%;text-align: center;color:#ffffff;  margin-top: 4px;font-size:11px;"><cetner>Mail: hello@corporate-contacts.com &nbsp;&nbsp; Call Us: +44 1482 869700</cetner></div>
+    </div>
+    <style type="text/css">
+        #toTop {
+            display: block;
+            position: fixed;
+            top: 96%;
+            right: 0;
+            background-color: gray;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+
+            // Hide the toTop button when the page loads.
+            $("#toTop").css("display", "none");
+
+            // This function runs every time the user scrolls the page.
+            $(window).scroll(function () {
+
+                // Check weather the user has scrolled down (if "scrollTop()"" is more than 0)
+                if ($(window).scrollTop() > 0) {
+
+                    // If it's more than or equal to 0, show the toTop button.
+                    console.log("is more");
+                    $("#toTop").fadeIn("slow");
+                }
+                else {
+                    // If it's less than 0 (at the top), hide the toTop button.
+                    console.log("is less");
+                    $("#toTop").fadeOut("slow");
+
+                }
+            });
+
+            $("#toTop").click(function () {
+
+                // Disable the default behaviour when a user clicks an empty anchor link.
+                // (The page jumps to the top instead of // animating)
+                event.preventDefault();
+
+                // Animate the scrolling motion.
+                $("html, body").animate({
+                    scrollTop: 0
+                }, "slow");
+
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        if ("ontouchend" in document) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+    </script>
+    <script src="~/assets/js/bootstrap.min.js"></script>
+    <script src="~/assets/js/typeahead-bs2.min.js"></script>
+
+    <!-- page specific plugin scripts -->
+
+    <script src="~/assets/js/jquery.easy-pie-chart.min.js"></script>
+
+    <!-- ace scripts -->
+
+    <script src="~/assets/js/ace-elements.min.js"></script>
+    <script src="~/assets/js/ace.min.js"></script>
+
+    <script type="text/javascript">
+
+        $('[data-rel=tooltip]').tooltip();
+    </script>
+
+    </body>
+    </html>

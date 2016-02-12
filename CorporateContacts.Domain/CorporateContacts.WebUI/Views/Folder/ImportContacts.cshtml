@@ -1,0 +1,97 @@
+﻿@model long
+
+@{
+    ViewBag.Title = "Import Contacts";
+    ViewBag.PageHeader = "Import Contacts for " + ViewBag.foldername;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Javascript {
+    <script src="~/Scripts/jquery.showLoading.js"></script>
+}
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i>@Html.ActionLink("Home","Index","Admin")</li><li><a href="@Url.Action("Items", "Folder", new { id = @Model})">@ViewBag.foldername</a></li><li class="active">Import Contacts</li>');
+</script>
+
+
+@using (Html.BeginForm("ImportContacts", "Folder", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="row">
+        <div class="col-sm-12">
+
+            @if (ViewBag.MessageItemImportExceed != null)
+            { 
+                <div class="alert alert-block alert-danger">
+                    <i class="fa fa-exclamation red"></i>
+                    @ViewBag.MessageItemImportExceed <p> Please upgrade by clicking <a hreef="@Url.Action("BillingOptions", "Admin", new { id = 1 })">HERE</a></p>
+                </div>
+            }
+
+            
+
+            <input type="file" name="importcontact" id="importcontact" />
+            <input type="submit" name="submit" value="Upload" class="btn btn-sm btn-primary" onclick="$('#loading').addClass('inline', 1000);"/>
+            <a class="btn btn-sm btn-primary" href="@Url.Action("Items", "Folder", new { id = @Model})">
+                <i class="icon-undo align-top bigger-125"></i>
+                View Contacts
+            </a>
+            <br />
+            <br />
+             <div id="loading" style="display: none;">Contacts are uploading...&nbsp;&nbsp;<img src="~/Content/Images/ajax-loader.gif" alt="" /></div>
+            <br />
+            <br />
+            
+                @if (ViewBag.Message != null)
+                {
+                    <div style="color: red">
+                        @ViewBag.Message
+                    </div>
+                }
+                    
+            <br />
+            
+                @if (ViewBag.MessagePass != null)
+                {
+                    <div style="color: green">
+                        @ViewBag.MessagePass
+                    </div>
+                }
+                    
+           
+                @if (ViewBag.MessageExtention != null)
+                {
+                    <div style="color: red">
+                        @ViewBag.MessageExtention
+                    </div>
+                }
+                    
+        </div>
+    </div>
+    
+    
+    
+}
+
+<script type="text/javascript">
+    jQuery(function ($) {
+        $('#importcontact').ace_file_input({
+            no_file: 'No File ...',
+            btn_choose: 'Choose',
+            btn_change: 'Change',
+            droppable: false,
+            onchange: null,
+            thumbnail: false //| true | large
+            //whitelist:'gif|png|jpg|jpeg'
+            //blacklist:'exe|php'
+            //onchange:''
+            //
+        });
+    });
+</script>
+
+<style>
+    .ace-file-input .remove {
+        display: none;
+        background-color: transparent;
+    }
+</style>

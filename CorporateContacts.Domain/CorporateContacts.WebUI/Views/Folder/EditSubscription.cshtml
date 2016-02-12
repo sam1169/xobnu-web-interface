@@ -1,0 +1,94 @@
+﻿@model CorporateContacts.WebUI.Models.SubscriptionsViewModel
+
+@{
+    ViewBag.Title = "Edit Subscription";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@using (Html.BeginForm("EditSubscription", "Folder", FormMethod.Post))
+{ 
+    <div class="row" style="margin-bottom: 10px;">
+        <div class="col-xs-5">
+            <div style="float: right;">
+                <button class="btn btn-sm btn-primary" type="submit">
+                    <i class="icon-save align-top bigger-125"></i>
+                    Save
+                </button>
+                <a class="btn btn-sm btn-primary" href="@Url.Action("ViewSubscriptions", "Folder", new { id = Model.FolderID })">
+                    <i class="icon-undo  align-top bigger-125"></i>
+                    View Subscriptions
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-xs-5">
+
+
+            <div class="widget-main no-padding">
+                <div class="table-header"><i class="icon-long6-arrow-left"></i>Edit for  @Model.Subscriptiondetail.FolderName </div>
+                <table class="table table-striped table-bordered table-hover">
+
+                    <tbody>
+
+                        <tr>
+                            <td class="col-xs-3">FolderName</td>
+                            <td class="col-xs-8">@Model.Subscriptiondetail.FolderName</td>
+                        </tr>
+                        <tr>
+                            <td>Owner</td>
+                            <td>@Model.Subscriptiondetail.Owner</td>
+                        </tr>
+                        <tr>
+                            <td>Type</td>
+                            <td>@Model.Subscriptiondetail.Type</td>
+                        </tr>                       
+                        <tr>
+                            <td>AllowAdditions</td>
+                            <td>@Html.EditorFor(m => m.Subscriptiondetail.AllowAdditions)</td>
+                        </tr>
+                        <tr>
+                            <td>IgnoreExisting</td>
+                            <td>@Html.EditorFor(m => m.Subscriptiondetail.IgnoreExisting)</td>
+                        </tr>
+                        <tr>
+                            <td>CategoryFilterUsed</td>
+                            <td>@Html.EditorFor(m => m.Subscriptiondetail.CategoryFilterUsed)</td>
+                        </tr>
+                        <tr>
+                            <td>CopyPhotos</td>
+                            <td>@Html.EditorFor(m => m.Subscriptiondetail.CopyPhotos)</td>
+                        </tr>
+                        <tr>
+                            <td>TurnOffReminders</td>
+                            <td>@Html.EditorFor(m => m.Subscriptiondetail.TurnOffReminders)</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+    <br />
+    <br />
+    @Html.HiddenFor(model => model.FolderID)
+    @Html.HiddenFor(model => model.Subscriptiondetail.SubscriberID)   
+    
+    <div class="row">
+        <div class="col-xs-5">
+            <div style="float: right;">
+                <button class="btn btn-sm btn-primary" type="submit">
+                    <i class="icon-save align-top bigger-125"></i>
+                    Save
+                </button>
+                <a class="btn btn-sm btn-primary" href="@Url.Action("ViewSubscriptions", "Folder", new { id = Model.FolderID })">
+                    <i class="icon-undo  align-top bigger-125"></i>
+                    View Subscriptions
+                </a>
+            </div>
+        </div>
+    </div>
+}

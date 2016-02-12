@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Support";
+    ViewBag.PageHeader = "Support";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<style type="text/css">
+
+    iframe { width:100% ; // set your width here
+        height:100% ;
+    border:none ;
+      min-height: 450px;
+}
+</style>
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i>@Html.ActionLink("Home","Index","Admin")</li><li class="acctive">Support</li>');
+</script>
+
+<div class="row">
+    <div class="col-xs-12">
+            <iframe height="100%" src="http://corporatecontacts.freshdesk.com/support/home"></iframe>
+    </div>
+</div>

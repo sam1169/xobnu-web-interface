@@ -1,0 +1,76 @@
+﻿@{
+    ViewBag.Title = "Verify Email Address";
+}
+
+@{
+    ViewBag.Title = "Success";
+    Layout = "~/Views/Login/_LoginLayout.cshtml";
+}
+
+@*<h2>Thanks for choosing Corporate Contacts!</h2>
+<p>We have sent an email your email address </p>
+
+@Html.ActionLink("Explore your new Corporate Contacts account", "Index", "Admin")*@
+
+<div class="row  center-all-items" style="margin-left: -2px;">
+    <div style="display: table-cell;vertical-align: middle;">
+        <center>
+            <div style="max-width: 600px;background: rgba(0, 0, 0, 0.35);padding: 1px;border-radius: 15px;box-shadow: 0 7px 27px rgb(247, 247, 247);">
+                <h2 class="lighter bigger" style="color: #ffffff;margin-bottom:25px;text-shadow:none;">
+                    Thanks for choosing Corporate Contacts!
+                </h2>
+
+                @if (ViewBag.VerifiedMessageSucess != null)
+                {
+                    <h4 style="max-width:450px;color: #26C44B;">
+                        @ViewBag.VerifiedMessageSucess
+                    </h4>
+                }
+
+                @if (ViewBag.VerifiedMessageFail != null)
+                {
+                    <h4 style="max-width:450px;color: #ff0000;">
+                        @ViewBag.VerifiedMessageFail
+                    </h4>
+                }
+
+                @if (ViewBag.VerifiedMessageSucess != "")
+                {
+                    <a class="btn btn-sm btn-primary btn-getstarted" style="margin-top:15px;" href="@Url.Action("Index", "Admin")">
+                        Explore Now!
+                    </a>
+                }
+                <div class="space-4" style="margin-bottom: 20px;"></div>
+            </div>
+</center>
+    </div>
+</div>
+
+
+    <script type="text/javascript">
+        window.jQuery || document.write("<script src='assets/js/jquery-2.0.3.min.js'>" + "<" + "/script>");
+    </script>
+
+    <script type="text/javascript">
+        if ("ontouchend" in document) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+    </script>
+
+    <!-- inline scripts related to this page -->
+
+    @* <script type="text/javascript">
+
+        function show_box(id) {
+            jQuery('.widget-box.visible').removeClass('visible');
+            jQuery('#' + id).addClass('visible');
+        }
+
+    </script>*@
+
+    <style>
+        .validation-summary-errors {
+            font-weight: bold;
+            color: #f00;
+        }
+    </style>
+
+

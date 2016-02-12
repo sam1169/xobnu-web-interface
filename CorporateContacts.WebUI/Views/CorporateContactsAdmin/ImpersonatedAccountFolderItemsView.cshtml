@@ -1,0 +1,20 @@
+﻿@model Xobnu.WebUI.Models.ImpersonateAccountsSysAdminModel
+@{
+    ViewBag.Title = "System Admin Dashboard";
+    ViewBag.PageHeader = "Item List of Folder ";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon active"></i><a href="/CorporateContactsAdmin/">Home</a></li><li><a href="/CorporateContactsAdmin/ImpersonateAccount">Account List</a></li><li><a href="/CorporateContactsAdmin/ImpersonatedAccount/?AccID=@Model.SelectedAccountInfo.ID">Account Summary</a></li><li class="active">Folder List</li>');
+    $('#folder-item-list').load('http://test.corporate-contacts.com/Folder/Items/35 #page-content');
+</script>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div id="folder-item-list"></div>
+    </div>
+</div>
+        <script>
+            
+        </script>

@@ -1,0 +1,184 @@
+﻿@model CorporateContacts.WebUI.Models.ExLogOnViewModel
+@{
+    ViewBag.Title = "Login to Exchange";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Javascript {
+    <script src="~/Scripts/jquery.showLoading.js"></script>
+}
+<div class="page-header">
+    <h1>Login to Exchange
+    <small>
+        <i class="icon-double-angle-right"></i>
+    </small>
+    </h1>
+</div>
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="widget-box">
+            <div class="widget-header header-color-blue2">
+                <h4 class="lighter smaller">Select from existing</h4>
+            </div>
+            <div class="widget-body">
+                @using (Html.BeginForm("Login", "Exo365", FormMethod.Post, new { @class = "form-horizontal" }))
+                { 
+                    @Html.HiddenFor(x=>x.ReturnUrl,new {value=@Model.ReturnUrl})
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="form-field-2">Credentials Name</label>
+                            <div class="col-sm-9">@Html.DropDownListFor(m => Model.SelectedCredentialID, new SelectList(Model.ExistingCredentials, "ID", "Name"), new { @class = "form-control", @style = "width:250px" })
+                                <span class="help-inline col-xs-12 col-sm-7"><span class="middle">@Html.ValidationMessageFor(m => m.Credentials.Password)</span></span>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        <div class="col-md-offset-3 col-md-9">
+                            <input type="submit" value="Next" class="btn btn-info" onclick="$('#loading2').addClass('inline', 1000);">
+                            &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;         
+                                <div id="loading2" style="display: none;">Loading!&nbsp;&nbsp;<img src="~/Content/Images/ajax-loader.gif" alt="" /></div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="widget-box">
+            <div class="widget-header header-color-blue2">
+                <h4 class="lighter smaller">Create new</h4>
+            </div>
+            <div class="widget-body">
+
+                <div id="accordion" class="accordion-style1 panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                    <i class="bigger-110 icon-angle-down" data-icon-hide="icon-angle-down" data-icon-show="icon-angle-right"></i>
+                                    &nbsp;Office 365/ Hosted Exchange Systems
+                                </a>
+                            </h4>
+                        </div>
+
+                        <div class="panel-collapse in" id="collapseOne" style="height: auto;">
+                            <div class="panel-body">
+                                @using (Html.BeginForm("Login", "Exo365", FormMethod.Post, new { @class = "form-horizontal" }))
+                                {      
+                                    @Html.HiddenFor(x=>x.ReturnUrl,new {value=@Model.ReturnUrl})
+                                    @Html.Hidden("hosted", true)
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Give a name</label>
+                                        <div class="col-sm-9">
+                                            @Html.TextBoxFor(m => m.Credentials.Name, new { @class = "col-xs-10 col-sm-5" })
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Email</label>
+                                        <div class="col-sm-9">
+                                            @Html.TextBoxFor(m => m.Credentials.EmailAddress, new { @class = "col-xs-10 col-sm-5" })
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="form-field-2">Password</label>
+                                        <div class="col-sm-9">@Html.PasswordFor(m => m.Credentials.Password, new { @class = "col-xs-10 col-sm-5" })<span class="help-inline col-xs-12 col-sm-7">
+                                            <span class="middle">@Html.ValidationMessageFor(m => m.Credentials.Password)</span></span>
+                                        </div>
+                                    </div> 
+                                    <div class="col-md-offset-3 col-md-9">
+                                        <input type="submit" value="Next" class="btn btn-info" onclick="$('#loading').addClass('inline', 1000);">
+                                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;         
+                                <div id="loading" style="display: none;">Loading!&nbsp;&nbsp;<img src="~/Content/Images/ajax-loader.gif" alt="" /></div>
+                                    </div>
+									  
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                    <i class="bigger-110 icon-angle-right" data-icon-hide="icon-angle-down" data-icon-show="icon-angle-right"></i>
+                                    &nbsp;Inhouse Exchange Systems
+                                </a>
+                            </h4>
+                        </div>
+
+                        <div class="panel-collapse collapse" id="collapseTwo" style="height: 0px;">
+                            <div class="panel-body">
+                                @using (Html.BeginForm("Login", "Exo365", FormMethod.Post, new { @class = "form-horizontal" }))
+                                {   
+                                    @Html.HiddenFor(x=>x.ReturnUrl,new {value=@Model.ReturnUrl})
+                                    @Html.Hidden("hosted", false)
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Give a name</label>
+                                        <div class="col-sm-9">
+                                            @Html.TextBoxFor(m => m.Credentials.Name, new { @class = "col-xs-10 col-sm-5" })
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Email</label>
+                                        <div class="col-sm-9">
+                                            @Html.TextBoxFor(m => m.Credentials.EmailAddress, new { @class = "col-xs-10 col-sm-5" })
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="form-field-1">Username</label>
+                                        <div class="col-sm-9">
+                                            @Html.TextBoxFor(m => m.Credentials.UserName, new { @class = "col-xs-10 col-sm-5" })
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="form-field-2">Password</label>
+                                        <div class="col-sm-9">@Html.PasswordFor(m => m.Credentials.Password, new { @class = "col-xs-10 col-sm-5" })<span class="help-inline col-xs-12 col-sm-7">
+                                            <span class="middle">@Html.ValidationMessageFor(m => m.Credentials.Password)</span></span>
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="form-field-2">Exchange Version</label>
+                                        <div class="col-sm-9">@Html.DropDownListFor(m => m.Credentials.ServerVersion, new SelectList(new object[] { "2007SP1", "2010", "2010SP1", "2010SP2" }), new { @class = "form-control", @style = "width:150px" })
+                                            <span class="help-inline col-xs-12 col-sm-7"><span class="middle">@Html.ValidationMessageFor(m => m.Credentials.Password)</span></span>
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"></label>
+                                        <div class="col-sm-9">
+                                            <span class="help-inline col-xs-12 col-sm-7">
+                                                <label class="middle">
+                                                    @Html.CheckBoxFor(m => m.Credentials.UseImpersonation, new { @class = "ace" })
+                                                    <span class="lbl">Use Impersonation</span>
+                                                </label>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-offset-3 col-md-9">
+                                        <input type="submit" value="Next" class="btn btn-info" onclick="$('#loading1').addClass('inline', 1000);">
+                                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;         
+                                <div id="loading1" style="display: none;">Loading!&nbsp;&nbsp;<img src="~/Content/Images/ajax-loader.gif" alt="" /></div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('input[type=checkbox],input[type=radio]').after('<span class="lbl" />');
+    });
+
+
+
+
+
+</script>

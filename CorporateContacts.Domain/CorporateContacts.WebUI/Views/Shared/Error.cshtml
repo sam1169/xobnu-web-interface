@@ -1,0 +1,67 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+@{  
+            
+    ViewBag.Title = "Error Processing Data";
+    ViewBag.PageHeader = "Aw, Snap! Corporate Contacts ran into a Problem...";
+    Layout = "~/Views/Shared/_ErrorLayout.cshtml";
+}
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i><a href="/Admin/">Home</a></li>');
+</script>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="widget-box">
+            <div class="widget-header widget-header-flat">
+                <h4 class="smaller">We are fixing this as you read..!</h4>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main">
+
+                    <ul>
+                        <li>
+                            <i style="margin-left: -15px;" class="icon-circle red"></i>
+                            There was an Error while Processing your request. By now, the System Administrator is being notified of this issue and is working hard to resolve this for you.
+                        </li>
+                        <li>
+                            <i style="margin-left: -15px;" class="icon-circle red"></i>
+                            If you wish to submit a support ticket about this error, you can do so by clicking on <a href="@Url.Action("Support", "Admin")">Support</a>.
+                        </li>
+                        @*<li>
+                                <i class="icon-ok bigger-110 green"></i>
+                                <a>Click here to create your First Folder</a>
+                            </li>*@
+                    </ul>
+                    <div id="excvalue" style="display: none">@Model.Exception</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var action = '@Model.ActionName';
+        var controller = '@Model.ControllerName';
+        var exceMessage = $('#excvalue').html();
+        var message = '@Model.Exception.Message';
+        var source = '@Model.Exception.Source';
+        console.log(exceMessage);
+        console.log('OK');
+
+        $.ajax({
+            url: '@Url.Action("SendErrorNotification", "ErrorHandle")',
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+            data: { actionNmae: action, controllerName: controller, messageExce: exceMessage, errorMessage: message, errorSource: source },
+            success: function (result) {
+                $('#notemessage').html("Note Successfully Saved");
+            },
+            error: function (result) {
+                $('#notemessagefail').html("Note Save Failed");
+            }
+        });
+    });
+
+</script>

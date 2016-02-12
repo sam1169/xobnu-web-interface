@@ -1,0 +1,36 @@
+List of StripeAPIURls
+
+----------------------------------------------------------------------------------------------------------------------
+
+Test Server
+
+1. https://test.corporate-contacts.com/api/stripe/ChargeCaptured
+   * API will be called when an unsuccesful charge is being charged again.
+
+2. https://test.corporate-contacts.com/api/stripe/Chargesucceeded
+   * API will be called as and when a successful transaction occurs.
+
+3. https://test.corporate-contacts.com/api/stripe/ChargeFailed
+   * API will be called when a unsucceful transaction occurs.
+
+4. https://test.corporate-contacts.com/api/stripe/InvoiceCreated
+   * API will be called when an invoice is being created.
+
+----------------------------------------------------------------------------------------------------------------------
+
+Staging Server
+
+1. https://staging.corporate-contacts.com/api/stripe/ChargeCaptured
+   * API will be called when an unsuccesful charge is being charged again.
+
+2. https://staging.corporate-contacts.com/api/stripe/Chargesucceeded
+   * API will be called as and when a successful transaction occurs.
+
+3. https://staging.corporate-contacts.com/api/stripe/ChargeFailed
+   * API will be called when a unsucceful transaction occurs.
+
+4. https://staging.corporate-contacts.com/api/stripe/InvoiceCreated
+   * API will be called when an invoice is being created.
+----------------------------------------------------------------------------------------------------------------------
+
+Live Server

@@ -1,0 +1,160 @@
+﻿@model CorporateContacts.Domain.Entities.User
+
+@{
+    ViewBag.Title = "New User";
+    ViewBag.PageHeader = "Add New User";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i>@Html.ActionLink("Home","Index","Admin")</li><li><a href="/Admin/AccountOptions/">Account</a></li><li class="active">New User</li>');
+</script>
+
+@*<h2>NewUser</h2>
+    @using (Html.BeginForm("EditUser", "Admin", FormMethod.Post))
+    {
+        <p>Full Name</p> @Html.EditorFor(m => m.FullName)@Html.ValidationMessageFor(m => m.FullName);<br />
+        <p>Email</p> @Html.EditorFor(m => m.Email)@Html.ValidationMessageFor(m => m.Email);<br />
+        <p>Type</p>@Html.DropDownListFor(m => m.UserType, new SelectList(new string[] { "0", "1" }, new string[] { "User", "Admin" }));
+        <br />
+        <br />
+        <input type="submit" value="Add" class="button-clean-gray" />
+    }*@
+
+@if (Session["NewUserInfo"] != null)
+{
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="alert alert-block alert-danger">
+                <button type="button" class="close" data-dismiss="alert">
+                    <i class="icon-remove"></i>
+                </button>
+                <p>
+                    <strong>
+                        @Session["NewUserInfo"].ToString()
+                        @{Session["NewUserInfo"] = null;}
+                    </strong>
+                </p>
+
+
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+<div class="row">
+    <div class="col-xs-12">
+        <div style="float: right;">
+            <a class="btn btn-sm btn-primary" href="@Url.Action("AccountOptions", "Admin")">
+                <i class="icon-rotate-left align-top bigger-125"></i>
+                Back
+            </a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="widget-box">
+            <div class="widget-header widget-header-flat">
+                <h4 class="smaller">
+                    <i class="icon-user smaller-80"></i>
+                    Create User
+                </h4>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main">
+                    <div class="row">
+                        @using (Html.BeginForm("EditUser", "Admin", FormMethod.Post))
+                                {
+
+                            <div class="col-xs-12">
+                                <div class="form-group">
+
+                                    <label class="block clearfix ">
+                                        <span class="block input-icon input-icon-right">
+                                            @Html.TextBoxFor(m => m.FullName, new { placeholder = "Full Name", @class = "form-control" })
+                                            <i class=" icon-user"></i>
+                                        </span>
+                                    </label>
+                                    <label class="block clearfix ">
+                                        <span class="block input-icon input-icon-right">
+                                            @Html.TextBoxFor(m => m.Email, new { placeholder = "Email", @class = "form-control" })
+                                            <i class=" icon-envelope"></i>
+                                        </span>
+                                    </label>
+                                    @*<label class="block clearfix">
+                                        <span class="block input-icon input-icon-right">
+                                            @Html.PasswordFor(m => m.Password, new { placeholder = "Password", @class = "form-control", onblur = "if(this.value=='')this.value='Password'", onfocus = "if(this.value=='Password')this.value='' " })
+                                            <i class="icon-lock"></i>
+                                        </span>
+                                    </label>
+
+                                    <label class="block clearfix">
+                                        <span class="block input-icon input-icon-right">
+                                            @Html.PasswordFor(m => m.ConfirmPassword, new { placeholder = "Confirm Password", @class = "form-control", onblur = "if(this.value=='')this.value='Password'", onfocus = "if(this.value=='Password')this.value='' " })
+                                            <i class="icon-retweet"></i>
+                                        </span>
+                                    </label>*@
+                                    <label class="block clearfix">
+                                        <span class="block input-icon input-icon-right">
+                                            <div class="checkbox">
+                                                <label>
+                                                    @Html.CheckBoxFor(m => m.isAdmin, new { @class = "ace", @style = "opacity:1;" })
+                                                    @*<input  type="checkbox" class="ace">*@
+                                                    <span class="lbl" style="vertical-align: top;"> &nbsp; Administrator</span>
+                                                </label>
+                                            </div>
+
+                                        </span>
+                                    </label>
+                                    @*<label class="block clearfix">
+                                            <span class="block input-icon input-icon-right">
+                                                @Html.DropDownListFor(model => model.UserType, new SelectList(new List<SelectListItem>{ new SelectListItem
+                                                        {
+                                                            Value = "0",
+                                                            Text = "User"
+                                                        },new SelectListItem
+                                                        {
+                                                            Value = "1",
+                                                            Text = "Admin"
+                                                        }
+                                                        }, "Value", "Text"), "-- Please select type --", new { @class = "form-control" })
+
+                                            </span>
+                                        </label>*@
+                                    <div style="color: red;">
+                                        @Html.ValidationSummary()
+                                    </div>
+
+                                </div>
+                                <div class="clearfix ">
+                                    <button class="btn btn-sm btn-primary" type="submit">
+                                        <i class="icon-save  bigger-110"></i>
+                                        Save
+                                    </button>
+                                    <button class="btn btn-sm" type="reset">
+                                        <i class="icon-undo bigger-110"></i>
+                                        Reset
+                                    </button>
+                                </div>
+
+                            </div>
+
+                                }
+
+
+                    </div>
+
+
+
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

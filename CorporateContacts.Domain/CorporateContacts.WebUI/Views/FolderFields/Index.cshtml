@@ -1,0 +1,14 @@
+﻿@model CorporateContacts.Domain.Entities.CCFolderField
+
+@{
+    ViewBag.Title = "FolderField";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>FolderField</h2>
+
+ <p>Field Name</p> @Html.EditorFor(m => m.FieldName)@Html.ValidationMessageFor(m => m.FieldName)<br /> 
+ <p>Field Type</p> @Html.EditorFor(m => m.FieldType)@Html.ValidationMessageFor(m => m.FieldType)<br /> 
+
+  <br /><br />
+    <input type="submit" value="Add" class="button-clean-gray" />

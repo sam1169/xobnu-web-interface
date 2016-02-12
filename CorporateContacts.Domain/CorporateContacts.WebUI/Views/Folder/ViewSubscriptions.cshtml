@@ -1,0 +1,114 @@
+﻿@model CorporateContacts.WebUI.Models.SubscriptionsViewModel
+
+@{
+    ViewBag.Title = "View Subscriptions";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="col-xs-5">
+            <h2>View Subscriptions</h2>
+        </div>
+        <div class="col-xs-7">
+            <div style="float: right;">
+                <a class="btn btn-sm btn-primary" href="@Url.Action("LogintoExchange", "Folder", new { src = "sec", fid = Model.FolderID })">
+                    <i class="icon-pencil align-top bigger-125"></i>
+                    New Subscription
+                </a>
+                <a class="btn btn-sm btn-primary" href="@Url.Action("Items", "Folder", new { id = Model.FolderID })">
+                    <i class="icon-undo align-top bigger-125"></i>
+                    View Contacts
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+
+        @if (Model.SubscriptionDetails.ToList().Count > 0)
+        {
+            <div class="widget-main no-padding">
+                <div class="table-header"><i class="icon-long6-arrow-left"></i>Subscriptions for  @Model.FolderName </div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead class="thin-border-bottom">
+                            <tr>
+                                <th><i class="icon-folder-close"></i>Folder Name                            </th>
+                                <th><i class="icon-user"></i>Owner</th>
+                                <th>Type                            </th>                               
+                                <th>Allow Additions           </th>
+                                <th>Ignore Existing           </th>
+                                <th>Category Filter Used           </th>
+                                <th>Copy Photos           </th>
+                                <th>Turn Off Reminders          </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var item in Model.SubscriptionDetails)
+                            { 
+                                <tr>
+                                    <td>@item.FolderName</td>
+                                    <td>@item.Owner</td>
+                                    <td>@item.Type</td>                                   
+                                    <td>@item.AllowAdditions</td>
+                                    <td>@item.IgnoreExisting</td>
+                                    <td>@item.CategoryFilterUsed</td>
+                                    <td>@item.CopyPhotos</td>
+                                    <td>@item.TurnOffReminders</td>
+                                    <td><a style="margin-right: 10px;">@Html.ActionLink("Delete", "DeleteSubscriptions", new { id = item.ConnectionID }, new { @class = "btn btn-xs btn-primary" })</a>
+                                        <a style="margin-right: 10px;">@Html.ActionLink("Edit", "EditSubscription", new { id = item.FolderID, sid = item.ConnectionID },new { @class = "btn btn-xs btn-primary" })</a>
+                                        <a style="margin-right: 10px;">@Html.ActionLink("Fields", "SelectMappingFields", new { id = item.FolderID, sid = item.ConnectionID }, new { @class = "btn btn-xs btn-primary" })</a>
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="table-header">Subscriptions</div>   
+            <br />              
+            <p class="alert alert-warning">
+                No Subscriptions found 
+            </p> 
+          
+        }
+
+    </div>
+</div>
+<br />
+<br />
+<div class="row">
+    <div class="col-xs-12">
+        <div style="float: right">
+            <a class="btn btn-sm btn-primary" href="@Url.Action("LogintoExchange", "Folder", new { src = "sec", fid = Model.FolderID })">
+                <i class="icon-pencil align-top bigger-125"></i>
+                New Subscription
+            </a>
+            <a class="btn btn-sm btn-primary" href="@Url.Action("Items", "Folder", new { id = Model.FolderID })">
+                <i class="icon-undo align-top bigger-125"></i>
+                View Contacts
+            </a>
+
+        </div>
+    </div>
+</div>
+
+<style>
+ .col-xs-7 {
+position: relative;
+min-height: 1px;
+padding-right: 0px; 
+padding-left: 12px;
+}
+</style>

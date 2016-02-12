@@ -1,0 +1,242 @@
+﻿@model CorporateContacts.WebUI.Models.SystemAdminDashboardViewModel
+@{
+    ViewBag.Title = "System Admin Dashboard - Connection Details";
+    ViewBag.PageHeader = "Connection Details of '" + Model.SelectedConnection.Connection.FolderName +"'";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i><a href="/CorporateContactsAdmin/">Home</a></li><li><a href="/CorporateContactsAdmin/AccountInfo">Account Info</a></li><li class="active">Connection Details</li>');
+    var SelectedCheckBoxID = '';
+</script>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="col-sm-12 col-md-6">
+            <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                <label class="admin-labels" for="name">Connection Folder Name</label><br />
+                @Model.SelectedConnection.Connection.FolderName
+            </div>
+            <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                <label class="admin-labels" for="name">Connected CC Folder  Name</label><br />
+                @Model.SelectedConnection.Folder.Name
+
+            </div>
+            @*<a class="btn btn-sm btn-primary" href="@Url.Action("ShowAccountDetails", "CorporateContactsAdmin", new { ID = Model.SelectedAccountID })">Get Details</a>*@
+        </div>
+        <div class="col-sm-12 col-md-6">
+
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="col-sm-12 col-md-6">
+            <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                <a id="btnRestartTimer" href="#" class="btn btn-danger">
+                    Reset Timer
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="col-sm-12 col-md-6 toggle-buttons">
+            <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                <ul class='tg-list'>
+                    <li class='tg-list-item'>
+                        <h4>Allow Additions</h4>
+                        <input class='tgl tgl-ios' id='chkAllowAdditions' type='checkbox' @Model.SelectedConnectionCheckBoxes.allowAdditions onchange="SelectedCheckBoxID='AllowAdditions';">
+                        <label class='tgl-btn' for='chkAllowAdditions'></label>
+                    </li>
+                </ul>
+            </div>
+            <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                <ul class='tg-list'>
+                    <li class='tg-list-item'>
+                        <h4>Ignore Exsisting</h4>
+                        <input class='tgl tgl-ios' id='chkIgnoreExsisting' type='checkbox' @Model.SelectedConnectionCheckBoxes.ignoreExsisting onchange="SelectedCheckBoxID='IgnoreExisting';">
+                        <label class='tgl-btn' for='chkIgnoreExsisting'></label>
+                    </li>
+                </ul>
+            </div>
+            <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                <ul class='tg-list'>
+                    <li class='tg-list-item'>
+                        <h4>Category Filter</h4>
+                        <input class='tgl tgl-ios' id='chkCategoryFilter' type='checkbox' @Model.SelectedConnectionCheckBoxes.categoryFilter onchange="SelectedCheckBoxID='CategoryFilterUsed';">
+                        <label class='tgl-btn' for='chkCategoryFilter'></label>
+                    </li>
+                </ul>
+            </div>
+            <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                <ul class='tg-list'>
+                    <li class='tg-list-item'>
+                        <h4>Copy Photos</h4>
+                        <input class='tgl tgl-ios' id='chkCopyPhotos' type='checkbox' @Model.SelectedConnectionCheckBoxes.copyPhotos onchange="SelectedCheckBoxID='CopyPhotos';">
+                        <label class='tgl-btn' for='chkCopyPhotos'></label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 toggle-buttons">
+            <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                <ul class='tg-list'>
+                    <li class='tg-list-item'>
+                        <h4>Turn Off Reminders</h4>
+                        <input class='tgl tgl-ios' id='chkTurnOffReminders' type='checkbox' @Model.SelectedConnectionCheckBoxes.turnOffReminders onchange="SelectedCheckBoxID='TurnOffReminders';">
+                        <label class='tgl-btn' for='chkTurnOffReminders'></label>
+                    </li>
+                </ul>
+            </div>
+            <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                <ul class='tg-list'>
+                    <li class='tg-list-item'>
+                        <h4>Is Running</h4>
+                        <input class='tgl tgl-ios' id='chkIsRunning' type='checkbox' @Model.SelectedConnectionCheckBoxes.isRunning onchange="SelectedCheckBoxID='IsRunning';">
+                        <label class='tgl-btn' for='chkIsRunning'></label>
+                    </li>
+                </ul>
+            </div>
+            <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                <ul class='tg-list'>
+                    <li class='tg-list-item'>
+                        <h4>Tag Subject</h4>
+                        <input class='tgl tgl-ios' id='chkTagSubject' type='checkbox' @Model.SelectedConnectionCheckBoxes.tagSubject onchange="SelectedCheckBoxID='tagSubject';">
+                        <label class='tgl-btn' for='chkTagSubject'></label>
+                    </li>
+                </ul>
+            </div>
+            <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                <ul class='tg-list'>
+                    <li class='tg-list-item'>
+                        <h4>Sync Status (Paused)</h4>
+                        <input class='tgl tgl-ios' id='chkIsPaused' type='checkbox' @Model.SelectedConnectionCheckBoxes.isPaused onchange="SelectedCheckBoxID = 'IsPaused';">
+                        <label class='tgl-btn' for='chkIsPaused'></label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="deleteloading" style="display: none;">Applying Requested Changes...&nbsp;&nbsp;<img src="~/Content/Images/ajax-loader.gif" alt="" /></div>
+@*<script>
+        $("#chkAllowAdditions").change(function () {
+            if (this.checked) {
+                window.location.replace('@Url.Action("Index", "CorporateContactsAdmin", new { ConnectionID =  Model.SelectedConnection.Connection.ConnectionID , chkbox ="AllowAdditions", chkBoxVal = true})');
+            }
+            else {
+                window.location.replace('@Url.Action("Index", "CorporateContactsAdmin", new { ConnectionID =  Model.SelectedConnection.Connection.ConnectionID , chkbox ="AllowAdditions", chkBoxVal = false})');
+            }
+        });
+
+    </script>*@
+
+<div class="col-sm-6">
+    <!-- #dialog-message -->
+    <div id="dialog-confirm" class="hide">
+        <div class="alert alert-info bigger-110">
+            This will change the current state of setting.
+        </div>
+
+        <div class="space-6"></div>
+
+        <p class="bigger-110 bolder center grey">
+            Are you sure you want to proceed?
+        </p>
+    </div>
+    <!-- #dialog-confirm -->
+</div>
+
+<div class="col-sm-6">
+    <!-- #dialog-message -->
+    <div id="dialog-confirm-restart-timer" class="hide">
+        <div class="alert alert-info bigger-110">
+            This will initiate a full re-sync of all data for this connection. It may take a long time to finish.
+        </div>
+
+        <div class="space-6"></div>
+
+        <p class="bigger-110 bolder center grey">
+            Are you sure you want to proceed?
+        </p>
+    </div>
+    <!-- #dialog-confirm -->
+</div>
+
+
+<link rel="stylesheet" href="~/assets/css/jquery-ui-1.10.3.full.min.css" />
+<script src="~/assets/js/jquery-ui-1.10.3.full.min.js"></script>
+<script src="~/assets/js/fuelux/fuelux.spinner.min.js"></script>
+
+<script>
+    $("input[type=checkbox]").on('change', function (e) {
+        e.preventDefault();
+        var chkBoxID = $(this).attr('id');
+
+        $("#dialog-confirm").removeClass('hide').dialog({
+            resizable: false,
+            modal: true,
+            title: "Change State",
+            title_html: true,
+            buttons: [
+                {
+                    html: "<i class='icon-info-sign bigger-110'></i>&nbsp; Apply Change",
+                    "class": "btn btn-danger btn-xs",
+                    click: function () {
+                        window.location.href = '/CorporateContactsAdmin/ChangeConnectionToggleButtons?ConnectionID=@Model.SelectedConnection.Connection.ConnectionID&chkbox=' + SelectedCheckBoxID;
+                        $(this).dialog("close");
+                        $("#deleteloading").show();
+                    }
+                }
+                ,
+                {
+                    html: "<i class='icon-remove bigger-110'></i>&nbsp; Cancel",
+                    "class": "btn btn-xs",
+                    click: function () {
+                        $(this).dialog("close");
+                        var chkBox = document.getElementById(chkBoxID);
+                        if (chkBox.checked) {
+                            document.getElementById(chkBoxID).checked = false;
+                        }
+                        else {
+                            document.getElementById(chkBoxID).checked = true;
+                        }
+                        $("#deleteloading").hide();
+                    }
+                }
+            ]
+        });
+    });
+
+    $("#btnRestartTimer").on('click', function (e) {
+        e.preventDefault();
+
+        $("#dialog-confirm-restart-timer").removeClass('hide').dialog({
+            resizable: false,
+            modal: true,
+            title: "Restart Sync Timer",
+            title_html: true,
+            buttons: [
+                {
+                    html: "<i class='icon-info-sign bigger-110'></i>&nbsp; Restart Timer",
+                    "class": "btn btn-danger btn-xs",
+                    click: function () {
+                        window.location.href = '/CorporateContactsAdmin/ChangeConnectionToggleButtons?ConnectionID=@Model.SelectedConnection.Connection.ConnectionID&chkbox=RestartTimer';
+                        $(this).dialog("close");
+                        $("#deleteloading").show();
+                    }
+                }
+                ,
+                {
+                    html: "<i class='icon-remove bigger-110'></i>&nbsp; Cancel",
+                    "class": "btn btn-xs",
+                    click: function () {
+                        $(this).dialog("close");
+                        $("#deleteloading").hide();
+                    }
+                }
+            ]
+        });
+    });
+</script>

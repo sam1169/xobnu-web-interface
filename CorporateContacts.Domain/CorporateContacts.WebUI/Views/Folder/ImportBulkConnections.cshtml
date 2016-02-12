@@ -1,0 +1,178 @@
+﻿@model  CorporateContacts.WebUI.Models.ImportConnectionListModel
+
+@{
+    ViewBag.Title = "Import Connections";
+
+    if (ViewBag.foldername != null)
+    {
+        ViewBag.PageHeader = "Import Connections for " + ViewBag.foldername;
+    }
+    else
+    {
+        ViewBag.PageHeader = "Please try Again..";
+    }
+
+
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Javascript {
+    <script src="~/Scripts/jquery.showLoading.js"></script>
+}
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i>@Html.ActionLink("Home","Index","Admin")</li><li><a href="/Folder/ManageFolders/">Manage Folders</a></li><li class="active">Import Conections</li>');
+</script>
+
+@using (Html.BeginForm("ImportBulkConnections", "Folder", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(x => x.selectedFolderID)
+    <div class="row">
+        <div class="col-sm-12">
+            @if (ViewBag.MessageItemImportExceed != null)
+            {
+                <div class="alert alert-block alert-danger">
+                    <i class="fa fa-exclamation red"></i>
+                    @ViewBag.MessageConnectionImportExceed
+                </div>
+            }
+            @Html.Hidden("hosted", true)
+            <div class="form-group">
+                <label class="col-sm-4 control-label no-padding-right" for="form-field-1">Select Credential</label>
+                <div class="col-sm-8">
+                    @Html.DropDownListFor(m => Model.SelectedCredentialID, new SelectList(Model.ExistingCredentials, "ID", "Name"), new { @class = "form-control", @style = "width:250px" })
+                    <span class="help-inline col-xs-12 col-sm-7"><span class="middle">@Html.ValidationMessageFor(m => m.Credentials.Password)</span></span>
+                </div>
+            </div>
+            <div class="space-4"></div>
+            <br />
+            <div class="form-group">
+                <label class="col-sm-4 control-label no-padding-right" for="form-field-1">Select Impersonation or Delegation</label>
+                <div class="col-sm-8">
+                    @Html.DropDownListFor(m => Model.SelectedImporsanationOrDelegation, new SelectList(Model.ImporsanationOrDelegation, "ID", "Name"), new { @class = "form-control", @style = "width:250px" })
+                </div>
+            </div>
+            <div class="space-4"></div>
+            <br />
+            <div class="form-group">
+                <label class="col-sm-4 control-label no-padding-right" for="form-field-1">Select Sync Direction</label>
+                <div class="col-sm-8">
+                    @Html.DropDownListFor(model => model.SyncDirection, new SelectList(new List<SelectListItem>{ new SelectListItem
+                                                    {
+                                                        Value = "CopyToCC",
+                                                        Text = "Copy TO Corporate Contacts"
+                                                    },new SelectListItem
+                                                    {
+                                                        Value = "CopyFromCC",
+                                                        Text = "Copy FROM Corporate Contacts"
+                                                    }
+                                                    ,new SelectListItem
+                                                    {
+                                                        Value = "TwoWay",
+                                                        Text = "Two Way Sync"
+                                                    }}, "Value", "Text"), "-- Please select direction --", new { @class = "form-control11", @style = "width:250px" })
+                </div>
+            </div>
+            <div class="space-4"></div>
+            <br />
+            <div class="form-group">
+                <label class="col-sm-4 control-label no-padding-right" for="form-field-2">Default Folder to Sync</label>
+                <div class="col-sm-8">
+                    <input disabled class="col-xs-10" style="max-width:250px;" type="text" name="" value="@Model.ItemType" />
+                </div>
+            </div>
+            <div class="space-4"></div>
+            <br />
+            <div class="form-group">
+                <label class="col-sm-4 control-label no-padding-right" for="form-field-2">Upload File</label>
+                <div class="col-sm-8">
+                    <div class="ace-file-input">
+                        <input type="file" name="importConnection" id="importConnection" />
+
+                        <a class="remove" href="#">
+                            <i class="icon-remove">
+                            </i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" name="submit" value="Upload Connection List" class="btn btn-sm btn-primary" onclick="$('#loading').addClass('inline', 1000);" />
+
+                <div id="loading" style="display: none;">Importing Connection List... &nbsp;&nbsp;<img src="~/Content/Images/ajax-loader.gif" alt="" /></div>
+            </div>
+
+
+            <div style="color: red">
+                @if (ViewBag.Message != null)
+                { @ViewBag.Message }
+            </div>
+            <br />
+            <div style="color: green">
+                @if (ViewBag.MessagePass != null)
+                { @ViewBag.MessagePass }
+            </div>
+            <div style="color: red">
+                @if (ViewBag.MessageExtention != null)
+                { @ViewBag.MessageExtention }
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-10">
+            <div class="alert alert-warning">
+                <strong>The format of the Excel file to be uploaded is as shown below. There should be two Columns 'Email', 'Category Filter'. If Category Filter is not specified, it will be default to ignore a Category Filter</strong>
+                <br /><br />
+                <img src="~/assets/images/excel-format.png" />
+                <br>
+            </div>
+
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    jQuery(function ($) {
+        $('#importConnection').ace_file_input({
+            no_file: 'No File ...',
+            btn_choose: 'Choose',
+            btn_change: 'Change',
+            droppable: false,
+            onchange: null,
+            thumbnail: false //| true | large
+            //whitelist:'gif|png|jpg|jpeg'
+            //blacklist:'exe|php'
+            //onchange:''
+            //
+        });
+    });
+
+    function getEmailBeingProcessed() {
+        // do whatever you like here
+        setTimeout(getEmailBeingProcessed, 2000);
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("currentConnectionBeingAdded", "Folder")',
+            data: {},
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            async: true,
+            success: function (data)
+            {
+                $('#txtConnectionEmailAddded').html(data);
+            },
+            error: function () {}
+        });
+
+
+    }
+
+</script>
+
+<style>
+    .ace-file-input .remove {
+        display: none;
+        background-color: transparent;
+    }
+</style>

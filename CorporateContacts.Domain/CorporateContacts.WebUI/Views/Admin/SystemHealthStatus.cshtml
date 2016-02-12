@@ -1,0 +1,72 @@
+﻿@model CorporateContacts.WebUI.Models.HealthMsgsViewModel
+@{
+    ViewBag.Title = "System Health";
+    ViewBag.PageHeader = "System Health Status";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/assets/css/jquery-ui-1.10.3.full.min.css" />
+<script src="~/assets/js/jquery-ui-1.10.3.full.min.js"></script>
+<script src="~/assets/js/fuelux/fuelux.spinner.min.js"></script>
+
+
+<script>
+
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i>@Html.ActionLink("Home","Index","Admin")</li><li>Admin</li><li class="active">System Health Status</li>');
+
+</script>
+
+
+
+<div class="row">
+        <div class="col-xs-10">
+            <div class="comments">
+
+                @foreach (var healthMsgObj in Model.HealthMsgList)
+                {
+
+                <div class="itemdiv commentdiv">      
+                    <div class="user">
+                            @if (healthMsgObj.isIssue == true)
+                            {
+                                 <img style="border-radius: 100%;border: 0px !important;max-width: 40px;position: relative;width:20px;height:20px;background-color:#ff0000;" />
+                            }
+                            else
+                            {
+                                <img style="border-radius: 100%;border: 0px !important;max-width: 40px;position: relative;width:20px;height:20px;background-color:#00ff21;" />
+                            }
+                    </div>              
+                    <div class="body">
+                        <div class="name">
+                            @healthMsgObj.IssueDateTime
+                            @if (healthMsgObj.isIssue == true)
+                            { 
+                                <text>
+                                   - Issue 
+                                </text>
+                            }
+                            else
+                            {
+                                <text>
+                                   - General 
+                                </text>
+                            }
+                        </div>
+
+                        <div class="time">
+                            <i class="icon-time"></i>
+                            <span class="green">@healthMsgObj.FixDateTime</span>
+                        </div>
+
+                        <div class="text">
+                            <i class="icon-quote-left"></i>
+                            @healthMsgObj.Message
+                        </div>
+                    </div>
+                </div>
+
+                }
+            </div>
+        </div>  
+</div>
+

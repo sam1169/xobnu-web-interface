@@ -1,0 +1,249 @@
+﻿@model List<String>
+@{
+    ViewBag.Title = "Select Folder Fields";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section JavaScript
+{
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <style>
+        #sortable1, #sortable2, #sortable3
+        {
+            list-style-type: none;
+            margin: 2px;
+            padding: 0;
+            float: left;
+            margin-right: 10px;
+            padding: 5px;
+            min-width: 283px;
+        }
+
+            #sortable1 li, #sortable2 li, #sortable3 li
+            {
+                margin: 5px;
+                padding: 5px;
+                width: 260px;
+                cursor: pointer;
+            }
+    </style>
+    <script>
+        $(function () {
+            $("ul.droptrue").sortable({
+                connectWith: "ul"
+            });
+
+            $("ul.dropfalse").sortable({
+                connectWith: "ul",
+                dropOnEmpty: false
+            });
+
+            $("#sortable1, #sortable2, #sortable3").disableSelection();
+        });
+    </script>
+}
+<div class="page-header">
+    <h1>Select Fields</h1>
+</div>
+@using (Html.BeginForm("SelectFields", "Exo365", FormMethod.Post))
+{
+    <div class="row">
+        <div class="col-xs-3">
+            <div class="widget-box">
+                <div class="widget-header header-color-blue2">
+                    <h4 class="lighter smaller">All fields</h4>
+                </div>
+                <div class="widget-body" style="overflow-y: auto; max-height: 600px">
+                    <div id="sortable">
+                        <ul id="sortable1" class="droptrue" style="min-height: 600px">
+                            @foreach (var item in Model)
+                            {
+                                <li id="" class="ui-state-default">@item</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-3">
+            <div class="widget-box">
+                <div class="widget-header header-color-blue2">
+                    <h4 class="lighter smaller">Selected fields</h4>
+                </div>
+                <div id="selection" class="widget-body" style="overflow-y: auto; max-height: 600px">
+                    <ul id="sortable3" class="droptrue" style="min-height: 600px">
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-3">
+            <div class="widget-box">
+                <div class="widget-header header-color-blue2">
+                    <h4 class="lighter smaller">Templates</h4>
+                </div>
+                <div class="widget-body" style="overflow-y: auto; max-height: 600px; min-height: 600px; padding: 20px">
+                    <button id="csimple" class="btn btn-info btn-block">Corporate Simple</button>
+                    <button id="csstd" class="btn btn-primaryr btn-block">Corporate Standard</button>
+                    <button id="hsimple" class="btn btn-yellow btn-block">Home Simple</button>
+                    <button id="hstd" class="btn btn-success btn-block">Home Standard</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="space"></div>
+    <div class="row">
+        <div class="col-xs-5">
+            <button type="submit" class="btn btn-primary btn-sm">
+                <i class="icon-user icon-white"></i>Done
+               
+            </button>
+        </div>
+    </div>
+
+    @Html.Hidden("hid1")
+    
+}
+<script>
+    $("#csimple").click(function (e) {
+        e.preventDefault();
+        $('#selection ul').empty();
+        $('#sortable ul').empty();
+            @foreach (var item in Model)
+            { <text>            $('#sortable ul').append('<li id="" class="ui-state-default">@item</li>');            </text>
+            }
+            $("#selection ul").append('<li id="" class="ui-state-default">First Name</li>');
+            $("#selection ul").append('<li id="" class="ui-state-default">Last Name</li>');
+            $("#selection ul").append('<li id="" class="ui-state-default">Job Title</li>');
+            $("#selection ul").append('<li id="" class="ui-state-default">Company</li>');
+            $("#selection ul").append('<li id="" class="ui-state-default">Mobile Phone</li>');
+            $("#selection ul").append('<li id="" class="ui-state-default">Business Phone</li>');
+            $("#selection ul").append('<li id="" class="ui-state-default">Email Address</li>');
+            $("#selection ul").append('<li id="" class="ui-state-default">Categories</li>');
+            $("#sortable1 li:contains('First Name')").remove();
+            $("#sortable1 li:contains('Last Name')").remove();
+            $("#sortable1 li:contains('Job Title')").remove();
+            $("#sortable1 li:contains('Company')").remove();
+            $("#sortable1 li:contains('Mobile Phone')").remove();
+            $("#sortable1 li:contains('Business Phone')").remove();
+            $("#sortable1 li:contains('Email Address')").remove();
+            $("#sortable1 li:contains('Categories')").remove();
+        });
+
+        $("#csstd").click(function (e) {
+            e.preventDefault();
+            $('#selection ul').empty();
+            $('#sortable ul').empty();
+            @foreach (var item in Model)
+            { <text>            $('#sortable ul').append('<li id="" class="ui-state-default">@item</li>');            </text>
+            }
+        $("#selection ul").append('<li id="" class="ui-state-default">First Name</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Last Name</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Job Title</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Company</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Mobile Phone</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Business Phone</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Business Fax</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Business Address Street</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Business Address City</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Business Address State</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Business Address Postal Code</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Business Address Country</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Business Phone 2</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Company Main Phone</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Email Address</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Email2 Address</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Categories</li>');
+        $("#sortable1 li:contains('First Name')").remove();
+        $("#sortable1 li:contains('Last Name')").remove();
+        $("#sortable1 li:contains('Job Title')").remove();
+        $("#sortable1 li:contains('Company')").remove();
+        $("#sortable1 li:contains('Mobile Phone')").remove();
+        $("#sortable1 li:contains('Business Phone')").remove();
+        $("#sortable1 li:contains('Business Fax')").remove();
+        $("#sortable1 li:contains('Business Address Street')").remove();
+        $("#sortable1 li:contains('Business Address City')").remove();
+        $("#sortable1 li:contains('Business Address State')").remove();
+        $("#sortable1 li:contains('Business Address Postal Code')").remove();
+        $("#sortable1 li:contains('Business Address Country')").remove();
+        $("#sortable1 li:contains('Business Phone 2')").remove();
+        $("#sortable1 li:contains('Company Main Phone')").remove();
+        $("#sortable1 li:contains('Email Address')").remove();
+        $("#sortable1 li:contains('Email2 Address')").remove();
+        $("#sortable1 li:contains('Categories')").remove();
+    });
+
+
+    $("#hsimple").click(function (e) {
+        e.preventDefault();
+        $('#selection ul').empty();
+        $('#sortable ul').empty();
+            @foreach (var item in Model)
+            { <text>            $('#sortable ul').append('<li id="" class="ui-state-default">@item</li>');            </text>
+            }
+        $("#selection ul").append('<li id="" class="ui-state-default">First Name</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Last Name</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Mobile Phone</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Home Phone</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Email Address</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Categories</li>');
+        $("#sortable1 li:contains('First Name')").remove();
+        $("#sortable1 li:contains('Last Name')").remove();
+        $("#sortable1 li:contains('Mobile Phone')").remove();
+        $("#sortable1 li:contains('Home Phone')").remove();
+        $("#sortable1 li:contains('Email Address')").remove();
+        $("#sortable1 li:contains('Categories')").remove();
+    });
+
+
+    $("#hstd").click(function (e) {
+        e.preventDefault();
+        $('#selection ul').empty();
+        $('#sortable ul').empty();
+            @foreach (var item in Model)
+            { <text>            $('#sortable ul').append('<li id="" class="ui-state-default">@item</li>');            </text>
+            }
+        $("#selection ul").append('<li id="" class="ui-state-default">First Name</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Last Name</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Mobile Phone</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Home Address Street</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Home Address City</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Home Address State</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Home Address Postal Code</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Home Address Country</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Home Phone</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Email Address</li>');
+        $("#selection ul").append('<li id="" class="ui-state-default">Categories</li>');
+        $("#sortable1 li:contains('First Name')").remove();
+        $("#sortable1 li:contains('Last Name')").remove();
+        $("#sortable1 li:contains('Mobile Phone')").remove();
+        $("#sortable1 li:contains('Home Address Street')").remove();
+        $("#sortable1 li:contains('Home Address City')").remove();
+        $("#sortable1 li:contains('Home Address State')").remove();
+        $("#sortable1 li:contains('Home Address Postal Code')").remove();
+        $("#sortable1 li:contains('Home Address Country')").remove();
+        $("#sortable1 li:contains('Home Phone')").remove();
+        $("#sortable1 li:contains('Email Address')").remove();
+        $("#sortable1 li:contains('Categories')").remove();
+    });
+
+
+</script>
+<script>
+    $("form").on("submit", function (event) {
+        event.preventDefault();
+        // Validate form, returning on failure.
+        var myselection = new Array();
+        $('#selection').find('li').each(function (index) {
+            console.log(index + ": " + $(this).text());
+            myselection[index] = $(this).text();
+        });
+        console.log(JSON.stringify(myselection));
+        $('#hid1').val(JSON.stringify(myselection));
+        $(this).off("submit");
+        this.submit();
+    });
+
+</script>

@@ -1,0 +1,19 @@
+﻿@model IEnumerable<Xobnu.Domain.Entities.Plan>
+
+@{
+    ViewBag.Title = "Select a product";
+}
+
+<h2>Select a product first</h2>
+@using (Html.BeginForm("SaveAccount", "SignUp", FormMethod.Get))
+{
+    foreach (var item in Model)
+    {
+
+        <div style="display:block;font-size:large">@Html.RadioButton("SelectedPlan", item.ID,item.ID==2?true:false) @item.Name</div>
+        <div style="margin-left:2em;color:#D74B4B">@item.Price.ToString("c")</div>
+        <br /><br />
+    }
+    <input type="submit" value="Next >" class="button-clean-gray" />
+}
+

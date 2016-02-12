@@ -1,0 +1,46 @@
+﻿@model IEnumerable<CorporateContacts.Domain.Entities.CCFolderField>
+
+@{
+    ViewBag.Title = "View Folder Fields";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Folder Field </h2>
+
+<h2>@Html.ActionLink("Add Field", "Field", new { id = Model.FirstOrDefault().FolderID }) </h2>
+<div class="row">
+    <div class="col-xs-12">
+        @* <h4>Folders @Html.ActionLink("(Add Folder)", "index")</h4>*@
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var field in Model )
+                    {
+                    <tr>
+                        <td>@field.FieldName </td>
+                        <td>@field.FieldType </td>
+                        <td>
+                           @using (Html.BeginForm("Deletefield", "Folder", FormMethod.Post))
+                            {                  
+                               @Html.HiddenFor(model => model.FirstOrDefault(e => e.FieldID == field.FieldID).FieldID)  
+                               @Html.HiddenFor(model => model.FirstOrDefault(e => e.FolderID == field.FolderID).FolderID)     
+                                   
+                                <input type="submit" value="Delete" class="button-clean-gray" />
+                            }
+                        </td>
+
+                    </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

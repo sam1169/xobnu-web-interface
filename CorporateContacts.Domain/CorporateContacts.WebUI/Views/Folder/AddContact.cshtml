@@ -1,0 +1,330 @@
+﻿@model CorporateContacts.WebUI.Models.AddContactViewModel
+@{
+    ViewBag.Title = "Add Contact";
+    if (Model.FolderType == 1)
+    {
+        ViewBag.PageHeader = "Add Contact";
+    }
+    else
+    {
+        ViewBag.PageHeader = "Add Appointment";
+    }
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<script>
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i>@Html.ActionLink("Home","Index","Admin")</li><li><a href="/Folder/Items/@Model.FolderID">Folder</a></li><li class="acctive">New Item</li>');
+</script>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div style="float: right;">
+            <a class="btn btn-sm btn-primary" href="@Url.Action("Items", "Folder", new { id = Model.FolderID })">
+                <i class="icon-rotate-left align-top bigger-125"></i>
+                Back
+            </a>
+        </div>
+    </div>
+</div>
+<div class="space-4"></div>
+
+<script src="~/js/jquery.datetimepicker.js"></script>
+<link href="~/css/jquery.datetimepicker.css" rel="stylesheet" />
+<link href="~/assets/css/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" />
+
+@using (Html.BeginForm("AddContact", "Folder", FormMethod.Post))
+{
+    <div class="row">
+        @*<div class="col-sm-1"></div>*@
+        <div class="col-sm-12">
+            <div class="form-horizontal" role="form">
+                <div style="color: red">
+                    @if (ViewBag.Message != null)
+                    { @ViewBag.Message }
+                </div>
+
+                @if (Model.FolderType == 1)
+                {
+
+
+
+
+
+                    //Contact
+
+
+
+                    <div class="widget-box">
+                        <div class="widget-header">
+                            <h4 class="smaller">
+                                Enter the following information
+
+                            </h4>
+                        </div>
+
+                        <div class="widget-body">
+                            <div class="widget-main">
+                                <p class="muted">
+                                    <div class="row">
+                                        @foreach (var m in Model.FolderFields)
+                                        {
+
+                                            <div class="col-xs-12">
+                                                <div class="form-group" id="DynamicValueAssignedHere">
+                                                    <label class="col-sm-4 control-label no-padding-right" for="form-field-1">@m.FieldCaption </label>
+                                                    <div class="col-sm-8">
+                                                        <input type="text" id="form-field-1" class="col-xs-12 col-sm-12 contact-field" name="valu" placeholder="Enter @m.FieldCaption here" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                    </p>
+
+                                
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    //Appointment
+
+                    <div class="widget-box">
+                        <div class="widget-header">
+                            <h4 class="smaller">
+                                Enter the following information
+
+                            </h4>
+                        </div>
+
+                        <div class="widget-body">
+                            <div class="widget-main">
+                                <p class="muted">
+                                    @foreach (var m in Model.FolderFields.Take(3))
+                                    {
+                                        if (m.FieldCaption == "Subject")
+                                        {
+                                            <div class="form-group" id="DynamicValueAssignedHere1">
+                                                <label class="col-sm-1 control-label no-padding-right" for="form-input-readonly">@m.FieldCaption</label>
+                                                <div class="col-sm-11" style="overflow: hidden">
+                                                    <input class="col-xs-8 col-sm-8 contact-field" type="text" id="txtAppointmentSubject" placeholder="Enter Subject of Appointment" name="valu" />
+                                                </div>
+                                            </div>
+                                        }
+                                        else if (m.FieldCaption == "Start Time")
+                                        {
+                                            <div class="form-group" id="DynamicValueAssignedHere1">
+                                                <label class="col-sm-1 control-label no-padding-right" for="form-input-readonly">@m.FieldCaption</label>
+                                                <div class="col-sm-11" style="overflow: hidden">
+                                                    <input class="col-xs-8 col-sm-8 contact-field" type="text" id="txtTimeArrived" placeholder="Enter Start Time" name="valu" />
+                                                </div>
+                                            </div>
+                                        }
+                                        else if (m.FieldCaption == "End Time")
+                                        {
+                                            <div class="form-group" id="DynamicValueAssignedHere1">
+                                                <label class="col-sm-1 control-label no-padding-right" for="form-input-readonly">@m.FieldCaption</label>
+                                                <div class="col-sm-11" style="overflow: hidden">
+                                                    <input class="col-xs-8 col-sm-8 contact-field" type="text" id="txtTimeEnding" placeholder="Enter End Time" name="valu" />
+                                                </div>
+                                            </div>
+                                        }
+                                        else if (m.FieldCaption == "Location" & Model.isCrimeDiary == true)
+                                        {
+                                            <div class="form-group" id="DynamicValueAssignedHere1">
+                                                <label class="col-sm-1 control-label no-padding-right" for="form-input-readonly">@m.FieldCaption</label>
+                                                <div class="col-sm-11" style="overflow: hidden">
+                                                    <input class="col-xs-8 col-sm-8 contact-field" type="text" id="txtAppointmentLocation" placeholder="Enter Location" name="valu" />
+                                                </div>
+                                            </div>
+                                        }
+                                        <div class="space-4"></div>
+
+                                    }
+
+                                    @foreach (var m in Model.FolderFields.Skip(3).Take(1))
+                                    {
+                                        if (m.FieldCaption == "Notes")
+                                        {
+                                            <div class="form-group" id="DynamicValueAssignedHere">
+                                                <label class="col-sm-1 control-label no-padding-right" for="form-field-1">@m.FieldCaption </label>
+
+                                                <div class="col-sm-11">
+                                                    <textarea rows="15" id="form-field-1" class="col-xs-12 col-sm-12 contact-field" name="valu" placeholder="Enter Notes here"></textarea>
+                                                    @*<input type="text" id="form-field-1" class="col-xs-10 col-sm-5" name="valu" />*@
+                                                </div>
+                                            </div>
+                                        }
+                                        else if (m.FieldCaption == "End Time" & Model.isCrimeDiary == true)
+                                        {
+                                            <div class="form-group" id="DynamicValueAssignedHere1">
+                                                <label class="col-sm-1 control-label no-padding-right" for="form-input-readonly">@m.FieldCaption</label>
+                                                <div class="col-sm-11" style="overflow: hidden">
+                                                    <input class="col-xs-8 col-sm-8 contact-field" type="text" id="txtTimeEnding" placeholder="Enter End Time" name="valu" />
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+
+                                    <div class="space-4"></div>
+
+                                    @foreach (var m in Model.FolderFields.Skip(4).Take(1))
+                                    {
+                                        if (m.FieldCaption == "Location")
+                                        {
+                                            <div class="form-group" id="DynamicValueAssignedHere1">
+                                                <label class="col-sm-1 control-label no-padding-right" for="form-input-readonly">@m.FieldCaption</label>
+                                                <div class="col-sm-11" style="overflow: hidden">
+                                                    <input class="col-xs-8 col-sm-8 contact-field" type="text" id="txtAppointmentLocation" placeholder="Enter Location" name="valu" />
+                                                </div>
+                                            </div>
+                                        }
+                                        else if (m.FieldCaption == "Notes" & Model.isCrimeDiary == true)
+                                        {
+                                            <div class="form-group" id="DynamicValueAssignedHere">
+                                                <label class="col-sm-1 control-label no-padding-right" for="form-field-1">@m.FieldCaption </label>
+
+                                                <div class="col-sm-11">
+                                                    <textarea rows="15" id="form-field-1" class="col-xs-12 col-sm-12 contact-field" name="valu" placeholder="Enter Notes here"></textarea>
+                                                    @*<input type="text" id="form-field-1" class="col-xs-10 col-sm-5" name="valu" />*@
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+
+                                </p>
+
+                                <hr />
+                                <div id="accordion" class="accordion-style1 panel-group">
+
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                                    <i class="icon-angle-right bigger-110" data-icon-hide="icon-angle-down" data-icon-show="icon-angle-right"></i>
+                                                    &nbsp;Other Information
+                                                </a>
+                                            </h4>
+                                        </div>
+
+                                        <div class="panel-collapse collapse" id="collapseTwo">
+                                            <div class="panel-body">
+
+                                                <div class="col-sm-6"></div>
+                                                <div class="col-sm-6"></div>
+                                                @{
+                                    var skipCount = 0;
+                                    if (Model.isCrimeDiary == true)
+                                    {
+                                        skipCount = 5;
+                                    }
+                                    else
+                                    {
+                                        skipCount = 5;
+                                    }
+                                                }
+
+
+                                                @foreach (var m in Model.FolderFields.Skip(skipCount))
+                                                {
+                                                    <div class="form-group" id="DynamicValueAssignedHere">
+                                                        <label class="col-sm-1 control-label no-padding-right" for="form-field-1">@m.FieldCaption </label>
+
+                                                        <div class="col-sm-11">
+                                                            <input type="text" id="form-field-1" class="col-xs-12 col-sm-12 contact-field" name="valu" placeholder="Enter @m.FieldCaption here" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="space-4"></div>
+
+                                                }
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+
+
+
+
+
+                <div class="form-actions white" style="background-color:#ffffff;">
+                    <div class="col-md-3"></div>
+                    <center>
+                        <div class="col-md-6">
+                            <button class="btnadd btn btn-info" type="submit" id="btnadd1">
+                                <i class="icon-save bigger-110"></i>
+                                Save&nbsp;
+                                @if (Model.FolderType == 1)
+                                {
+                                    <text>Contacts</text>
+                                }
+                                else
+                                {
+                                    <text>Appointment</text>
+                                }
+                            </button>
+
+                            &nbsp; &nbsp; &nbsp;
+                            <button class="btn" type="reset">
+                                <i class="icon-undo bigger-110"></i>
+                                Reset
+                            </button>
+                        </div>
+                    </center>
+
+                    <div class="col-md-3"></div>
+                </div>
+
+
+            </div>
+
+            @Html.HiddenFor(model => model.FolderValues)
+            @Html.HiddenFor(model => model.FolderID)
+        </div>
+        @*<div class="col-sm-1"></div>*@
+    </div>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        var fieldvalue;
+
+        $(".btnadd").click(function () {
+            fieldvalue = "";
+            $('.contact-field').each(function (input) {
+                if ($(this).val() == '') fieldvalue += ' ' + '|';
+                else fieldvalue += $(this).val() + '|';
+            });
+
+            //$('textarea[name="valu"]').each(function (input) {
+            //    if ($(this).val() == '') fieldvalue += ' ' + '|';
+            //    else fieldvalue += $(this).val() + '|';
+            //});
+
+            $('#FolderValues').val(fieldvalue);
+
+        });
+
+    });
+
+</script>
+
+<script type="text/javascript">
+    $('#txtTimeArrived').datetimepicker().datetimepicker({ step: 10, format: 'Y-m-d H:i' });
+    $('#txtTimeEnding').datetimepicker().datetimepicker({ step: 10, format: 'Y-m-d H:i' });
+</script>
+
+
+
+
+

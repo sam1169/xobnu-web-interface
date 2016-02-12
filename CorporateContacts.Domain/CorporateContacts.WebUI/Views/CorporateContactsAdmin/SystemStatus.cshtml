@@ -1,0 +1,151 @@
+﻿@model CorporateContacts.WebUI.Models.HealthMsgsViewModel
+@{
+    ViewBag.Title = "System Status";
+    ViewBag.PageHeader = "System Health Status";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/assets/css/jquery-ui-1.10.3.full.min.css" />
+<script src="~/assets/js/jquery-ui-1.10.3.full.min.js"></script>
+<script src="~/assets/js/fuelux/fuelux.spinner.min.js"></script>
+<script src="~/js/jquery.datetimepicker.js"></script>
+<link href="~/css/jquery.datetimepicker.css" rel="stylesheet" />
+
+<script>
+
+    $('.breadcrumb').html('<li><i class="icon-home home-icon"></i><a href="/CorporateContactsAdmin/">Home</a></li><li class="active">System Status</li>');
+</script>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="widget-box">
+            <div class="widget-header widget-header-flat">
+                <h4 class="smaller">
+                    <i class="icon-user smaller-80"></i>
+                    New System Status Alert
+                </h4>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            @using (Html.BeginForm("SystemStatus", "CorporateContactsAdmin", FormMethod.Post))
+                            {
+
+                               
+                                    <div class="form-group">
+
+                                        <label class="block clearfix ">
+                                            <span class="block input-icon input-icon-right">
+                                                @Html.TextAreaFor(m => m.newObj.Message, new { placeholder = "Issue / Comment", @class = "form-control" })
+                                                <i class=" icon-envelope"></i>
+                                            </span>
+                                        </label>
+                                        <label class="block clearfix ">
+                                            <span class="block input-icon input-icon-right">
+                                                @Html.TextBoxFor(m => m.newObj.HealthLevel, new { placeholder = "Level of Message", @class = "form-control" })
+                                                <i class=" icon-exclamation"></i>
+                                            </span>
+                                        </label>
+                                        <label class="block clearfix">
+                                            <span class="block input-icon input-icon-right">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        @Html.CheckBoxFor(m => m.newObj.isIssue, new { @class = "ace", @style="opacity:1;"})
+                                                        @*<input  type="checkbox" class="ace">*@
+                                                        <span class="lbl" style="vertical-align: top;"> &nbsp; System Issue</span>
+                                                    </label>
+                                                </div>
+                                                
+                                            </span>
+                                        </label>
+                                        <label class="block clearfix">
+                                            <span class="block input-icon input-icon-right">
+                                                @Html.TextBoxFor(m => m.FixDateTimeString, new { placeholder = "Date of Issue Fix", @class = "form-control fix-date-select" })                                                
+                                                <i class=" icon-calendar"></i>
+                                            </span>                                            
+                                        </label>
+                                        <div style="color: red;">
+                                            @Html.ValidationSummary()
+                                        </div>
+
+                                    </div>
+                                    <div class="clearfix ">
+                                        <button class="btn btn-sm btn-primary" type="submit">
+                                            <i class="icon-save  bigger-110"></i>
+                                            Save
+                                        </button>
+                                        <button class="btn btn-sm" type="reset">
+                                            <i class="icon-undo bigger-110"></i>
+                                            Clear
+                                        </button>
+                                    </div>
+
+                                
+
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <br /><br />
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="comments">
+
+                @foreach (var healthMsgObj in Model.HealthMsgList)
+                {
+
+                    <div class="itemdiv commentdiv">
+                        <div class="user">
+                            @if (healthMsgObj.isIssue == true)
+                            {
+                                <img style="border-radius: 100%;border: 0px !important;max-width: 40px;position: relative;width:20px;height:20px;background-color:#ff0000;" />
+                            }
+                            else
+                            {
+                                <img style="border-radius: 100%;border: 0px !important;max-width: 40px;position: relative;width:20px;height:20px;background-color:#00ff21;" />
+                            }
+                        </div>
+                        <div class="body">
+                            <div class="name">
+                                @healthMsgObj.IssueDateTime
+                                @if (healthMsgObj.isIssue == true)
+                                {
+                                    <text>
+                                        - Issue
+                                    </text>
+                                }
+                                else
+                                {
+                                    <text>
+                                        - General
+                                    </text>
+                                }
+                            </div>
+
+                            <div class="time">
+                                <i class="icon-time"></i>
+                                <span class="green">@healthMsgObj.FixDateTime</span>
+                            </div>
+
+                            <div class="text">
+                                <i class="icon-quote-left"></i>
+                                @healthMsgObj.Message
+                            </div>
+                        </div>
+                    </div>
+
+                }
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $('.fix-date-select').datetimepicker().datetimepicker({ step: 10, format: 'Y-m-d H:i' });
+    </script>
